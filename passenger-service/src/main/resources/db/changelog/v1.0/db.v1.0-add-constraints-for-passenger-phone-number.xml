@@ -1,0 +1,15 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="v1.0-add-constraints-phone" author="danilalisichkin">
+        <addUniqueConstraint columnNames="phone_number" constraintName="uc_passengers_phonenumber" tableName="passengers"/>
+
+        <rollback>
+            <dropUniqueConstraint constraintName="uc_passengers_phonenumber" tableName="passengers"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
