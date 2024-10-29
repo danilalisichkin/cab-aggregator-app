@@ -1,6 +1,7 @@
 package com.cabaggregator.driverservice.services;
 
 import com.cabaggregator.driverservice.core.dto.CarAddingDTO;
+import com.cabaggregator.driverservice.core.dto.DriverAddingDTO;
 import com.cabaggregator.driverservice.core.dto.DriverDTO;
 
 import java.util.List;
@@ -14,9 +15,9 @@ public interface IDriverService {
 
     DriverDTO getDriverByEmail(String email);
 
-    DriverDTO saveDriver(CarAddingDTO carDTO);
+    DriverDTO saveDriver(DriverAddingDTO driverDTO);
 
-    DriverDTO updateDriver(DriverDTO carDTO);
+    DriverDTO updateDriver(DriverDTO driverDTO);
 
     void deleteDriverById(long id);
 
