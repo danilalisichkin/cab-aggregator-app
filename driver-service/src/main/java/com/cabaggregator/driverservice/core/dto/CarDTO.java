@@ -15,7 +15,7 @@ public class CarDTO {
     private long id;
 
     @NotNull
-    @Pattern(regexp = "^\\d{4} (А|В|Е|І|К|М|Н|О|Р|С|Т|Х){2}-\\d$",
+    @Pattern(regexp = "^\\d{4} [АВЕІКМНОРСТХ]{2}-\\d$",
             message = "{error.invalid.licence.plate.format}")
     private String licensePlate;
 
