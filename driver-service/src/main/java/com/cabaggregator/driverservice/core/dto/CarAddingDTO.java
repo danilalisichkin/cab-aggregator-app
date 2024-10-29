@@ -1,5 +1,6 @@
 package com.cabaggregator.driverservice.core.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -8,6 +9,7 @@ import lombok.Data;
 
 @Data
 @Builder
+@Schema(description = "Entry to add new car")
 public class CarAddingDTO {
     @NotNull
     @Pattern(regexp = "^\\d{4} (А|В|Е|І|К|М|Н|О|Р|С|Т|Х){2}-\\d$",
