@@ -27,4 +27,7 @@ public class Car {
 
     @Column(nullable = false)
     private String color;
+
+    @OneToOne(mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)
+    private CarDetails carDetails;
 }

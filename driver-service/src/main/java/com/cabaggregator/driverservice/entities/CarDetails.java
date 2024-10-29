@@ -23,4 +23,8 @@ public class CarDetails {
 
     @Column(nullable = false)
     private int seatCapacity;
+
+    @OneToOne
+    @JoinColumn(name = "car_id", nullable = false)
+    private Car car;
 }
