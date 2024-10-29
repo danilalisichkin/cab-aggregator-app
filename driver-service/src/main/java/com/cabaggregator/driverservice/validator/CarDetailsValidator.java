@@ -3,13 +3,10 @@ package com.cabaggregator.driverservice.validator;
 import com.cabaggregator.driverservice.core.constants.MessageKeys;
 import com.cabaggregator.driverservice.dao.repository.CarDetailsRepository;
 import com.cabaggregator.driverservice.dao.repository.CarRepository;
-import com.cabaggregator.driverservice.entities.CarDetails;
 import com.cabaggregator.driverservice.exceptions.DataUniquenessConflictException;
 import com.cabaggregator.driverservice.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Component
 public class CarDetailsValidator {

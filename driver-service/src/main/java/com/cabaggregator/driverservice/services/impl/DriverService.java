@@ -1,7 +1,6 @@
 package com.cabaggregator.driverservice.services.impl;
 
 import com.cabaggregator.driverservice.core.constants.MessageKeys;
-import com.cabaggregator.driverservice.core.dto.CarAddingDTO;
 import com.cabaggregator.driverservice.core.dto.DriverAddingDTO;
 import com.cabaggregator.driverservice.core.dto.DriverDTO;
 import com.cabaggregator.driverservice.core.mappers.DriverMapper;

@@ -1,6 +1,5 @@
 package com.cabaggregator.driverservice.services;
 
-import com.cabaggregator.driverservice.core.dto.CarAddingDTO;
 import com.cabaggregator.driverservice.core.dto.DriverAddingDTO;
 import com.cabaggregator.driverservice.core.dto.DriverDTO;
 
