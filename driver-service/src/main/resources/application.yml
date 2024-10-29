@@ -12,5 +12,8 @@ spring:
         hibernate:
           default_schema: public
           dialect: org.hibernate.dialect.PostgreSQLDialect
+    web:
+      locale: en
+      locale-resolver: accept_header
 server:
   port: ${SERVER_PORT:8081}
