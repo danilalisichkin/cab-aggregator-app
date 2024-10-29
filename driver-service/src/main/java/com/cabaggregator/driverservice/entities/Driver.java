@@ -3,6 +3,8 @@ package com.cabaggregator.driverservice.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Getter
 @Setter
@@ -25,7 +27,10 @@ public class Driver {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false, precision = 3, scale = 2)
+    private BigDecimal rating;
+
     @OneToOne
-    @JoinColumn(name = "car_id", nullable = false)
+    @JoinColumn(name = "car_id")
     private Car car;
 }
