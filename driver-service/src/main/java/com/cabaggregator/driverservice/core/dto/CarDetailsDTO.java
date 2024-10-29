@@ -1,7 +1,5 @@
 package com.cabaggregator.driverservice.core.dto;
 
-import com.cabaggregator.driverservice.entities.Car;
-import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 

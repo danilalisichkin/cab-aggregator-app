@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class CarAddingDTO extends CarDTO {
+public class CarAddingDTO {
     String licensePlate;
     String make;
     String model;
