@@ -18,6 +18,8 @@ public abstract  class MessageKeys {
 
     public static final String ERROR_DRIVERS_NOT_FOUND = "error.drivers.not.found";
     public static final String ERROR_DRIVER_WITH_ID_NOT_FOUND = "error.driver.with.id.not.found";
+    public static final String ERROR_DRIVER_WITH_PHONE_NOT_FOUND = "error.driver.with.phone.not.found";
+    public static final String ERROR_DRIVER_WITH_EMAIL_NOT_FOUND = "error.driver.with.email.not.found";
     public static final String ERROR_DRIVER_WITH_PHONE_ALREADY_EXISTS = "error.driver.with.phone.already.exists";
     public static final String ERROR_DRIVER_WITH_EMAIL_ALREADY_EXISTS="error.driver.with.email.already.exists";
     public static final String ERROR_DRIVER_ALREADY_HAS_CAR="error.driver.already.has.car";
