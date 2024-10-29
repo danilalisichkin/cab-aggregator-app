@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class CarDTO {
+    private long id;
     private String licensePlate;
     private String make;
     private String model;

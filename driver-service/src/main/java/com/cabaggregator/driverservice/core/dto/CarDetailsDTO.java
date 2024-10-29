@@ -12,5 +12,5 @@ import java.time.LocalDate;
 public class CarDetailsDTO {
     private LocalDate releaseDate;
     private int seatCapacity;
-    private String carLicensePlate;
+    private long carId;
 }
