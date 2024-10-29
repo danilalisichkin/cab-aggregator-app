@@ -11,7 +11,7 @@ import lombok.Data;
 public class CarAddingDTO {
     @NotNull
     @Pattern(regexp = "^\\d{4} (А|В|Е|І|К|М|Н|О|Р|С|Т|Х){2}-\\d$",
-            message = "")
+            message = "{error.invalid.licence.plate.format}")
     private String licensePlate;
 
     @NotNull
