@@ -30,4 +30,7 @@ public class Car {
 
     @OneToOne(mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)
     private CarDetails carDetails;
+
+    @OneToOne(mappedBy = "car")
+    private Driver driver;
 }

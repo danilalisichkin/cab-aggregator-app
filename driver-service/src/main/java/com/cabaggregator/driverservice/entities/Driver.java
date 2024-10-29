@@ -24,4 +24,8 @@ public class Driver {
 
     @Column(nullable = false)
     private String name;
+
+    @OneToOne
+    @JoinColumn(name = "car_id", nullable = false)
+    private Car car;
 }
