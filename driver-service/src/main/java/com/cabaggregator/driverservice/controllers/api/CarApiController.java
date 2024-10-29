@@ -3,6 +3,8 @@ package com.cabaggregator.driverservice.controllers.api;
 import com.cabaggregator.driverservice.core.dto.CarAddingDTO;
 import com.cabaggregator.driverservice.core.dto.CarDTO;
 import com.cabaggregator.driverservice.services.ICarService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -16,17 +18,19 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/cars")
-public class CarsApiController {
+@Tag(name = "Car API Controller", description = "Provides CRUD-operations with cars")
+public class CarApiController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final ICarService carService;
 
     @Autowired
-    public CarsApiController(ICarService carService) {
+    public CarApiController(ICarService carService) {
         this.carService = carService;
     }
 
     @GetMapping("/all")
+    @Operation(summary = "Get all", description = "Allows to get all existing cars")
     public ResponseEntity<List<CarDTO>> getAllCars() {
         logger.info("Sending all cars");
 
@@ -37,6 +41,7 @@ public class CarsApiController {
 
     //TODO add get car by id or license plate
     @GetMapping("/{id}")
+    @Operation(summary = "Get by id", description = "Allows to get existing car by id")
     public ResponseEntity<CarDTO> getCarById(@NotNull @PathVariable long id) {
         logger.info("Getting car with id={}", id);
 
@@ -46,6 +51,7 @@ public class CarsApiController {
     }
 
     @PostMapping
+    @Operation(summary = "Add/save", description = "Allows to add/save new car")
     public ResponseEntity<CarDTO> saveCar(@Valid @RequestBody CarAddingDTO carAddingDTO) {
         logger.info("Saving car with licence plate={}", carAddingDTO.getLicensePlate());
 
@@ -55,6 +61,7 @@ public class CarsApiController {
     }
 
     @PutMapping
+    @Operation(summary = "Update", description = "Allows to update existing car")
     public ResponseEntity<CarDTO> updateCar(@Valid @RequestBody CarDTO carDTO) {
         logger.info("Updating car with id={}", carDTO.getId());
 
@@ -64,6 +71,7 @@ public class CarsApiController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete", description = "Allows to delete existing car by id")
     public ResponseEntity<Void> deleteCarById(@NotNull @PathVariable long id) {
         logger.info("Deleting car with id={}", id);
 
@@ -73,6 +81,7 @@ public class CarsApiController {
     }
 
     @DeleteMapping("/all")
+    @Operation(summary = "Delete all", description = "Allows to delete all existing cars")
     public ResponseEntity<Void> deleteAllCars() {
         logger.info("Deleting all cars");
 

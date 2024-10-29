@@ -3,6 +3,8 @@ package com.cabaggregator.driverservice.controllers.api;
 import com.cabaggregator.driverservice.core.dto.CarDetailsAddingDTO;
 import com.cabaggregator.driverservice.core.dto.CarDetailsDTO;
 import com.cabaggregator.driverservice.services.ICarDetailsService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -16,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/cars/details")
+@Tag(name = "Car Details API Controller", description = "Provides CRUD-operations with car details")
 public class CarDetailsController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -27,6 +30,7 @@ public class CarDetailsController {
     }
 
     @GetMapping("/all")
+    @Operation(summary = "Get all", description = "Allows to get all existing car details")
     public ResponseEntity<List<CarDetailsDTO>> getAllCarDetails() {
         logger.info("Sending all car details");
 
@@ -37,6 +41,7 @@ public class CarDetailsController {
 
     //TODO add get car details by car_id
     @GetMapping("/{id}")
+    @Operation(summary = "Get by id", description = "Allows to get existing car details by id")
     public ResponseEntity<CarDetailsDTO> getCarDetailsById(@NotNull @PathVariable long id) {
         logger.info("Getting car details with id={}", id);
 
@@ -46,6 +51,7 @@ public class CarDetailsController {
     }
 
     @PostMapping
+    @Operation(summary = "Add/save", description = "Allows to add/save new car details")
     public ResponseEntity<CarDetailsDTO> saveCarDetails(@Valid @RequestBody CarDetailsAddingDTO carDetailsAddingDTO) {
         logger.info("Saving car details for car with id={}", carDetailsAddingDTO.getCarId());
 
@@ -55,6 +61,7 @@ public class CarDetailsController {
     }
 
     @PutMapping
+    @Operation(summary = "Update", description = "Allows to update existing car details")
     public ResponseEntity<CarDetailsDTO> updateCarDetails(@Valid @RequestBody CarDetailsDTO carDetailsDTO) {
         logger.info("Updating car details for car with id={}", carDetailsDTO.getCarId());
 
