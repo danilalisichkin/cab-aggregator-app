@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: ride-service
+  data:
+    mongodb:
+      url: mongodb://${DB_HOST:localhost}:${DB_PORT:27016}/${DB_NAME:ride_database}
+      username: ${DB_USERNAME:mongo}
+      password: ${DB_PASSWORD:root}
+server:
+  port: ${SERVER_PORT:8082}
