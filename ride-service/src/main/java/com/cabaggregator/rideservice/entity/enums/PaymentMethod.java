@@ -3,6 +3,8 @@ package com.cabaggregator.rideservice.entity.enums;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
+
 @Getter
 @RequiredArgsConstructor
 public enum PaymentMethod {
@@ -13,12 +15,10 @@ public enum PaymentMethod {
     private final String value;
 
     public static PaymentMethod getById(int id) {
-        for (PaymentMethod paymentMethod : PaymentMethod.values()) {
-            if (paymentMethod.getId() == id)
-                return paymentMethod;
-        }
-
-        throw new IllegalArgumentException("Unknown id: " + id);
+        return Arrays.stream(PaymentMethod.values())
+                .filter(paymentMethod -> paymentMethod.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Unknown id: " + id));
     }
 }
 

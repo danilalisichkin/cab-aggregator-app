@@ -3,6 +3,8 @@ package com.cabaggregator.rideservice.entity.enums;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
+
 @Getter
 @RequiredArgsConstructor
 public enum RideStatus {
@@ -17,11 +19,9 @@ public enum RideStatus {
     private final String value;
 
     public static RideStatus getById(int id) {
-        for (RideStatus rideStatus : RideStatus.values()) {
-            if (rideStatus.getId() == id)
-                return rideStatus;
-        }
-
-        throw new IllegalArgumentException("Unknown id: " + id);
+        return Arrays.stream(RideStatus.values())
+                .filter(rideStatus -> rideStatus.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Unknown id: " + id));
     }
 }
