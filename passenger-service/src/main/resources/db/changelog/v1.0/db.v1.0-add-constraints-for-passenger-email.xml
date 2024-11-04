@@ -1,0 +1,15 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="v1.0-add-constraints-email" author="danilalisichkin">
+        <addUniqueConstraint columnNames="email" constraintName="uc_passengers_email" tableName="passengers"/>
+
+        <rollback>
+            <dropUniqueConstraint constraintName="uc_passengers_email" tableName="passengers"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

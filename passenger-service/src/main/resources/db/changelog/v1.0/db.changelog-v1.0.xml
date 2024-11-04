@@ -1,0 +1,12 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <include file="db.v1.0-create-sequence-for-passengers.xml" relativeToChangelogFile="true" />
+    <include file="db.v1.0-create-passengers-table.xml" relativeToChangelogFile="true" />
+    <include file="db.v1.0-add-constraints-for-passenger-email.xml" relativeToChangelogFile="true" />
+    <include file="db.v1.0-add-constraints-for-passenger-phone-number.xml" relativeToChangelogFile="true" />
+
+</databaseChangeLog>
