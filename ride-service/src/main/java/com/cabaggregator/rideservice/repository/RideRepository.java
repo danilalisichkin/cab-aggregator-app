@@ -12,5 +12,5 @@ public interface RideRepository extends MongoRepository<Ride, ObjectId> {
 
     Optional<Ride> findByDriverId(long driverId);
 
-    Optional<Ride> findByRideStatus(RideStatus rideStatus);
+    Optional<Ride> findByStatus(RideStatus status);
 }

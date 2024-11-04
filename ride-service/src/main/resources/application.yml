@@ -3,7 +3,7 @@ spring:
     name: ride-service
   data:
     mongodb:
-      url: mongodb://${DB_HOST:localhost}:${DB_PORT:27016}/${DB_NAME:ride_database}
+      url: mongodb://${DB_HOST:localhost}:${DB_PORT:27017}/${DB_NAME:ride_database}
       username: ${DB_USERNAME:mongo}
       password: ${DB_PASSWORD:root}
 server:

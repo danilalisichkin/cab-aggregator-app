@@ -1,8 +1,13 @@
 package com.cabaggregator.rideservice.entity;
 
+import com.cabaggregator.rideservice.entity.conveter.PaymentMethodConverter;
+import com.cabaggregator.rideservice.entity.conveter.RideStatusConverter;
+import com.cabaggregator.rideservice.entity.conveter.ServiceCategoryConverter;
 import com.cabaggregator.rideservice.entity.enums.PaymentMethod;
 import com.cabaggregator.rideservice.entity.enums.RideStatus;
 import com.cabaggregator.rideservice.entity.enums.ServiceCategory;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,10 +31,16 @@ public class Ride {
 
     private long passengerId;
 
+    @JsonSerialize(using = ServiceCategoryConverter.Serializer.class)
+    @JsonDeserialize(using = ServiceCategoryConverter.Deserializer.class)
     private ServiceCategory serviceCategory;
 
+    @JsonSerialize(using = RideStatusConverter.Serializer.class)
+    @JsonDeserialize(using = RideStatusConverter.Deserializer.class)
     private RideStatus status;
 
+    @JsonSerialize(using = PaymentMethodConverter.Serializer.class)
+    @JsonDeserialize(using = PaymentMethodConverter.Deserializer.class)
     private PaymentMethod paymentMethod;
 
     private String pickupAddress;
