@@ -2,14 +2,15 @@ package com.cabaggregator.passengerservice.controller.api;
 
 import com.cabaggregator.passengerservice.controller.api.doc.PassengerControllerDocumentation;
 import com.cabaggregator.passengerservice.core.constant.MessageKeys;
+import com.cabaggregator.passengerservice.core.constant.ValidationRegex;
 import com.cabaggregator.passengerservice.core.dto.PagedDto;
 import com.cabaggregator.passengerservice.core.dto.PassengerAddingDto;
 import com.cabaggregator.passengerservice.core.dto.PassengerDto;
 import com.cabaggregator.passengerservice.core.dto.PassengerUpdatingDto;
-import com.cabaggregator.passengerservice.exception.BadRequestException;
 import com.cabaggregator.passengerservice.service.IPassengerService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,13 +41,11 @@ public class PassengerController implements PassengerControllerDocumentation {
             @Positive @RequestParam(required = false, name = "page", defaultValue = "1") int pageNumber,
             @Positive @RequestParam(required = false, name = "size", defaultValue = "10") int pageSize,
             @RequestParam(required = false, name = "sort", defaultValue = "id") String sortField,
+            @Pattern(regexp = ValidationRegex.SORT_ORDER,
+                    message = MessageKeys.VALIDATION_INVALID_SORT_ORDER)
             @RequestParam(required = false, name = "order", defaultValue = "desc") String sortOrder) {
 
         log.info("Sending page of passengers");
-
-        if (!sortOrder.equalsIgnoreCase("asc") && !sortOrder.equalsIgnoreCase("desc")) {
-            throw new BadRequestException(MessageKeys.ERROR_INVALID_SORT_ORDER);
-        }
 
         PagedDto<PassengerDto> page = passengerService.getPageOfPassengers(pageNumber, pageSize, sortField, sortOrder);
 

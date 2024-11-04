@@ -11,10 +11,9 @@ public final class MessageKeys {
     public static final String ERROR_CAUSE_VALIDATION = "error.cause.validation";
     public static final String ERROR_CAUSE_INTERNAL = "error.cause.internal";
 
-    public static final String ERROR_INVALID_SORT_ORDER = "error.invalid.sort.order";
-
     public static final String VALIDATION_INVALID_PHONE_FORMAT = "{error.invalid.phone.format}";
     public static final String VALIDATION_INVALID_LENGTH = "{error.invalid.length}";
+    public static final String VALIDATION_INVALID_SORT_ORDER = "{error.invalid.sort.order}";
 
     public static final String ERROR_PASSENGER_WITH_ID_NOT_FOUND = "error.passenger.with.id.not.found";
     public static final String ERROR_PASSENGER_WITH_PHONE_ALREADY_EXISTS = "error.passenger.with.phone.already.exists";

@@ -45,11 +45,7 @@ public class PassengerService implements IPassengerService {
     @Override
     public PassengerDto getPassengerById(long id) {
         return passengerMapper.entityToDto(
-                passengerRepository
-                        .findById(id)
-                        .orElseThrow(() -> new ResourceNotFoundException(
-                                MessageKeys.ERROR_PASSENGER_WITH_ID_NOT_FOUND,
-                                id)));
+                getPassengerEntityById(id));
     }
 
     @Override
@@ -68,12 +64,7 @@ public class PassengerService implements IPassengerService {
     @Override
     @Transactional
     public PassengerDto updatePassenger(long id, PassengerUpdatingDto passengerDto) {
-        Passenger passengerToUpdate =
-                passengerRepository
-                        .findById(id)
-                        .orElseThrow(() -> new ResourceNotFoundException(
-                                MessageKeys.ERROR_PASSENGER_WITH_ID_NOT_FOUND,
-                                id));
+        Passenger passengerToUpdate = getPassengerEntityById(id);
 
         if (!passengerDto.phoneNumber().equals(passengerToUpdate.getPhoneNumber())) {
             passengerValidator.checkPhoneUniqueness(passengerDto.phoneNumber());
@@ -92,5 +83,13 @@ public class PassengerService implements IPassengerService {
     public void deletePassengerById(long id) {
         passengerValidator.checkExistenceOfPassengerWithId(id);
         passengerRepository.deleteById(id);
+    }
+
+    private Passenger getPassengerEntityById(long id) {
+        return passengerRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        MessageKeys.ERROR_PASSENGER_WITH_ID_NOT_FOUND,
+                        id));
     }
 }

@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -74,16 +76,20 @@ public class RestExceptionHandler {
 
     @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class})
     public ResponseEntity<MultiErrorResponse> handleNoValidException(Exception e) {
-        Map<String, String> errorMap = new HashMap<>();
+        Map<String, List<String>> errorMap = new HashMap<>();
 
         if (e instanceof MethodArgumentNotValidException validationEx) {
-            validationEx.getBindingResult().getFieldErrors().forEach(error ->
-                    errorMap.put(error.getField(), error.getDefaultMessage())
-            );
+            validationEx.getBindingResult()
+                    .getFieldErrors().forEach(error -> {
+                errorMap.computeIfAbsent(error.getField(), k -> new ArrayList<>())
+                        .add(error.getDefaultMessage());
+            });
         } else if (e instanceof ConstraintViolationException constraintEx) {
-            constraintEx.getConstraintViolations().forEach(violation ->
-                    errorMap.put(violation.getPropertyPath().toString(), violation.getMessage())
-            );
+            constraintEx.getConstraintViolations()
+                    .forEach(violation -> {
+                errorMap.computeIfAbsent(violation.getPropertyPath().toString(), k -> new ArrayList<>())
+                        .add(violation.getMessage());
+            });
         }
 
         return ResponseEntity
