@@ -8,18 +8,22 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document("ride_rates")
-public class RideRate {
+@Document("promo_codes")
+public class PromoCode {
     @Id
     private ObjectId id;
 
-    private ObjectId rideId;
+    private String value;
 
-    private Integer passengerRate;
+    private double discount;
 
-    private Integer driverRate;
+    private LocalDateTime startDate;
+
+    private LocalDateTime endDate;
 }

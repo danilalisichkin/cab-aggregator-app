@@ -27,9 +27,11 @@ public class Ride {
     @Id
     private ObjectId id;
 
-    private long driverId;
+    private Long driverId;
 
     private long passengerId;
+
+    private ObjectId promoCodeId;
 
     @JsonSerialize(using = ServiceCategoryConverter.Serializer.class)
     @JsonDeserialize(using = ServiceCategoryConverter.Deserializer.class)
