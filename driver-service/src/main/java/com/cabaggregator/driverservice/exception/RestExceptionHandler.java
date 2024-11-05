@@ -75,11 +75,7 @@ public class RestExceptionHandler {
     public ResponseEntity<Object> handleNoValidException(MethodArgumentNotValidException e) {
         Map<String, String> errorMap = new HashMap<>();
 
-        e.getBindingResult().getFieldErrors().forEach(error -> {
-            String fieldName = error.getField();
-            String errorMessage = error.getDefaultMessage();
-            errorMap.put(fieldName, errorMessage);
-        });
+        getValidationErrors(errorMap, e);
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -115,5 +111,13 @@ public class RestExceptionHandler {
                 .body(new ErrorResponse(
                         messageBuilder.buildLocalizedMessage(MessageKeys.ERROR_IF_PERSISTS_CONTACT_DEVELOPERS, null),
                         messageBuilder.buildLocalizedMessage(MessageKeys.ERROR_CAUSE_INTERNAL, null)));
+    }
+
+    private void getValidationErrors(Map<String, String> errorMap, MethodArgumentNotValidException e) {
+        e.getBindingResult().getFieldErrors().forEach(error -> {
+            String fieldName = error.getField();
+            String errorMessage = error.getDefaultMessage();
+            errorMap.put(fieldName, errorMessage);
+        });
     }
 }

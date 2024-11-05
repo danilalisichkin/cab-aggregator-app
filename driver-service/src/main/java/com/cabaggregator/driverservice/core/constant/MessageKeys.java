@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public abstract  class MessageKeys {
+public final class MessageKeys {
     public static final String ERROR_CAUSE_BAD_REQUEST = "error.cause.bad.request";
     public static final String ERROR_CAUSE_NOT_FOUND = "error.cause.not.found";
     public static final String ERROR_CAUSE_UNIQUENESS_CONFLICT = "error.cause.uniqueness.conflict";
