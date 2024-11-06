@@ -3,12 +3,9 @@ package com.cabaggregator.driverservice.core.dto.page;
 import java.util.List;
 
 public record PagedDto<T>(
-        int page,
-        int pageSize,
-        int totalPages,
-        long totalItems,
-        int itemsOnPage,
+        Integer page,
+        Integer pageSize,
+        Integer totalPages,
         List<T> content
 ) {
 }
-

@@ -6,6 +6,7 @@ import com.cabaggregator.driverservice.core.dto.driver.DriverUpdatingDto;
 import com.cabaggregator.driverservice.entity.Driver;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
@@ -15,13 +16,17 @@ import java.util.List;
 public interface DriverMapper {
     DriverDto entityToDto(Driver driver);
 
-    Driver updatingDtoToEntity(DriverUpdatingDto driverDto);
+    void updateEntityFromDto(DriverUpdatingDto driverDto, @MappingTarget Driver driver);
 
-    Driver addingDtoToEntity(DriverAddingDto driverDto);
+    Driver dtoToEntity(DriverAddingDto driverDto);
 
     List<DriverDto> entityListToDtoList(List<Driver> drivers);
 
     default Page<DriverDto> entityPageToDtoPage(Page<Driver> entityPage) {
+        if (entityPage == null) {
+            return null;
+        }
+
         List<DriverDto> dtoList = entityListToDtoList(entityPage.getContent());
         return new PageImpl<>(dtoList, entityPage.getPageable(), entityPage.getTotalElements());
     }

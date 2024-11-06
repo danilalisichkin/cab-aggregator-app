@@ -1,7 +1,7 @@
 package com.cabaggregator.driverservice.core.dto.car;
 
 public record CarDto(
-        long id,
+        Long id,
         String licensePlate,
         String make,
         String model,

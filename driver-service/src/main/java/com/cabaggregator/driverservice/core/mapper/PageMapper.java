@@ -11,8 +11,6 @@ public class PageMapper {
                 page.getPageable().getPageNumber(),
                 page.getSize(),
                 page.getTotalPages(),
-                page.getTotalElements(),
-                page.getPageable().getPageSize(),
                 page.getContent()
         );
         return pagedDto;
