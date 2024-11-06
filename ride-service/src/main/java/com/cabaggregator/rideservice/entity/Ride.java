@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -27,10 +28,11 @@ public class Ride {
     @Id
     private ObjectId id;
 
+    private Long passengerId;
+
     private Long driverId;
 
-    private long passengerId;
-
+    @Indexed(unique = true)
     private ObjectId promoCodeId;
 
     @JsonSerialize(using = ServiceCategoryConverter.Serializer.class)
@@ -49,7 +51,7 @@ public class Ride {
 
     private String destinationAddress;
 
-    private double cost;
+    private Double cost;
 
     private LocalDateTime startTime;
 

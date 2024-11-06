@@ -1,14 +1,18 @@
 package com.cabaggregator.rideservice.controller.api;
 
-import com.cabaggregator.rideservice.core.dto.PagedDto;
+import com.cabaggregator.rideservice.core.dto.page.PagedDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideUpdatingDto;
 import com.cabaggregator.rideservice.core.dto.ride.booking.RideBookingAddingDto;
 import com.cabaggregator.rideservice.core.dto.ride.booking.RideBookingUpdatingDto;
+import com.cabaggregator.rideservice.core.dto.ride.promo.RidePromoCodeDto;
 import com.cabaggregator.rideservice.core.dto.ride.rate.RideRateDto;
+import com.cabaggregator.rideservice.core.dto.ride.rate.RideRateSettingDto;
 import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -27,15 +31,13 @@ public class RideController {
     }
 
     @GetMapping("/{id}/rate")
-    public ResponseEntity<RideDto> getRideRate(@PathVariable ObjectId id) {
+    public ResponseEntity<RideRateDto> getRideRate(@PathVariable ObjectId id) {
 
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/rates")
-    public ResponseEntity<PagedDto<RideRateDto>> getRideRates(
-            @RequestParam(required = false, name = "passenger_id") Long passengerId,
-            @RequestParam(required = false, name = "driver_id") Long driverId) {
+    @GetMapping("/{id}/promo_code")
+    public ResponseEntity<RidePromoCodeDto> getRidePromoCode(@PathVariable ObjectId id) {
 
         return ResponseEntity.ok().build();
     }
@@ -62,7 +64,7 @@ public class RideController {
     @PostMapping("/{id}/rate")
     public ResponseEntity<RideRateDto> setRideRate(
             @PathVariable ObjectId id,
-            @RequestBody RideRateDto rate) {
+            @RequestBody RideRateSettingDto rate) {
 
         return ResponseEntity.ok().build();
     }
@@ -83,10 +85,24 @@ public class RideController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{id}/status")
+    @PatchMapping("/{id}/status")
     public ResponseEntity<RideDto> changeRideStatus(
             @PathVariable ObjectId id,
             @RequestBody String status) {
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/promo_code")
+    public ResponseEntity<RidePromoCodeDto> setRidePromoCode(
+            @PathVariable ObjectId id,
+            @RequestBody String code) {
+
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}/promo_code")
+    public ResponseEntity<Void> cancelRidePromoCode(@PathVariable ObjectId id) {
 
         return ResponseEntity.ok().build();
     }

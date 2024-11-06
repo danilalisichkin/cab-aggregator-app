@@ -3,14 +3,14 @@ package com.cabaggregator.rideservice.core.dto.ride;
 import java.time.LocalDateTime;
 
 public record RideUpdatingDto(
-        long passengerId,
+        Long passengerId,
         String promoCode,
-        String status,
         String serviceCategory,
+        String status,
         String paymentMethod,
         String pickupAddress,
         String destinationAddress,
-        double cost,
+        Double cost,
         LocalDateTime startTime,
         LocalDateTime endTime
 ) {

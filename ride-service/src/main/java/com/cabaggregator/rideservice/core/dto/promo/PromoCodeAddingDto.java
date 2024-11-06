@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public record PromoCodeAddingDto(
         String value,
-        double discount,
+        Double discount,
         LocalDateTime startDate,
         LocalDateTime endDate
 ) {

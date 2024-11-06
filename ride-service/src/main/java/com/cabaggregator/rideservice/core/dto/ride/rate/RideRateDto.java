@@ -5,7 +5,7 @@ import org.bson.types.ObjectId;
 public record RideRateDto(
         ObjectId id,
         ObjectId rideId,
-        Integer clientRate,
+        Integer passengerRate,
         Integer driverRate
 ) {
 }

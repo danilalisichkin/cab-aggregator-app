@@ -1,6 +1,6 @@
 package com.cabaggregator.rideservice.core.mapper;
 
-import com.cabaggregator.rideservice.core.dto.PagedDto;
+import com.cabaggregator.rideservice.core.dto.page.PagedDto;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -15,8 +15,6 @@ public class PageMapper {
                 page.getPageable().getPageNumber(),
                 page.getSize(),
                 page.getTotalPages(),
-                page.getTotalElements(),
-                page.getPageable().getPageSize(),
                 page.getContent()
         );
         return pagedDto;

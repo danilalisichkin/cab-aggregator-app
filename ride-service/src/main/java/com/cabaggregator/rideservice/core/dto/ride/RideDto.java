@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 public record RideDto(
         ObjectId rideId,
-        long passengerId,
+        Long passengerId,
         Long driverId,
         String promoCode,
         String serviceCategory,
@@ -14,7 +14,7 @@ public record RideDto(
         String paymentMethod,
         String pickupAddress,
         String destinationAddress,
-        double cost,
+        Double cost,
         LocalDateTime startTime,
         LocalDateTime endTime
 ) {

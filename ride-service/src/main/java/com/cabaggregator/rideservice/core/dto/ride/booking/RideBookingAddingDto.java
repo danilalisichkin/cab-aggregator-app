@@ -1,8 +1,7 @@
 package com.cabaggregator.rideservice.core.dto.ride.booking;
 
 public record RideBookingAddingDto(
-        long passengerId,
-        String promoCode,
+        Long passengerId,
         String serviceCategory,
         String paymentMethod,
         String pickupAddress,
