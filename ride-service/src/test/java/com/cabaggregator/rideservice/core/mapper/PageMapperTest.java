@@ -15,7 +15,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("unit")
-public class PageMapperTest {
+class PageMapperTest {
     private final PageMapper mapper = new PageMapper();
 
     @Test

@@ -2,10 +2,12 @@ package com.cabaggregator.rideservice.core.dto.ride;
 
 import org.bson.types.ObjectId;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 
 public record RideDto(
-        ObjectId rideId,
+        ObjectId id,
         Long passengerId,
         Long driverId,
         String promoCode,
@@ -14,8 +16,11 @@ public record RideDto(
         String paymentMethod,
         String pickupAddress,
         String destinationAddress,
-        Double cost,
+        BigDecimal cost,
         LocalDateTime startTime,
         LocalDateTime endTime
 ) {
+    public BigDecimal cost() {
+        return cost.setScale(2, RoundingMode.HALF_UP);
+    }
 }

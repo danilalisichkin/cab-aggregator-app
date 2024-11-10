@@ -3,7 +3,6 @@ package com.cabaggregator.rideservice.core.mapper;
 import com.cabaggregator.rideservice.RideRateTestUtil;
 import com.cabaggregator.rideservice.core.dto.ride.rate.RideRateDto;
 import com.cabaggregator.rideservice.entity.RideRate;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,20 +19,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("unit")
 @ExtendWith(MockitoExtension.class)
-public class RideRateMapperTest {
+class RideRateMapperTest {
     private final RideRateMapper mapper = Mappers.getMapper(RideRateMapper.class);
-
-    private RideRate rideRate;
-    private RideRateDto rideRateDto;
-
-    @BeforeEach
-    void setUp() {
-        rideRate = RideRateTestUtil.buildRideRate();
-        rideRateDto = RideRateTestUtil.buildRideRateDto();
-    }
 
     @Test
     void entityToDto_ShouldConvertEntityToDto_WhenEntityIsNotNull() {
+        RideRate rideRate = RideRateTestUtil.buildRideRate();
+        RideRateDto rideRateDto = RideRateTestUtil.buildRideRateDto();
+
         RideRateDto result = mapper.entityToDto(rideRate);
 
         assertThat(result).isNotNull();
@@ -47,6 +40,9 @@ public class RideRateMapperTest {
 
     @Test
     void entityListToDtoList_ShouldConvertEntityListToDtoList_WhenEntityListIsNotEmpty() {
+        RideRate rideRate = RideRateTestUtil.buildRideRate();
+        RideRateDto rideRateDto = RideRateTestUtil.buildRideRateDto();
+
         List<RideRate> entityList = Arrays.asList(rideRate, rideRate);
         List<RideRateDto> expectedDtoList = Arrays.asList(rideRateDto, rideRateDto);
 
@@ -73,6 +69,8 @@ public class RideRateMapperTest {
 
     @Test
     void entityPageToDtoPage_ShouldConvertEntityPageToDtoPage_WhenPageIsNotNull() {
+        RideRate rideRate = RideRateTestUtil.buildRideRate();
+
         List<RideRate> entityList = Arrays.asList(rideRate, rideRate);
         Page<RideRate> entityPage = new PageImpl<>(entityList);
 

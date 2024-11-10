@@ -3,7 +3,7 @@ package com.cabaggregator.rideservice.core.dto.promo;
 import java.time.LocalDateTime;
 
 public record PromoCodeUpdatingDto(
-        Double discount,
+        Integer discount,
         LocalDateTime startDate,
         LocalDateTime endDate
 ) {

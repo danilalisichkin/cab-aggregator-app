@@ -23,7 +23,7 @@ public class PromoCode {
     @Indexed(unique = true)
     private String value;
 
-    private Double discount;
+    private Integer discount;
 
     private LocalDateTime startDate;
 

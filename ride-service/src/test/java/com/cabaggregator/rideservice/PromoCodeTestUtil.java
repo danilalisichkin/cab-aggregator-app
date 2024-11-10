@@ -12,15 +12,14 @@ import org.bson.types.ObjectId;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class PromoCodeTestUtil {
+public final class PromoCodeTestUtil {
     public static final ObjectId PROMO_CODE_ID = new ObjectId();
     public static final String VALUE = "PROMO2024";
-    public static final Double DISCOUNT = 5.0;
+    public static final Integer DISCOUNT = 5;
     public static final LocalDateTime START_DATE = LocalDateTime.of(2024, 1, 1, 0, 0);
     public static final LocalDateTime END_DATE = LocalDateTime.of(2024, 12, 31, 23, 59);
 
-    public static final String UPDATED_VALUE = "PROMO2025";
-    public static final Double UPDATED_DISCOUNT = 10.0;
+    public static final Integer UPDATED_DISCOUNT = 10;
     public static final LocalDateTime UPDATED_START_DATE = LocalDateTime.of(2025, 1, 1, 0, 0);
     public static final LocalDateTime UPDATED_END_DATE = LocalDateTime.of(2025, 12, 31, 23, 59);
 

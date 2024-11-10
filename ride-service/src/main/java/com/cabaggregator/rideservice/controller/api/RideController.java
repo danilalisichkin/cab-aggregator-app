@@ -36,7 +36,7 @@ public class RideController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{id}/promo_code")
+    @GetMapping("/{id}/promo-code")
     public ResponseEntity<RidePromoCodeDto> getRidePromoCode(@PathVariable ObjectId id) {
 
         return ResponseEntity.ok().build();
@@ -54,7 +54,7 @@ public class RideController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/book")
+    @PostMapping
     public ResponseEntity<RideDto> createRideBooking(
             @RequestBody RideBookingAddingDto addingDto) {
 
@@ -69,7 +69,7 @@ public class RideController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{id}/book")
+    @PutMapping("/{id}")
     public ResponseEntity<RideDto> updateRideBooking(
             @PathVariable ObjectId id,
             @RequestBody RideBookingUpdatingDto updatingDto) {
@@ -93,7 +93,7 @@ public class RideController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{id}/promo_code")
+    @PostMapping("/{id}/promo-code")
     public ResponseEntity<RidePromoCodeDto> setRidePromoCode(
             @PathVariable ObjectId id,
             @RequestBody String code) {
@@ -101,7 +101,7 @@ public class RideController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{id}/promo_code")
+    @DeleteMapping("/{id}/promo-code")
     public ResponseEntity<Void> cancelRidePromoCode(@PathVariable ObjectId id) {
 
         return ResponseEntity.ok().build();

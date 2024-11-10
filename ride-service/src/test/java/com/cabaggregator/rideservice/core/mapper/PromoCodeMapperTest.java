@@ -6,7 +6,6 @@ import com.cabaggregator.rideservice.core.dto.promo.PromoCodeDto;
 import com.cabaggregator.rideservice.core.dto.promo.PromoCodeUpdatingDto;
 import com.cabaggregator.rideservice.core.dto.ride.promo.RidePromoCodeDto;
 import com.cabaggregator.rideservice.entity.PromoCode;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,26 +23,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Tag("unit")
 @ExtendWith(MockitoExtension.class)
-public class PromoCodeMapperTest {
+class PromoCodeMapperTest {
     private final PromoCodeMapper mapper = Mappers.getMapper(PromoCodeMapper.class);
-
-    private PromoCode promoCode;
-    private PromoCodeDto promoCodeDto;
-    private PromoCodeAddingDto promoCodeAddingDto;
-    private PromoCodeUpdatingDto promoCodeUpdatingDto;
-    private RidePromoCodeDto ridePromoCodeDto;
-
-    @BeforeEach
-    void setUp() {
-        promoCode = PromoCodeTestUtil.buildPromoCode();
-        promoCodeDto = PromoCodeTestUtil.buildPromoCodeDto();
-        promoCodeAddingDto = PromoCodeTestUtil.buildPromoCodeAddingDto();
-        promoCodeUpdatingDto = PromoCodeTestUtil.buildPromoCodeUpdatingDto();
-        ridePromoCodeDto = PromoCodeTestUtil.buildRidePromoCodeDto();
-    }
 
     @Test
     void entityToDto_ShouldConvertEntityToDto_WhenEntityIsNotNull() {
+        PromoCode promoCode = PromoCodeTestUtil.buildPromoCode();
+        PromoCodeDto promoCodeDto = PromoCodeTestUtil.buildPromoCodeDto();
+
         PromoCodeDto result = mapper.entityToDto(promoCode);
 
         assertThat(result).isNotNull();
@@ -57,6 +44,9 @@ public class PromoCodeMapperTest {
 
     @Test
     void entityToRideDto_ShouldConvertEntityToRideDto_WhenEntityIsNotNull() {
+        PromoCode promoCode = PromoCodeTestUtil.buildPromoCode();
+        RidePromoCodeDto ridePromoCodeDto = PromoCodeTestUtil.buildRidePromoCodeDto();
+
         RidePromoCodeDto result = mapper.entityToRideDto(promoCode);
 
         assertThat(result).isNotNull();
@@ -70,6 +60,9 @@ public class PromoCodeMapperTest {
 
     @Test
     void updateEntityFromDto_ShouldUpdateEntity_WhenDtoIsNotNull() {
+        PromoCode promoCode = PromoCodeTestUtil.buildPromoCode();
+        PromoCodeUpdatingDto promoCodeUpdatingDto = PromoCodeTestUtil.buildPromoCodeUpdatingDto();
+
         mapper.updateEntityFromDto(promoCodeUpdatingDto, promoCode);
 
         assertThat(promoCode).isNotNull();
@@ -82,12 +75,17 @@ public class PromoCodeMapperTest {
 
     @Test
     void updateEntityFromDto_ShouldThrowNullPointerException_WhenDtoIsNull() {
+        PromoCodeUpdatingDto promoCodeUpdatingDto = PromoCodeTestUtil.buildPromoCodeUpdatingDto();
+
         assertThatThrownBy(() -> mapper.updateEntityFromDto(promoCodeUpdatingDto, null))
                 .isInstanceOf(NullPointerException.class);
     }
 
     @Test
     void dtoToEntity_ShouldConvertDtoToEntity_WhenDtoIsNotNull() {
+        PromoCode promoCode = PromoCodeTestUtil.buildPromoCode();
+        PromoCodeAddingDto promoCodeAddingDto = PromoCodeTestUtil.buildPromoCodeAddingDto();
+
         PromoCode result = mapper.dtoToEntity(promoCodeAddingDto);
 
         assertThat(result).isNotNull();
@@ -105,6 +103,9 @@ public class PromoCodeMapperTest {
 
     @Test
     void entityListToDtoList_ShouldConvertEntityListToDtoList_WhenEntityListIsNotEmpty() {
+        PromoCode promoCode = PromoCodeTestUtil.buildPromoCode();
+        PromoCodeDto promoCodeDto = PromoCodeTestUtil.buildPromoCodeDto();
+
         List<PromoCode> entityList = Arrays.asList(promoCode, promoCode);
         List<PromoCodeDto> expectedDtoList = Arrays.asList(promoCodeDto, promoCodeDto);
 
@@ -131,6 +132,8 @@ public class PromoCodeMapperTest {
 
     @Test
     void entityPageToDtoPage_ShouldConvertEntityPageToDtoPage_WhenPageIsNotNull() {
+        PromoCode promoCode = PromoCodeTestUtil.buildPromoCode();
+
         List<PromoCode> entityList = Arrays.asList(promoCode, promoCode);
         Page<PromoCode> entityPage = new PageImpl<>(entityList);
 

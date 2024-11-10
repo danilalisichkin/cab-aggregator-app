@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/v1/promo_codes")
+@RequestMapping("api/v1/promo-codes")
 public class PromoCodeController {
     @GetMapping("/{id}")
     public ResponseEntity<PromoCodeDto> getPromoCode(@PathVariable ObjectId id) {
@@ -22,10 +22,8 @@ public class PromoCodeController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<PromoCodeDto> createPromoCode(
-            @PathVariable ObjectId id,
-            @RequestBody PromoCodeAddingDto dto) {
+    @PostMapping
+    public ResponseEntity<PromoCodeDto> createPromoCode(@RequestBody PromoCodeAddingDto dto) {
 
         return ResponseEntity.ok().build();
     }

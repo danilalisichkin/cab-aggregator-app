@@ -7,7 +7,6 @@ import com.cabaggregator.rideservice.core.dto.ride.RideUpdatingDto;
 import com.cabaggregator.rideservice.core.dto.ride.booking.RideBookingAddingDto;
 import com.cabaggregator.rideservice.core.dto.ride.booking.RideBookingUpdatingDto;
 import com.cabaggregator.rideservice.entity.Ride;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,30 +24,18 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Tag("unit")
 @ExtendWith(MockitoExtension.class)
-public class RideMapperTest {
+class RideMapperTest {
     private final RideMapper mapper = Mappers.getMapper(RideMapper.class);
-
-    private Ride ride;
-    private RideDto rideDto;
-    private RideUpdatingDto rideUpdatingDto;
-    private RideBookingAddingDto rideBookingAddingDto;
-    private RideBookingUpdatingDto rideBookingUpdatingDto;
-
-    @BeforeEach
-    void setUp() {
-        ride = RideTestUtil.buildRide();
-        rideDto = RideTestUtil.buildRideDto();
-        rideUpdatingDto = RideTestUtil.buildRideUpdatingDto();
-        rideBookingAddingDto = RideTestUtil.buildBookingAddingDto();
-        rideBookingUpdatingDto = RideTestUtil.buildBookingUpdatingDto();
-    }
 
     @Test
     void entityToDto_ShouldConvertEntityToDto_WhenEntityIsNotNull() {
+        Ride ride = RideTestUtil.buildRide();
+        RideDto rideDto = RideTestUtil.buildRideDto();
+
         RideDto result = mapper.entityToDto(ride);
 
         assertThat(result).isNotNull();
-        assertThat(result.rideId()).isEqualTo(rideDto.rideId());
+        assertThat(result.id()).isEqualTo(rideDto.id());
         assertThat(result.passengerId()).isEqualTo(rideDto.passengerId());
         assertThat(result.driverId()).isEqualTo(rideDto.driverId());
         assertThat(result.promoCode()).isNull();
@@ -69,6 +56,9 @@ public class RideMapperTest {
 
     @Test
     void updateEntityFromDto_ShouldUpdateEntity_WhenDtoIsNotNull() {
+        Ride ride = RideTestUtil.buildRide();
+        RideUpdatingDto rideUpdatingDto = RideTestUtil.buildRideUpdatingDto();
+
         mapper.updateEntityFromDto(rideUpdatingDto, ride);
 
         assertThat(ride).isNotNull();
@@ -87,12 +77,17 @@ public class RideMapperTest {
 
     @Test
     void updateEntityFromDto_ShouldThrowNullPointerException_WhenDtoIsNull() {
+        RideUpdatingDto rideUpdatingDto = RideTestUtil.buildRideUpdatingDto();
+
         assertThatThrownBy(() -> mapper.updateEntityFromDto(rideUpdatingDto, null))
                 .isInstanceOf(NullPointerException.class);
     }
 
     @Test
     void dtoToEntity_ShouldConvertDtoToEntity_WhenDtoIsNotNull() {
+        Ride ride = RideTestUtil.buildRide();
+        RideBookingAddingDto rideBookingAddingDto = RideTestUtil.buildBookingAddingDto();
+
         Ride result = mapper.dtoToEntity(rideBookingAddingDto);
 
         assertThat(result).isNotNull();
@@ -111,6 +106,9 @@ public class RideMapperTest {
 
     @Test
     void updateEntityFromBookingDto_ShouldUpdateEntity_WhenDtoIsNotNull() {
+        Ride ride = RideTestUtil.buildRide();
+        RideBookingUpdatingDto rideBookingUpdatingDto = RideTestUtil.buildBookingUpdatingDto();
+
         mapper.updateEntityFromBookingDto(rideBookingUpdatingDto, ride);
 
         assertThat(ride).isNotNull();
@@ -123,12 +121,17 @@ public class RideMapperTest {
 
     @Test
     void updateEntityFromBookingDto_ShouldThrowNullPointerException_WhenDtoIsNull() {
+        RideBookingUpdatingDto rideBookingUpdatingDto = RideTestUtil.buildBookingUpdatingDto();
+
         assertThatThrownBy(() -> mapper.updateEntityFromBookingDto(rideBookingUpdatingDto, null))
                 .isInstanceOf(NullPointerException.class);
     }
 
     @Test
     void entityListToDtoList_ShouldConvertEntityListToDtoList_WhenEntityListIsNotEmpty() {
+        Ride ride = RideTestUtil.buildRide();
+        RideDto rideDto = RideTestUtil.buildRideDto();
+
         List<Ride> entityList = Arrays.asList(ride, ride);
         List<RideDto> expectedDtoList = Arrays.asList(rideDto, rideDto);
 
@@ -139,7 +142,7 @@ public class RideMapperTest {
             RideDto expectedDto = expectedDtoList.get(i);
 
             assertThat(convertedDto).isNotNull();
-            assertThat(convertedDto.rideId()).isEqualTo(expectedDto.rideId());
+            assertThat(convertedDto.id()).isEqualTo(expectedDto.id());
             assertThat(convertedDto.passengerId()).isEqualTo(expectedDto.passengerId());
             assertThat(convertedDto.driverId()).isEqualTo(expectedDto.driverId());
             assertThat(convertedDto.promoCode()).isNull();
@@ -171,6 +174,8 @@ public class RideMapperTest {
 
     @Test
     void entityPageToDtoPage_ShouldConvertEntityPageToDtoPage_WhenPageIsNotNull() {
+        Ride ride = RideTestUtil.buildRide();
+
         List<Ride> entityList = Arrays.asList(ride, ride);
         Page<Ride> entityPage = new PageImpl<>(entityList);
 

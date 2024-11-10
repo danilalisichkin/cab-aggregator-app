@@ -1,5 +1,8 @@
 package com.cabaggregator.rideservice.entity.enums;
 
+import com.cabaggregator.rideservice.entity.conveter.RideStatusConverter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -7,6 +10,8 @@ import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor
+@JsonSerialize(using = RideStatusConverter.Serializer.class)
+@JsonDeserialize(using = RideStatusConverter.Deserializer.class)
 public enum RideStatus {
     PREPARED(1, "PREPARED"),
     REQUESTED(2, "REQUESTED"),

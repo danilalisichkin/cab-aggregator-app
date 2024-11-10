@@ -16,14 +16,12 @@ import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface RideMapper {
-    @Mapping(source = "id", target = "rideId")
     @Mapping(target = "promoCode", ignore = true)
     @Mapping(source = "serviceCategory.value", target = "serviceCategory")
     @Mapping(source = "status.value", target = "status")
     @Mapping(source = "paymentMethod.value", target = "paymentMethod")
     RideDto entityToDto(Ride ride);
 
-    @Mapping(target = "passengerId", source = "passengerId")
     @Mapping(target = "promoCodeId", ignore = true)
     Ride dtoToEntity(RideBookingAddingDto dto);
 

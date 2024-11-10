@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public record PromoCodeDto(
         ObjectId id,
         String value,
-        Double discount,
+        Integer discount,
         LocalDateTime startDate,
         LocalDateTime endDate
 ) {

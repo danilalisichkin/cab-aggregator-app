@@ -12,6 +12,8 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -26,7 +28,7 @@ public final class RideTestUtil {
     public static final PaymentMethod PAYMENT_METHOD = PaymentMethod.CREDIT_CARD;
     public static final String PICKUP_ADDRESS = "Airport, 1st gate";
     public static final String DESTINATION_ADDRESS = "Global mall";
-    public static final Double COST = 50.0;
+    public static final BigDecimal COST = BigDecimal.valueOf(49.50);
     public static final LocalDateTime START_TIME = LocalDateTime.of(2024, 11, 1, 11, 00);
     public static final LocalDateTime END_TIME = LocalDateTime.of(2024, 11, 1, 11, 40);
 
@@ -37,7 +39,7 @@ public final class RideTestUtil {
     public static final PaymentMethod UPDATED_PAYMENT_METHOD = PaymentMethod.CREDIT_CARD;
     public static final String UPDATED_PICKUP_ADDRESS = "Airport, 1st gate";
     public static final String UPDATED_DESTINATION_ADDRESS = "Local mall";
-    public static final Double UPDATED_COST = 100.0;
+    public static final BigDecimal UPDATED_COST = BigDecimal.valueOf(99.99);
     public static final LocalDateTime UPDATED_START_TIME = LocalDateTime.of(2024, 11, 1, 9, 00);
     public static final LocalDateTime UPDATED_END_TIME = LocalDateTime.of(2024, 11, 1, 9, 40);
 
@@ -69,7 +71,7 @@ public final class RideTestUtil {
                 PAYMENT_METHOD.getValue(),
                 PICKUP_ADDRESS,
                 DESTINATION_ADDRESS,
-                COST,
+                COST.setScale(2, RoundingMode.HALF_UP),
                 START_TIME,
                 END_TIME
         );
@@ -84,7 +86,7 @@ public final class RideTestUtil {
                 UPDATED_PAYMENT_METHOD.getValue(),
                 UPDATED_PICKUP_ADDRESS,
                 UPDATED_DESTINATION_ADDRESS,
-                UPDATED_COST,
+                UPDATED_COST.setScale(2, RoundingMode.HALF_UP),
                 UPDATED_START_TIME,
                 UPDATED_END_TIME);
     }
