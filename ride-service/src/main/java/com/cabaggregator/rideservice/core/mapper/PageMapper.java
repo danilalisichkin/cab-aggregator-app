@@ -11,12 +11,11 @@ public class PageMapper {
             return null;
         }
 
-        PagedDto<T> pagedDto = new PagedDto<>(
+        return new PagedDto<>(
                 page.getPageable().getPageNumber(),
                 page.getSize(),
                 page.getTotalPages(),
                 page.getContent()
         );
-        return pagedDto;
     }
 }

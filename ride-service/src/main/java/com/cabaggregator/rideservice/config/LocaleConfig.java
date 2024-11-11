@@ -20,6 +20,14 @@ public class LocaleConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    public MessageSource validationErrorMessageSource() {
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        messageSource.setBasename("classpath:validation");
+        messageSource.setDefaultEncoding("UTF-8");
+        return messageSource;
+    }
+
+    @Bean
     public AcceptHeaderLocaleResolver localeResolver() {
         AcceptHeaderLocaleResolver ahlr = new AcceptHeaderLocaleResolver();
         ahlr.setDefaultLocale(Locale.ENGLISH);

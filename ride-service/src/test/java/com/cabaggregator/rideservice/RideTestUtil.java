@@ -66,9 +66,9 @@ public final class RideTestUtil {
                 PASSENGER_ID,
                 DRIVER_ID,
                 PROMO_CODE,
-                SERVICE_CATEGORY.getValue(),
-                STATUS.getValue(),
-                PAYMENT_METHOD.getValue(),
+                SERVICE_CATEGORY,
+                STATUS,
+                PAYMENT_METHOD,
                 PICKUP_ADDRESS,
                 DESTINATION_ADDRESS,
                 COST.setScale(2, RoundingMode.HALF_UP),
@@ -81,9 +81,9 @@ public final class RideTestUtil {
         return new RideUpdatingDto(
                 UPDATED_PASSENGER_ID,
                 UPDATED_PROMO_CODE,
-                UPDATED_SERVICE_CATEGORY.getValue(),
-                UPDATED_STATUS.getValue(),
-                UPDATED_PAYMENT_METHOD.getValue(),
+                UPDATED_SERVICE_CATEGORY,
+                UPDATED_STATUS,
+                UPDATED_PAYMENT_METHOD,
                 UPDATED_PICKUP_ADDRESS,
                 UPDATED_DESTINATION_ADDRESS,
                 UPDATED_COST.setScale(2, RoundingMode.HALF_UP),
@@ -94,8 +94,8 @@ public final class RideTestUtil {
     public static RideBookingAddingDto buildBookingAddingDto() {
         return new RideBookingAddingDto(
                 PASSENGER_ID,
-                SERVICE_CATEGORY.getValue(),
-                PAYMENT_METHOD.getValue(),
+                SERVICE_CATEGORY,
+                PAYMENT_METHOD,
                 PICKUP_ADDRESS,
                 DESTINATION_ADDRESS);
     }
@@ -103,7 +103,7 @@ public final class RideTestUtil {
     public static RideBookingUpdatingDto buildBookingUpdatingDto() {
         return new RideBookingUpdatingDto(
                 UPDATED_PASSENGER_ID,
-                UPDATED_PAYMENT_METHOD.getValue(),
+                UPDATED_PAYMENT_METHOD,
                 UPDATED_PICKUP_ADDRESS,
                 UPDATED_DESTINATION_ADDRESS);
     }

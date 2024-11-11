@@ -16,4 +16,9 @@ public final class MessageKeys {
         public static final String CANT_READ_REQUEST="error.cant.read.request";
         public static final String CONTACT_DEVELOPERS="error.if.persists.contact.developers";
     }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class ValidationErrors {
+        public static final String VALIDATION_INVALID_SORT_ORDER = "{validation.invalid.sort.order}";
+    }
 }
