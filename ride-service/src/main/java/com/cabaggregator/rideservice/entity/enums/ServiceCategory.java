@@ -1,5 +1,8 @@
 package com.cabaggregator.rideservice.entity.enums;
 
+import com.cabaggregator.rideservice.entity.conveter.ServiceCategoryConverter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -7,6 +10,8 @@ import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor
+@JsonSerialize(using = ServiceCategoryConverter.Serializer.class)
+@JsonDeserialize(using = ServiceCategoryConverter.Deserializer.class)
 public enum ServiceCategory {
     ECONOM(1, "ECONOM"),
     COMFORT(2, "COMFORT"),

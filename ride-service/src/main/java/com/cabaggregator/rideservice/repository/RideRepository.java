@@ -8,9 +8,9 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.Optional;
 
 public interface RideRepository extends MongoRepository<Ride, ObjectId> {
-    Optional<Ride> findByPassengerId(long passengerId);
+    Optional<Ride> findByPassengerId(Long passengerId);
 
-    Optional<Ride> findByDriverId(long driverId);
+    Optional<Ride> findByDriverId(Long driverId);
 
     Optional<Ride> findByStatus(RideStatus status);
 }

@@ -1,21 +1,19 @@
 package com.cabaggregator.rideservice.entity;
 
-import com.cabaggregator.rideservice.entity.conveter.PaymentMethodConverter;
-import com.cabaggregator.rideservice.entity.conveter.RideStatusConverter;
-import com.cabaggregator.rideservice.entity.conveter.ServiceCategoryConverter;
 import com.cabaggregator.rideservice.entity.enums.PaymentMethod;
 import com.cabaggregator.rideservice.entity.enums.RideStatus;
 import com.cabaggregator.rideservice.entity.enums.ServiceCategory;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 
 @Data
@@ -27,29 +25,30 @@ public class Ride {
     @Id
     private ObjectId id;
 
-    private long driverId;
+    private Long passengerId;
 
-    private long passengerId;
+    private Long driverId;
 
-    @JsonSerialize(using = ServiceCategoryConverter.Serializer.class)
-    @JsonDeserialize(using = ServiceCategoryConverter.Deserializer.class)
+    @Indexed(unique = true)
+    private ObjectId promoCodeId;
+
     private ServiceCategory serviceCategory;
 
-    @JsonSerialize(using = RideStatusConverter.Serializer.class)
-    @JsonDeserialize(using = RideStatusConverter.Deserializer.class)
     private RideStatus status;
 
-    @JsonSerialize(using = PaymentMethodConverter.Serializer.class)
-    @JsonDeserialize(using = PaymentMethodConverter.Deserializer.class)
     private PaymentMethod paymentMethod;
 
     private String pickupAddress;
 
     private String destinationAddress;
 
-    private double cost;
+    private BigDecimal cost;
 
     private LocalDateTime startTime;
 
     private LocalDateTime endTime;
+
+    public void setCost(BigDecimal cost) {
+        this.cost = cost.setScale(2, RoundingMode.HALF_UP);
+    }
 }
