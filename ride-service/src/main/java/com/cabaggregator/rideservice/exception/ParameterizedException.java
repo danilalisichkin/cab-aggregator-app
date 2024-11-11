@@ -8,7 +8,6 @@ public class ParameterizedException extends RuntimeException {
     private final Object[] messageArgs;
 
     public ParameterizedException(String messageKey, Object... messageArgs) {
-        super();
         this.messageKey = messageKey;
         this.messageArgs = messageArgs;
     }

@@ -3,6 +3,7 @@ package com.cabaggregator.rideservice.exception;
 import com.cabaggregator.rideservice.core.constant.MessageKeys;
 import com.cabaggregator.rideservice.core.dto.error.ErrorResponse;
 import com.cabaggregator.rideservice.core.dto.error.MultiErrorResponse;
+import com.cabaggregator.rideservice.util.MessageBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -24,7 +25,7 @@ import java.util.Map;
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class RestExceptionHandler {
-    private final com.cabaggregator.rideservice.util.MessageBuilder messageBuilder;
+    private final MessageBuilder messageBuilder;
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFoundException(Exception e) {
