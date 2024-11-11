@@ -23,13 +23,13 @@ public final class RideTestUtil {
     public static final Long PASSENGER_ID = 2L;
     public static final ObjectId PROMO_CODE_ID = PromoCodeTestUtil.PROMO_CODE_ID;
     public static final String PROMO_CODE = PromoCodeTestUtil.VALUE;
-    public static final ServiceCategory SERVICE_CATEGORY = ServiceCategory.ECONOM;
+    public static final ServiceCategory SERVICE_CATEGORY = ServiceCategory.ECONOMY;
     public static final RideStatus STATUS = RideStatus.PREPARED;
     public static final PaymentMethod PAYMENT_METHOD = PaymentMethod.CREDIT_CARD;
     public static final String PICKUP_ADDRESS = "Airport, 1st gate";
     public static final String DESTINATION_ADDRESS = "Global mall";
     public static final BigDecimal COST = BigDecimal.valueOf(49.50);
-    public static final LocalDateTime START_TIME = LocalDateTime.of(2024, 11, 1, 11, 00);
+    public static final LocalDateTime START_TIME = LocalDateTime.of(2024, 11, 1, 11, 0);
     public static final LocalDateTime END_TIME = LocalDateTime.of(2024, 11, 1, 11, 40);
 
     public static final Long UPDATED_PASSENGER_ID = 3L;
@@ -40,7 +40,7 @@ public final class RideTestUtil {
     public static final String UPDATED_PICKUP_ADDRESS = "Airport, 1st gate";
     public static final String UPDATED_DESTINATION_ADDRESS = "Local mall";
     public static final BigDecimal UPDATED_COST = BigDecimal.valueOf(99.99);
-    public static final LocalDateTime UPDATED_START_TIME = LocalDateTime.of(2024, 11, 1, 9, 00);
+    public static final LocalDateTime UPDATED_START_TIME = LocalDateTime.of(2024, 11, 1, 9, 0);
     public static final LocalDateTime UPDATED_END_TIME = LocalDateTime.of(2024, 11, 1, 9, 40);
 
     public static Ride buildRide() {

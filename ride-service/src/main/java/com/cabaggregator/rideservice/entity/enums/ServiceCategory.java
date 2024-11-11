@@ -13,7 +13,7 @@ import java.util.Arrays;
 @JsonSerialize(using = ServiceCategoryConverter.Serializer.class)
 @JsonDeserialize(using = ServiceCategoryConverter.Deserializer.class)
 public enum ServiceCategory {
-    ECONOM(1, "ECONOM"),
+    ECONOMY(1, "ECONOMY"),
     COMFORT(2, "COMFORT"),
     BUSINESS(3, "BUSINESS");
 
