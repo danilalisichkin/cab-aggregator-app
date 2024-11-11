@@ -4,9 +4,11 @@ import com.cabaggregator.rideservice.entity.Ride;
 import com.cabaggregator.rideservice.entity.enums.RideStatus;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
 public interface RideRepository extends MongoRepository<Ride, ObjectId> {
     Optional<Ride> findByPassengerId(Long passengerId);
 
