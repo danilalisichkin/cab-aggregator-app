@@ -1,5 +1,6 @@
 package com.cabaggregator.driverservice.configuration;
 
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
@@ -12,9 +13,24 @@ import java.util.Locale;
 public class LocaleConfig implements WebMvcConfigurer {
 
     @Bean
-    public ReloadableResourceBundleMessageSource messageSource() {
+    public MessageSource exceptionCausesMessageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setFallbackToSystemLocale(false);
+        messageSource.setBasename("classpath:error_causes");
+        messageSource.setDefaultEncoding("UTF-8");
+        return messageSource;
+    }
+
+    @Bean
+    public MessageSource validationErrorMessageSource() {
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        messageSource.setBasename("classpath:validation");
+        messageSource.setDefaultEncoding("UTF-8");
+        return messageSource;
+    }
+
+    @Bean
+    public MessageSource applicationMessageSource() {
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setBasename("classpath:messages");
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
