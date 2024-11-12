@@ -14,8 +14,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-
 @Entity
 @Getter
 @Setter
@@ -41,7 +39,7 @@ public class Driver {
     private String lastName;
 
     @Column(nullable = false, precision = 3, scale = 2)
-    private BigDecimal rating;
+    private Double rating;
 
     @OneToOne
     @JoinColumn(name = "car_id")

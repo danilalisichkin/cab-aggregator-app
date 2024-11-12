@@ -30,7 +30,7 @@ public class CarDetails {
     private LocalDate releaseDate;
 
     @Column(nullable = false)
-    private int seatCapacity;
+    private Integer seatCapacity;
 
     @OneToOne
     @JoinColumn(name = "car_id", nullable = false)
