@@ -13,8 +13,6 @@ import java.util.List;
 public interface RideRateMapper {
     RideRateDto entityToDto(RideRate entity);
 
-    RideRate dtoToEntity(RideRateDto dto);
-
     List<RideRateDto> entityListToDtoList(List<RideRate> rates);
 
     default Page<RideRateDto> entityPageToDtoPage(Page<RideRate> entityPage) {

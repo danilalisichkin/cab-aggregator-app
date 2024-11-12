@@ -4,6 +4,7 @@ import com.cabaggregator.rideservice.core.constant.MessageKeys;
 import com.cabaggregator.rideservice.core.dto.error.ErrorResponse;
 import com.cabaggregator.rideservice.core.dto.error.MultiErrorResponse;
 import com.cabaggregator.rideservice.util.MessageBuilder;
+import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 @Slf4j
 @RestControllerAdvice
@@ -72,7 +74,7 @@ public class RestExceptionHandler {
                         messageBuilder.buildLocalizedMessage(MessageKeys.ErrorCauses.BAD_REQUEST, null)));
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class})
     public ResponseEntity<MultiErrorResponse> handleNoValidException(MethodArgumentNotValidException e) {
         Map<String, List<String>> errorMap = new HashMap<>();
 
@@ -114,10 +116,18 @@ public class RestExceptionHandler {
                         messageBuilder.buildLocalizedMessage(MessageKeys.ErrorCauses.INTERNAL, null)));
     }
 
-    private void getValidationErrors(Map<String, List<String>> errorMap, MethodArgumentNotValidException e) {
-        e.getBindingResult()
-                .getFieldErrors().forEach(error ->
-                        errorMap.computeIfAbsent(error.getField(), k -> new ArrayList<>())
-                                .add(error.getDefaultMessage()));
+    private void getValidationErrors(Map<String, List<String>> errorMap, Exception e) {
+        BiConsumer<String, String> addError = (field, message) ->
+                errorMap.computeIfAbsent(field, k -> new ArrayList<>()).add(message);
+
+        if (e instanceof MethodArgumentNotValidException validationEx) {
+            validationEx.getBindingResult()
+                    .getFieldErrors().forEach(error ->
+                            addError.accept(error.getField(), error.getDefaultMessage()));
+        } else if (e instanceof ConstraintViolationException constraintEx) {
+            constraintEx.getConstraintViolations()
+                    .forEach(violation ->
+                            addError.accept(violation.getPropertyPath().toString(), violation.getMessage()));
+        }
     }
 }

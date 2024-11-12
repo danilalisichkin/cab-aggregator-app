@@ -1,5 +1,8 @@
 package com.cabaggregator.rideservice.core.dto.ride;
 
+import com.cabaggregator.rideservice.entity.enums.PaymentMethod;
+import com.cabaggregator.rideservice.entity.enums.RideStatus;
+import com.cabaggregator.rideservice.entity.enums.ServiceCategory;
 import org.bson.types.ObjectId;
 
 import java.math.BigDecimal;
@@ -11,9 +14,9 @@ public record RideDto(
         Long passengerId,
         Long driverId,
         String promoCode,
-        String serviceCategory,
-        String status,
-        String paymentMethod,
+        ServiceCategory serviceCategory,
+        RideStatus status,
+        PaymentMethod paymentMethod,
         String pickupAddress,
         String destinationAddress,
         BigDecimal cost,

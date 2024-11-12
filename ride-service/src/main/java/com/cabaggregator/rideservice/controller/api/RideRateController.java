@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/v1/ride_rates")
+@RequestMapping("api/v1/ride-rates")
 public class RideRateController {
     @GetMapping
     public ResponseEntity<PagedDto<RideRateDto>> getPageOfRideRates(
-            @RequestParam(required = false, name = "passenger_id") Long passengerId,
-            @RequestParam(required = false, name = "driver_id") Long driverId) {
+            @RequestParam(required = false, name = "passenger-id") Long passengerId,
+            @RequestParam(required = false, name = "driver-id") Long driverId) {
 
         return ResponseEntity.ok().build();
     }
