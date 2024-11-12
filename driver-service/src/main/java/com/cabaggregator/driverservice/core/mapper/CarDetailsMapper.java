@@ -4,7 +4,6 @@ import com.cabaggregator.driverservice.core.dto.car.details.CarDetailsDto;
 import com.cabaggregator.driverservice.core.dto.car.details.CarDetailsSettingDto;
 import com.cabaggregator.driverservice.entity.CarDetails;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 import org.springframework.data.domain.Page;

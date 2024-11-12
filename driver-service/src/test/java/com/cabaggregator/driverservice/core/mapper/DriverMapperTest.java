@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Tag("unit")
 @ExtendWith(MockitoExtension.class)
-public class DriverMapperTest {
+class DriverMapperTest {
     private final DriverMapper mapper = Mappers.getMapper(DriverMapper.class);
 
     private Driver driver;
@@ -123,8 +123,9 @@ public class DriverMapperTest {
 
         List<DriverDto> result = mapper.entityListToDtoList(entityList);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result)
+                .isNotNull()
+                .isEmpty();
     }
 
     @Test

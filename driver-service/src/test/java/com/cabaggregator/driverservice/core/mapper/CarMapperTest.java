@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Tag("unit")
 @ExtendWith(MockitoExtension.class)
-public class CarMapperTest {
+class CarMapperTest {
     private final CarMapper mapper = Mappers.getMapper(CarMapper.class);
 
     private Car car;
@@ -43,8 +43,9 @@ public class CarMapperTest {
     void entityToDto_ShouldConvertEntityToDto_WhenEntityIsNotNull() {
         CarDto convertedDto = mapper.entityToDto(car);
 
-        assertThat(convertedDto).isNotNull();
-        assertThat(convertedDto).isEqualTo(carDto);
+        assertThat(convertedDto)
+                .isNotNull()
+                .isEqualTo(carDto);
     }
 
     @Test
@@ -94,8 +95,9 @@ public class CarMapperTest {
 
         List<CarDto> result = mapper.entityListToDtoList(entityList);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(expectedDtoList);
+        assertThat(result)
+                .isNotNull()
+                .isEqualTo(expectedDtoList);
     }
 
     @Test
@@ -104,8 +106,9 @@ public class CarMapperTest {
 
         List<CarDto> result = mapper.entityListToDtoList(entityList);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result)
+                .isNotNull()
+                .isEmpty();
     }
 
     @Test
