@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 @Slf4j
 @RestControllerAdvice
@@ -116,18 +117,17 @@ public class RestExceptionHandler {
     }
 
     private void getValidationErrors(Map<String, List<String>> errorMap, Exception e) {
+        BiConsumer<String, String> addError = (field, message) ->
+                errorMap.computeIfAbsent(field, k -> new ArrayList<>()).add(message);
+
         if (e instanceof MethodArgumentNotValidException validationEx) {
             validationEx.getBindingResult()
-                    .getFieldErrors().forEach(error -> {
-                        errorMap.computeIfAbsent(error.getField(), k -> new ArrayList<>())
-                                .add(error.getDefaultMessage());
-                    });
+                    .getFieldErrors().forEach(error ->
+                            addError.accept(error.getField(), error.getDefaultMessage()));
         } else if (e instanceof ConstraintViolationException constraintEx) {
             constraintEx.getConstraintViolations()
-                    .forEach(violation -> {
-                        errorMap.computeIfAbsent(violation.getPropertyPath().toString(), k -> new ArrayList<>())
-                                .add(violation.getMessage());
-                    });
+                    .forEach(violation ->
+                            addError.accept(violation.getPropertyPath().toString(), violation.getMessage()));
         }
     }
 }
