@@ -1,6 +1,6 @@
 package com.cabaggregator.driverservice.validator;
 
-import com.cabaggregator.driverservice.core.constant.MessageKeys;
+import com.cabaggregator.driverservice.core.constant.ApplicationMessages;
 import com.cabaggregator.driverservice.exception.DataUniquenessConflictException;
 import com.cabaggregator.driverservice.exception.ResourceNotFoundException;
 import com.cabaggregator.driverservice.repository.CarRepository;
@@ -18,7 +18,7 @@ public class DriverValidator {
     public void checkPhoneUniqueness(String phone) {
         if (driverRepository.existsByPhoneNumber(phone)) {
             throw new DataUniquenessConflictException(
-                    MessageKeys.ApplicationMessages.DRIVER_WITH_PHONE_ALREADY_EXISTS,
+                    ApplicationMessages.DRIVER_WITH_PHONE_ALREADY_EXISTS,
                     phone);
         }
     }
@@ -26,7 +26,7 @@ public class DriverValidator {
     public void checkEmailUniqueness(String email) {
         if (driverRepository.existsByEmail(email)) {
             throw new DataUniquenessConflictException(
-                    MessageKeys.ApplicationMessages.DRIVER_WITH_EMAIL_ALREADY_EXISTS,
+                    ApplicationMessages.DRIVER_WITH_EMAIL_ALREADY_EXISTS,
                     email);
         }
     }
@@ -34,7 +34,7 @@ public class DriverValidator {
     public void checkExistenceOfDriverWithId(Long id) {
         if (!driverRepository.existsById(id)) {
             throw new ResourceNotFoundException(
-                    MessageKeys.ApplicationMessages.DRIVER_WITH_ID_NOT_FOUND,
+                    ApplicationMessages.DRIVER_WITH_ID_NOT_FOUND,
                     id);
         }
     }
@@ -42,7 +42,7 @@ public class DriverValidator {
     public void checkExistenceOfDriverCar(Long carId) {
         if (carId != null && !carRepository.existsById(carId)) {
             throw new ResourceNotFoundException(
-                    MessageKeys.ApplicationMessages.CAR_WITH_ID_NOT_FOUND,
+                    ApplicationMessages.CAR_WITH_ID_NOT_FOUND,
                     carId);
         }
     }

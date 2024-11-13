@@ -3,14 +3,19 @@ package com.cabaggregator.driverservice.service.impl;
 import com.cabaggregator.driverservice.core.dto.driver.DriverAddingDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverUpdatingDto;
+import com.cabaggregator.driverservice.core.dto.page.PageRequestDto;
 import com.cabaggregator.driverservice.core.dto.page.PagedDto;
-import com.cabaggregator.driverservice.service.IDriverService;
+import com.cabaggregator.driverservice.repository.DriverRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DriverService implements IDriverService {
+@RequiredArgsConstructor
+public class DriverServiceImpl implements com.cabaggregator.driverservice.service.DriverService {
+    private final DriverRepository driverRepository;
+
     @Override
-    public PagedDto<DriverDto> getPageOfDrivers(int pageNumber, int pageSize, String sortField, String sortOrder) {
+    public PagedDto<DriverDto> getPageOfDrivers(PageRequestDto pageRequestDto) {
         return null;
     }
 

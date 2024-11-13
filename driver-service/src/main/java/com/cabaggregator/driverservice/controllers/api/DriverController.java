@@ -1,16 +1,13 @@
 package com.cabaggregator.driverservice.controllers.api;
 
-import com.cabaggregator.driverservice.core.constant.MessageKeys;
-import com.cabaggregator.driverservice.core.constant.ValidationRegex;
 import com.cabaggregator.driverservice.core.dto.driver.DriverAddingDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverUpdatingDto;
+import com.cabaggregator.driverservice.core.dto.page.PageRequestDto;
 import com.cabaggregator.driverservice.core.dto.page.PagedDto;
-import com.cabaggregator.driverservice.service.IDriverService;
+import com.cabaggregator.driverservice.service.DriverService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -32,21 +28,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/drivers")
 @RequiredArgsConstructor
 public class DriverController {
-    private final IDriverService driverService;
+    private final DriverService driverService;
 
     @GetMapping
     public ResponseEntity<PagedDto<DriverDto>> getPageOfDrivers(
-            @Positive @RequestParam(required = false, name = "page", defaultValue = "1") int pageNumber,
-            @Positive @RequestParam(required = false, name = "size", defaultValue = "10") int pageSize,
-            @Pattern(regexp = ValidationRegex.SORT_ORDER,
-                    message = MessageKeys.ValidationErrors.INVALID_SORT_ORDER)
-            @RequestParam(required = false, name = "sort", defaultValue = "id") String sortField,
-            @RequestParam(required = false, name = "order", defaultValue = "desc") String sortOrder) {
+            @Valid @RequestBody PageRequestDto pageRequestDto) {
 
         log.info("Sending page of drivers");
 
         PagedDto<DriverDto> page =
-                driverService.getPageOfDrivers(pageNumber, pageSize, sortField, sortOrder);
+                driverService.getPageOfDrivers(pageRequestDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(page);
     }
