@@ -22,7 +22,6 @@ public final class DriverTestUtil {
     public static final String UPDATED_FIRST_NAME = "John";
     public static final String UPDATED_LAST_NAME = "Johnson";
     public static final Double UPDATED_RATING = 4.0;
-    public static final Long UPDATED_CAR_ID = 3L;
 
     public static Driver buildDriver() {
         return Driver.builder()

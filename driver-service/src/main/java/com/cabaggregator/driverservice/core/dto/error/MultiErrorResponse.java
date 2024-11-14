@@ -1,9 +1,10 @@
 package com.cabaggregator.driverservice.core.dto.error;
 
+import java.util.List;
 import java.util.Map;
 
 public record MultiErrorResponse(
         String cause,
-        Map<String, String> messages
+        Map<String, List<String>> messages
 ) {
 }

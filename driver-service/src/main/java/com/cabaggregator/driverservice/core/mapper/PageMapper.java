@@ -7,12 +7,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class PageMapper {
     public <T> PagedDto<T> pageToPagedDto(Page<T> page) {
-        PagedDto<T> pagedDto = new PagedDto<>(
+        return new PagedDto<>(
                 page.getPageable().getPageNumber(),
                 page.getSize(),
                 page.getTotalPages(),
                 page.getContent()
         );
-        return pagedDto;
     }
 }
