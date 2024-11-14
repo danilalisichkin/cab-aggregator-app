@@ -7,7 +7,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum UserRole {
     DRIVER("DRIVER"),
-    PASSENGER("PASSENGER");
+    PASSENGER("PASSENGER"),
+    ADMIN("ADMIN");
 
     private final String value;
+
+    public static UserRole fromValue(String value) {
+        for (UserRole role : UserRole.values()) {
+            if (role.getValue().equals(value)) {
+                return role;
+            }
+        }
+        return null;
+    }
 }

@@ -1,13 +1,10 @@
-package com.cabaggregator.rideservice.core.dto.ride.booking;
+package com.cabaggregator.rideservice.core.dto.ride.order;
 
 import com.cabaggregator.rideservice.entity.enums.PaymentMethod;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public record RideBookingUpdatingDto(
-        @NotNull
-        Long passengerId,
-
+public record RideOrderUpdatingDto(
         @NotNull
         PaymentMethod paymentMethod,
 

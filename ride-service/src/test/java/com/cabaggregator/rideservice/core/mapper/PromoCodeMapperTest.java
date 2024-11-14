@@ -4,7 +4,6 @@ import com.cabaggregator.rideservice.PromoCodeTestUtil;
 import com.cabaggregator.rideservice.core.dto.promo.PromoCodeAddingDto;
 import com.cabaggregator.rideservice.core.dto.promo.PromoCodeDto;
 import com.cabaggregator.rideservice.core.dto.promo.PromoCodeUpdatingDto;
-import com.cabaggregator.rideservice.core.dto.ride.promo.RidePromoCodeDto;
 import com.cabaggregator.rideservice.entity.PromoCode;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -33,29 +32,14 @@ class PromoCodeMapperTest {
 
         PromoCodeDto result = mapper.entityToDto(promoCode);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(promoCodeDto);
+        assertThat(result)
+                .isNotNull()
+                .isEqualTo(promoCodeDto);
     }
 
     @Test
     void entityToDto_ShouldReturnNull_WhenEntityIsNull() {
         assertThat(mapper.entityToDto(null)).isNull();
-    }
-
-    @Test
-    void entityToRideDto_ShouldConvertEntityToRideDto_WhenEntityIsNotNull() {
-        PromoCode promoCode = PromoCodeTestUtil.buildPromoCode();
-        RidePromoCodeDto ridePromoCodeDto = PromoCodeTestUtil.buildRidePromoCodeDto();
-
-        RidePromoCodeDto result = mapper.entityToRideDto(promoCode);
-
-        assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(ridePromoCodeDto);
-    }
-
-    @Test
-    void entityToRideDto_ShouldReturnNull_WhenEntityIsNull() {
-        assertThat(mapper.entityToRideDto(null)).isNull();
     }
 
     @Test
@@ -111,8 +95,9 @@ class PromoCodeMapperTest {
 
         List<PromoCodeDto> result = mapper.entityListToDtoList(entityList);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(expectedDtoList);
+        assertThat(result)
+                .isNotNull()
+                .isEqualTo(expectedDtoList);
     }
 
     @Test
@@ -121,8 +106,9 @@ class PromoCodeMapperTest {
 
         List<PromoCodeDto> result = mapper.entityListToDtoList(entityList);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result)
+                .isNotNull()
+                .isEmpty();
     }
 
     @Test

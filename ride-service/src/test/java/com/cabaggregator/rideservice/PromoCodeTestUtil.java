@@ -3,7 +3,6 @@ package com.cabaggregator.rideservice;
 import com.cabaggregator.rideservice.core.dto.promo.PromoCodeAddingDto;
 import com.cabaggregator.rideservice.core.dto.promo.PromoCodeDto;
 import com.cabaggregator.rideservice.core.dto.promo.PromoCodeUpdatingDto;
-import com.cabaggregator.rideservice.core.dto.ride.promo.RidePromoCodeDto;
 import com.cabaggregator.rideservice.entity.PromoCode;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -55,12 +54,5 @@ public final class PromoCodeTestUtil {
                 DISCOUNT,
                 START_DATE,
                 END_DATE);
-    }
-
-    public static RidePromoCodeDto buildRidePromoCodeDto() {
-        return new RidePromoCodeDto(
-                VALUE,
-                DISCOUNT
-        );
     }
 }

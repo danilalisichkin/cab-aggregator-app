@@ -27,7 +27,6 @@ public final class RideRateTestUtil {
                 RIDE_RATE_ID,
                 RIDE_ID,
                 PASSENGER_RATE,
-                DRIVER_RATE
-        );
+                DRIVER_RATE);
     }
 }

@@ -1,11 +1,9 @@
 package com.cabaggregator.rideservice.core.mapper;
 
-import com.cabaggregator.rideservice.PromoCodeTestUtil;
 import com.cabaggregator.rideservice.RideTestUtil;
 import com.cabaggregator.rideservice.core.dto.ride.RideDto;
-import com.cabaggregator.rideservice.core.dto.ride.RideUpdatingDto;
-import com.cabaggregator.rideservice.core.dto.ride.booking.RideBookingAddingDto;
-import com.cabaggregator.rideservice.core.dto.ride.booking.RideBookingUpdatingDto;
+import com.cabaggregator.rideservice.core.dto.ride.order.RideOrderAddingDto;
+import com.cabaggregator.rideservice.core.dto.ride.order.RideOrderUpdatingDto;
 import com.cabaggregator.rideservice.entity.Ride;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -44,7 +42,7 @@ class RideMapperTest {
         assertThat(result.paymentMethod()).isEqualTo(rideDto.paymentMethod());
         assertThat(result.pickupAddress()).isEqualTo(rideDto.pickupAddress());
         assertThat(result.destinationAddress()).isEqualTo(rideDto.destinationAddress());
-        assertThat(result.cost()).isEqualTo(rideDto.cost());
+        assertThat(result.price()).isEqualTo(rideDto.price());
         assertThat(result.startTime()).isEqualTo(rideDto.startTime());
         assertThat(result.endTime()).isEqualTo(rideDto.endTime());
     }
@@ -55,40 +53,11 @@ class RideMapperTest {
     }
 
     @Test
-    void updateEntityFromDto_ShouldUpdateEntity_WhenDtoIsNotNull() {
-        Ride ride = RideTestUtil.buildRide();
-        RideUpdatingDto rideUpdatingDto = RideTestUtil.buildRideUpdatingDto();
-
-        mapper.updateEntityFromDto(rideUpdatingDto, ride);
-
-        assertThat(ride).isNotNull();
-        assertThat(ride.getId()).isEqualTo(RideTestUtil.RIDE_ID);
-        assertThat(ride.getPassengerId()).isEqualTo(RideTestUtil.UPDATED_PASSENGER_ID);
-        assertThat(ride.getPromoCodeId()).isEqualTo(PromoCodeTestUtil.PROMO_CODE_ID);
-        assertThat(ride.getServiceCategory()).isEqualTo(RideTestUtil.UPDATED_SERVICE_CATEGORY);
-        assertThat(ride.getStatus()).isEqualTo(RideTestUtil.UPDATED_STATUS);
-        assertThat(ride.getPaymentMethod()).isEqualTo(RideTestUtil.UPDATED_PAYMENT_METHOD);
-        assertThat(ride.getPickupAddress()).isEqualTo(RideTestUtil.UPDATED_PICKUP_ADDRESS);
-        assertThat(ride.getDestinationAddress()).isEqualTo(RideTestUtil.UPDATED_DESTINATION_ADDRESS);
-        assertThat(ride.getCost()).isEqualTo(RideTestUtil.UPDATED_COST);
-        assertThat(ride.getStartTime()).isEqualTo(RideTestUtil.UPDATED_START_TIME);
-        assertThat(ride.getEndTime()).isEqualTo(RideTestUtil.UPDATED_END_TIME);
-    }
-
-    @Test
-    void updateEntityFromDto_ShouldThrowNullPointerException_WhenDtoIsNull() {
-        RideUpdatingDto rideUpdatingDto = RideTestUtil.buildRideUpdatingDto();
-
-        assertThatThrownBy(() -> mapper.updateEntityFromDto(rideUpdatingDto, null))
-                .isInstanceOf(NullPointerException.class);
-    }
-
-    @Test
     void dtoToEntity_ShouldConvertDtoToEntity_WhenDtoIsNotNull() {
         Ride ride = RideTestUtil.buildRide();
-        RideBookingAddingDto rideBookingAddingDto = RideTestUtil.buildBookingAddingDto();
+        RideOrderAddingDto rideOrderAddingDto = RideTestUtil.buildOrderAddingDto();
 
-        Ride result = mapper.dtoToEntity(rideBookingAddingDto);
+        Ride result = mapper.dtoToEntity(rideOrderAddingDto);
 
         assertThat(result).isNotNull();
         assertThat(result.getId()).isNull();
@@ -105,25 +74,24 @@ class RideMapperTest {
     }
 
     @Test
-    void updateEntityFromBookingDto_ShouldUpdateEntity_WhenDtoIsNotNull() {
+    void updateEntityFromOrderDto_ShouldUpdateEntity_WhenDtoIsNotNull() {
         Ride ride = RideTestUtil.buildRide();
-        RideBookingUpdatingDto rideBookingUpdatingDto = RideTestUtil.buildBookingUpdatingDto();
+        RideOrderUpdatingDto rideOrderUpdatingDto = RideTestUtil.buildOrderUpdatingDto();
 
-        mapper.updateEntityFromBookingDto(rideBookingUpdatingDto, ride);
+        mapper.updateEntityFromOrderDto(rideOrderUpdatingDto, ride);
 
         assertThat(ride).isNotNull();
         assertThat(ride.getId()).isEqualTo(RideTestUtil.RIDE_ID);
-        assertThat(ride.getPassengerId()).isEqualTo(RideTestUtil.UPDATED_PASSENGER_ID);
         assertThat(ride.getPaymentMethod()).isEqualTo(RideTestUtil.UPDATED_PAYMENT_METHOD);
         assertThat(ride.getPickupAddress()).isEqualTo(RideTestUtil.UPDATED_PICKUP_ADDRESS);
         assertThat(ride.getDestinationAddress()).isEqualTo(RideTestUtil.UPDATED_DESTINATION_ADDRESS);
     }
 
     @Test
-    void updateEntityFromBookingDto_ShouldThrowNullPointerException_WhenDtoIsNull() {
-        RideBookingUpdatingDto rideBookingUpdatingDto = RideTestUtil.buildBookingUpdatingDto();
+    void updateEntityFromOrderDto_ShouldThrowNullPointerException_WhenDtoIsNull() {
+        RideOrderUpdatingDto rideOrderUpdatingDto = RideTestUtil.buildOrderUpdatingDto();
 
-        assertThatThrownBy(() -> mapper.updateEntityFromBookingDto(rideBookingUpdatingDto, null))
+        assertThatThrownBy(() -> mapper.updateEntityFromOrderDto(rideOrderUpdatingDto, null))
                 .isInstanceOf(NullPointerException.class);
     }
 
@@ -151,7 +119,7 @@ class RideMapperTest {
             assertThat(convertedDto.paymentMethod()).isEqualTo(expectedDto.paymentMethod());
             assertThat(convertedDto.pickupAddress()).isEqualTo(expectedDto.pickupAddress());
             assertThat(convertedDto.destinationAddress()).isEqualTo(expectedDto.destinationAddress());
-            assertThat(convertedDto.cost()).isEqualTo(expectedDto.cost());
+            assertThat(convertedDto.price()).isEqualTo(expectedDto.price());
             assertThat(convertedDto.startTime()).isEqualTo(expectedDto.startTime());
             assertThat(convertedDto.endTime()).isEqualTo(expectedDto.endTime());
         }
@@ -163,8 +131,9 @@ class RideMapperTest {
 
         List<RideDto> result = mapper.entityListToDtoList(entityList);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result)
+                .isNotNull()
+                .isEmpty();
     }
 
     @Test

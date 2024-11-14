@@ -29,8 +29,9 @@ class RideRateMapperTest {
 
         RideRateDto result = mapper.entityToDto(rideRate);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(rideRateDto);
+        assertThat(result)
+                .isNotNull()
+                .isEqualTo(rideRateDto);
     }
 
     @Test
@@ -48,8 +49,9 @@ class RideRateMapperTest {
 
         List<RideRateDto> result = mapper.entityListToDtoList(entityList);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(expectedDtoList);
+        assertThat(result)
+                .isNotNull()
+                .isEqualTo(expectedDtoList);
     }
 
     @Test
@@ -58,8 +60,9 @@ class RideRateMapperTest {
 
         List<RideRateDto> result = mapper.entityListToDtoList(entityList);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result)
+                .isNotNull()
+                .isEmpty();
     }
 
     @Test

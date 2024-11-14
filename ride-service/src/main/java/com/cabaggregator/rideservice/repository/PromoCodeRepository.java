@@ -10,4 +10,6 @@ import java.util.Optional;
 @Repository
 public interface PromoCodeRepository extends MongoRepository<PromoCode, ObjectId> {
     Optional<PromoCode> findByValue(String value);
+
+    boolean existsByValue(String value);
 }

@@ -1,8 +1,8 @@
 package com.cabaggregator.rideservice.core.dto.promo;
 
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
@@ -13,8 +13,8 @@ public record PromoCodeAddingDto(
         String value,
 
         @NotNull
-        @Positive
-        @Max(value = 100)
+        @Min(1)
+        @Max(100)
         Integer discount,
 
         @NotNull

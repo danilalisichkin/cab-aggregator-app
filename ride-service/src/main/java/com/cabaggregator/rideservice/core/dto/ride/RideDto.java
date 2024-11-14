@@ -7,23 +7,26 @@ import org.bson.types.ObjectId;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 public record RideDto(
         ObjectId id,
-        Long passengerId,
-        Long driverId,
+        String passengerId,
+        String driverId,
         String promoCode,
         ServiceCategory serviceCategory,
         RideStatus status,
         PaymentMethod paymentMethod,
         String pickupAddress,
         String destinationAddress,
-        BigDecimal cost,
+        BigDecimal price,
+        LocalDateTime orderTime,
         LocalDateTime startTime,
-        LocalDateTime endTime
+        LocalDateTime endTime,
+        Duration estimatedDuration
 ) {
-    public BigDecimal cost() {
-        return cost.setScale(2, RoundingMode.HALF_UP);
+    public BigDecimal price() {
+        return price.setScale(2, RoundingMode.HALF_UP);
     }
 }

@@ -1,14 +1,11 @@
-package com.cabaggregator.rideservice.core.dto.ride.booking;
+package com.cabaggregator.rideservice.core.dto.ride.order;
 
 import com.cabaggregator.rideservice.entity.enums.PaymentMethod;
 import com.cabaggregator.rideservice.entity.enums.ServiceCategory;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public record RideBookingAddingDto(
-        @NotNull
-        Long passengerId,
-
+public record RideOrderAddingDto(
         @NotNull
         ServiceCategory serviceCategory,
 
