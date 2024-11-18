@@ -1,6 +1,8 @@
 package com.cabaggregator.rideservice.controller.api;
 
+import com.cabaggregator.rideservice.core.constant.ValidationErrors;
 import com.cabaggregator.rideservice.core.dto.ride.rate.RideRateDto;
+import jakarta.validation.constraints.NotEmpty;
 import org.hibernate.validator.constraints.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -17,8 +19,10 @@ import java.util.List;
 public class RideRateController {
     @GetMapping
     public ResponseEntity<List<RideRateDto>> getListOfRideRates(
-            @RequestParam(required = false, name = "passenger-id") @UUID String passengerId,
-            @RequestParam(required = false, name = "driver-id") @UUID String driverId) {
+            @RequestParam(required = false, name = "passenger-id")
+            @UUID(message = ValidationErrors.INVALID_UUID_FORMAT) @NotEmpty String passengerId,
+            @RequestParam(required = false, name = "driver-id")
+            @UUID(message = ValidationErrors.INVALID_UUID_FORMAT) @NotEmpty String driverId) {
 
         return ResponseEntity.ok().build();
     }

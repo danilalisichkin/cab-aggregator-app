@@ -1,18 +1,19 @@
 package com.cabaggregator.rideservice.controller.api;
 
 import com.cabaggregator.rideservice.core.constant.ValidationErrors;
-import com.cabaggregator.rideservice.core.constant.ValidationRegex;
 import com.cabaggregator.rideservice.core.dto.page.PagedDto;
 import com.cabaggregator.rideservice.core.dto.promo.PromoCodeAddingDto;
 import com.cabaggregator.rideservice.core.dto.promo.PromoCodeDto;
 import com.cabaggregator.rideservice.core.dto.promo.PromoCodeUpdatingDto;
 import com.cabaggregator.rideservice.core.enums.sort.PromoCodeSort;
+import com.cabaggregator.rideservice.service.PromoCodeService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
-import org.bson.types.ObjectId;
+import jakarta.validation.constraints.Size;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,26 +28,32 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Validated
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("api/v1/promo-codes")
 public class PromoCodeController {
+    private final PromoCodeService promoCodeService;
+
     @GetMapping
     public ResponseEntity<PagedDto<PromoCodeDto>> getPageOfPromoCodes(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken,
             @RequestParam(name = "offset") @Positive Integer offset,
             @RequestParam(name = "limit") @Positive Integer limit,
-            @Pattern(regexp = ValidationRegex.SORT_ORDER,
-                    message = ValidationErrors.INVALID_SORT_ORDER)
             @RequestParam(name = "sort") PromoCodeSort sort) {
 
-        return ResponseEntity.ok().build();
+        PagedDto<PromoCodeDto> page = promoCodeService.getPageOfPromoCodes(accessToken, offset, limit, sort);
+
+        return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
     @GetMapping("/{code}")
     public ResponseEntity<PromoCodeDto> getPromoCode(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken,
-            @PathVariable @NotNull String code) {
+            @PathVariable @NotEmpty
+            @Size(min = 2, max = 50, message = ValidationErrors.INVALID_STRING_LENGTH) String code) {
 
-        return ResponseEntity.ok().build();
+        PromoCodeDto promoCode = promoCodeService.getPromoCodeByValueSecured(accessToken, code);
+
+        return ResponseEntity.status(HttpStatus.OK).body(promoCode);
     }
 
     @PostMapping
@@ -54,15 +61,20 @@ public class PromoCodeController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken,
             @RequestBody @Valid PromoCodeAddingDto promoCodeDto) {
 
-        return ResponseEntity.ok().build();
+        PromoCodeDto promoCode = promoCodeService.savePromoCode(accessToken, promoCodeDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(promoCode);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{code}")
     public ResponseEntity<PromoCodeDto> updatePromoCode(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken,
-            @PathVariable @NotNull ObjectId id,
+            @PathVariable @NotEmpty
+            @Size(min = 2, max = 50, message = ValidationErrors.INVALID_STRING_LENGTH) String code,
             @RequestBody @Valid PromoCodeUpdatingDto updatingDto) {
 
-        return ResponseEntity.ok().build();
+        PromoCodeDto promoCode = promoCodeService.updatePromoCode(accessToken, code, updatingDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(promoCode);
     }
 }

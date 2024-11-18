@@ -1,10 +1,9 @@
 package com.cabaggregator.rideservice.core.constant;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ApplicationMessages {
+@UtilityClass
+public class ApplicationMessages {
     public static final String PROMO_CODE_ALREADY_EXISTS = "error.promo.code.already_exists";
     public static final String PROMO_CODE_START_DATE_IN_PAST = "error.promo.code.start.date.in.past";
     public static final String PROMO_CODE_END_DATE_IN_PAST = "error.promo.code.end.date.in.past";

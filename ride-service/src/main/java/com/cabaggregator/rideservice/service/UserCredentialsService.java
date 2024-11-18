@@ -6,5 +6,6 @@ import java.util.Optional;
 
 public interface UserCredentialsService {
     Optional<UserRole> getUserRole(String accessToken);
+
     String getUserId(String accessToken);
 }

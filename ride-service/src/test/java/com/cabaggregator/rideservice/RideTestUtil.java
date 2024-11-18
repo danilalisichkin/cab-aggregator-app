@@ -7,8 +7,7 @@ import com.cabaggregator.rideservice.entity.Ride;
 import com.cabaggregator.rideservice.entity.enums.PaymentMethod;
 import com.cabaggregator.rideservice.entity.enums.RideStatus;
 import com.cabaggregator.rideservice.entity.enums.ServiceCategory;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import org.bson.types.ObjectId;
 
 import java.math.BigDecimal;
@@ -16,8 +15,8 @@ import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class RideTestUtil {
+@UtilityClass
+public class RideTestUtil {
     public static final ObjectId RIDE_ID = new ObjectId();
     public static final String DRIVER_ID = "4665e57c-884a-433d-8fd2-55078f29eab9";
     public static final String PASSENGER_ID = "27ea1354-8777-4580-9d12-714eaac84167";

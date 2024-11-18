@@ -1,10 +1,9 @@
 package com.cabaggregator.rideservice.core.constant;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ErrorCauses {
+@UtilityClass
+public class ErrorCauses {
     public static final String BAD_REQUEST = "error.cause.bad.request";
     public static final String FORBIDDEN = "error.cause.forbidden";
     public static final String NOT_FOUND = "error.cause.not.found";

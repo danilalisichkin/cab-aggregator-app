@@ -23,6 +23,14 @@ public class UserRoleValidator {
         }
     }
 
+    public void validateUserIsAdmin(UserRole role) {
+        if (!role.equals(UserRole.ADMIN)) {
+            throw new ForbiddenException(
+                    ApplicationMessages.USER_MUST_HAVE_ROLE,
+                    UserRole.ADMIN.getValue());
+        }
+    }
+
     public void validateUserIsPassengerOrDriver(UserRole role) {
         if (!role.equals(UserRole.PASSENGER) && !role.equals(UserRole.DRIVER)) {
             throw new ForbiddenException(

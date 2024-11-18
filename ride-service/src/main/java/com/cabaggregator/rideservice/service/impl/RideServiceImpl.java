@@ -36,8 +36,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -65,24 +63,6 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public List<RideRateDto> getListOfRideRates(String passengerId, String driverId) {
-        rideRateValidator.validateProvidedParameters(passengerId, driverId);
-
-        List<Ride> rides;
-        if (passengerId != null && driverId != null) {
-            rides = rideRepository.findByPassengerIdAndDriverId(passengerId, driverId);
-        } else if (driverId != null) {
-            rides = rideRepository.findByDriverId(driverId);
-        } else {
-            rides = rideRepository.findByPassengerId(passengerId);
-        }
-
-        return rides.stream()
-                .map(ride -> rideRateService.getRideRateByRideId(ride.getId()))
-                .toList();
-    }
-
-    @Override
     public RideRateDto getRideRate(String accessToken, ObjectId id) {
         validateReviewerParticipation(accessToken, id);
 
@@ -93,12 +73,15 @@ public class RideServiceImpl implements RideService {
     @Transactional
     public RideRateDto setRideRate(String accessToken, ObjectId id, Integer rate) {
         validateReviewerParticipation(accessToken, id);
+        //TODO: add integration with passenger & driver services: calculate and set rating
 
         return rideRateService.saveRideRate(id, getUserRole(accessToken), rate);
     }
 
     @Override
-    public PagedDto<RideDto> getPageOfRides(String accessToken, Integer offset, Integer limit, RideSort sort, RideStatus status) {
+    public PagedDto<RideDto> getPageOfRides(
+            String accessToken, Integer offset, Integer limit, RideSort sort, RideStatus status) {
+
         PageRequest request = PageRequestBuilder.buildPageRequest(offset, limit, sort.getSortValue());
         UserRole userRole = getUserRole(accessToken);
         String userId = userCredentialsService.getUserId(accessToken);
