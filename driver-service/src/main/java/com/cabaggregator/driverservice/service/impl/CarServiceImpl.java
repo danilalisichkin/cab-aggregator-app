@@ -16,6 +16,7 @@ import com.cabaggregator.driverservice.entity.CarDetails;
 import com.cabaggregator.driverservice.exception.ResourceNotFoundException;
 import com.cabaggregator.driverservice.repository.CarRepository;
 import com.cabaggregator.driverservice.service.CarDetailsService;
+import com.cabaggregator.driverservice.service.CarService;
 import com.cabaggregator.driverservice.util.PageRequestBuilder;
 import com.cabaggregator.driverservice.validator.CarDetailsValidator;
 import com.cabaggregator.driverservice.validator.CarValidator;
@@ -26,7 +27,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CarServiceImpl implements com.cabaggregator.driverservice.service.CarService {
+public class CarServiceImpl implements CarService {
     private final CarRepository carRepository;
 
     private final CarDetailsService carDetailsService;

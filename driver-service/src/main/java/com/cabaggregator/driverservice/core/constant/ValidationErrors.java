@@ -4,7 +4,6 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class ValidationErrors {
-    public static final String INVALID_SORT_ORDER  = "{validation.invalid.sort.order}";
     public static final String INVALID_PHONE_FORMAT = "{validation.invalid.phone.format}";
     public static final String INVALID_LICENCE_PLATE_FORMAT = "{validation.invalid.licence.plate.format}";
     public static final String INVALID_STRING_LENGTH = "{validation.invalid.string.length}";

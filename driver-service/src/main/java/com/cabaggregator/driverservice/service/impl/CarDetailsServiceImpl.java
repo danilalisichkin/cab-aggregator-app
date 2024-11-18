@@ -6,13 +6,14 @@ import com.cabaggregator.driverservice.core.mapper.CarDetailsMapper;
 import com.cabaggregator.driverservice.entity.CarDetails;
 import com.cabaggregator.driverservice.exception.ResourceNotFoundException;
 import com.cabaggregator.driverservice.repository.CarDetailsRepository;
+import com.cabaggregator.driverservice.service.CarDetailsService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CarDetailsServiceImpl implements com.cabaggregator.driverservice.service.CarDetailsService {
+public class CarDetailsServiceImpl implements CarDetailsService {
     private final CarDetailsRepository carDetailsRepository;
     private final CarDetailsMapper carDetailsMapper;
 
