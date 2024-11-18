@@ -1,10 +1,8 @@
 package com.cabaggregator.driverservice.service;
 
-import com.cabaggregator.driverservice.core.dto.car.details.CarDetailsDto;
 import com.cabaggregator.driverservice.core.dto.car.details.CarDetailsSettingDto;
+import com.cabaggregator.driverservice.entity.CarDetails;
 
 public interface CarDetailsService {
-    CarDetailsDto getCarDetailsByCarId(Long carId);
-
-    CarDetailsDto saveCarDetails(Long carId, CarDetailsSettingDto carDetailsDto);
+    CarDetails saveCarDetails(Long carId, CarDetailsSettingDto carDetailsDto);
 }

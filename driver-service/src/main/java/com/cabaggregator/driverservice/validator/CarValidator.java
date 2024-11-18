@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class CarValidator {
     private final CarRepository carRepository;
 
-    public void checkLicencePlateUniqueness(String licencePlate) {
+    public void validateLicencePlateUniqueness(String licencePlate) {
         if (carRepository.existsByLicensePlate(licencePlate)) {
             throw new DataUniquenessConflictException(
                     ApplicationMessages.CAR_WITH_LICENCE_PLATE_ALREADY_EXISTS,
@@ -20,7 +20,7 @@ public class CarValidator {
         }
     }
 
-    public void checkExistenceOfCarWithId(Long id) {
+    public void validateExistenceOfCarWithId(Long id) {
         if (!carRepository.existsById(id)) {
             throw new ResourceNotFoundException(
                     ApplicationMessages.CAR_WITH_ID_NOT_FOUND,

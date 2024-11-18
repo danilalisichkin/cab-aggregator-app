@@ -16,11 +16,9 @@ public class CarDetailsValidator {
 
     private final CarRepository carRepository;
 
-    public void checkReleaseDate(LocalDate releaseDate) {
+    public void validateReleaseDate(LocalDate releaseDate) {
         if (releaseDate.isAfter(LocalDate.now())) {
-            throw new BadRequestException(
-                    ApplicationMessages.CAR_RELEASE_DATE_IS_AFTER_PRESENT,
-                    null);
+            throw new BadRequestException(ApplicationMessages.CAR_RELEASE_DATE_IS_AFTER_PRESENT);
         }
     }
 }

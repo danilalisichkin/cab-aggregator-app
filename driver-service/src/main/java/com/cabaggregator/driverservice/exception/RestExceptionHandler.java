@@ -4,11 +4,9 @@ import com.cabaggregator.driverservice.core.constant.ErrorCauses;
 import com.cabaggregator.driverservice.core.dto.error.ErrorResponse;
 import com.cabaggregator.driverservice.core.dto.error.MultiErrorResponse;
 import com.cabaggregator.driverservice.util.MessageBuilder;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -30,8 +28,8 @@ import java.util.function.BiConsumer;
 public class RestExceptionHandler {
     private final MessageBuilder messageBuilder;
 
-    @ExceptionHandler({EntityNotFoundException.class, NoResourceFoundException.class})
-    public ResponseEntity<Object> handleNotFoundException(Exception e) {
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(Exception e) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse(
@@ -40,7 +38,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Object> handleNotResourceFoundException(ParameterizedException e) {
+    public ResponseEntity<ErrorResponse> handleNotResourceFoundException(ParameterizedException e) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse(
@@ -48,17 +46,8 @@ public class RestExceptionHandler {
                         messageBuilder.buildLocalizedMessage(ErrorCauses.NOT_FOUND, null)));
     }
 
-    @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<Object> handleMissingRequestParameterException(Exception e) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(
-                        e.getMessage(),
-                        messageBuilder.buildLocalizedMessage(ErrorCauses.BAD_REQUEST, null)));
-    }
-
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<Object> handleBadRequestException(ParameterizedException e) {
+    public ResponseEntity<ErrorResponse> handleBadRequestException(ParameterizedException e) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(
@@ -66,8 +55,8 @@ public class RestExceptionHandler {
                         messageBuilder.buildLocalizedMessage(ErrorCauses.BAD_REQUEST, null)));
     }
 
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<Object> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+    @ExceptionHandler({HttpMessageNotReadableException.class, MissingServletRequestParameterException.class})
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(Exception e) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(
@@ -76,7 +65,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class})
-    public ResponseEntity<MultiErrorResponse> handleNoValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<MultiErrorResponse> handleNoValidException(Exception e) {
         Map<String, List<String>> errorMap = new HashMap<>();
 
         getValidationErrors(errorMap, e);
@@ -88,17 +77,8 @@ public class RestExceptionHandler {
                         errorMap));
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<Object> handleDataIntegrityViolationException(Exception e) {
-        return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body(new ErrorResponse(
-                        e.getMessage(),
-                        messageBuilder.buildLocalizedMessage(ErrorCauses.UNIQUENESS_CONFLICT, null)));
-    }
-
     @ExceptionHandler(DataUniquenessConflictException.class)
-    public ResponseEntity<Object> handleDataIUniquenessConflictException(ParameterizedException e) {
+    public ResponseEntity<ErrorResponse> handleDataIUniquenessConflictException(ParameterizedException e) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(new ErrorResponse(
@@ -107,7 +87,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleOtherException(Exception e) {
+    public ResponseEntity<ErrorResponse> handleOtherException(Exception e) {
         log.error("internal server error", e);
 
         return ResponseEntity

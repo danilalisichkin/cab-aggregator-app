@@ -26,7 +26,7 @@ public interface CarMapper {
 
     void updateEntityFromDto(CarUpdatingDto carDto, @MappingTarget Car car);
 
-    @Mapping(target = "carDetails", source = "details")
+    @Mapping(target = "carDetails", ignore = true)
     Car dtoToEntity(CarAddingDto carDto);
 
     List<CarDto> entityListToDtoList(List<Car> cars);

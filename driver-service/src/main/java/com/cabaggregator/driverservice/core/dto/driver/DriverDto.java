@@ -1,7 +1,7 @@
 package com.cabaggregator.driverservice.core.dto.driver;
 
 public record DriverDto(
-        Long id,
+        String id,
         String phoneNumber,
         String email,
         String firstName,

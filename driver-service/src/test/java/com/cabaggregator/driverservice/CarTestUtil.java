@@ -5,11 +5,10 @@ import com.cabaggregator.driverservice.core.dto.car.CarDto;
 import com.cabaggregator.driverservice.core.dto.car.CarFullDto;
 import com.cabaggregator.driverservice.core.dto.car.CarUpdatingDto;
 import com.cabaggregator.driverservice.entity.Car;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class CarTestUtil {
+@UtilityClass
+public class CarTestUtil {
     public static final Long CAR_ID = 2L;
     public static final String LICENSE_PLATE = "1234 AA-7";
     public static final String MAKE = "Ford";

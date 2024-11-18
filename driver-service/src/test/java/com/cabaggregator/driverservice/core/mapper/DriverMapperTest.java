@@ -39,7 +39,7 @@ class DriverMapperTest {
         assertThat(convertedDto.firstName()).isEqualTo(driverDto.firstName());
         assertThat(convertedDto.lastName()).isEqualTo(driverDto.lastName());
         assertThat(convertedDto.rating()).isEqualTo(driverDto.rating());
-        assertThat(convertedDto.carId()).isNull();
+        assertThat(convertedDto.carId()).isEqualTo(driverDto.carId());
     }
 
     @Test
@@ -79,7 +79,7 @@ class DriverMapperTest {
         Driver convertedEntity = mapper.dtoToEntity(driverAddingDto);
 
         assertThat(convertedEntity).isNotNull();
-        assertThat(convertedEntity.getId()).isNull();
+        assertThat(convertedEntity.getId()).isEqualTo(driverAddingDto.id());
         assertThat(convertedEntity.getPhoneNumber()).isEqualTo(driver.getPhoneNumber());
         assertThat(convertedEntity.getEmail()).isEqualTo(driver.getEmail());
         assertThat(convertedEntity.getFirstName()).isEqualTo(driver.getFirstName());
@@ -113,7 +113,7 @@ class DriverMapperTest {
             assertThat(convertedDto.firstName()).isEqualTo(expectedDto.firstName());
             assertThat(convertedDto.lastName()).isEqualTo(expectedDto.lastName());
             assertThat(convertedDto.rating()).isEqualTo(expectedDto.rating());
-            assertThat(convertedDto.carId()).isNull();
+            assertThat(convertedDto.carId()).isEqualTo(expectedDto.carId());
         }
     }
 

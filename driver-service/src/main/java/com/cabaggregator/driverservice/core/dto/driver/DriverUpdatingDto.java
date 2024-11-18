@@ -5,32 +5,33 @@ import com.cabaggregator.driverservice.core.constant.ValidationRegex;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public record DriverUpdatingDto(
-        @NotNull
+        @NotEmpty
         @Pattern(regexp = ValidationRegex.PHONE_BELARUS_FORMAT,
                 message = ValidationErrors.INVALID_PHONE_FORMAT)
         String phoneNumber,
 
-        @NotNull
+        @NotEmpty
         @Email
-        @Size(max = 50, message = ValidationErrors.INVALID_LENGTH)
+        @Size(max = 50, message = ValidationErrors.INVALID_STRING_MAX_LENGTH)
         String email,
 
-        @NotNull
-        @Size(max = 50, message = ValidationErrors.INVALID_LENGTH)
+        @NotEmpty
+        @Size(max = 50, message = ValidationErrors.INVALID_STRING_MAX_LENGTH)
         String firstName,
 
-        @NotNull
-        @Size(max = 50, message = ValidationErrors.INVALID_LENGTH)
+        @NotEmpty
+        @Size(max = 50, message = ValidationErrors.INVALID_STRING_MAX_LENGTH)
         String lastName,
 
         @NotNull
-        @Min(0)
-        @Max(5)
+        @Min(value = 0, message = ValidationErrors.INVALID_NUMBER_MIN_VALUE)
+        @Max(value = 5, message = ValidationErrors.INVALID_NUMBER_MAX_VALUE)
         Double rating
 ) {
 }
