@@ -1,6 +1,7 @@
 package com.cabaggregator.driverservice.service.impl;
 
 import com.cabaggregator.driverservice.core.constant.ApplicationMessages;
+import com.cabaggregator.driverservice.core.dto.car.details.CarDetailsDto;
 import com.cabaggregator.driverservice.core.dto.car.details.CarDetailsSettingDto;
 import com.cabaggregator.driverservice.core.mapper.CarDetailsMapper;
 import com.cabaggregator.driverservice.entity.CarDetails;
@@ -19,11 +20,12 @@ public class CarDetailsServiceImpl implements CarDetailsService {
 
     @Override
     @Transactional
-    public CarDetails saveCarDetails(Long id, CarDetailsSettingDto carDetailsDto) {
+    public CarDetailsDto saveCarDetails(Long id, CarDetailsSettingDto carDetailsDto) {
         CarDetails carDetails = getCarDetailsEntityById(id);
         carDetailsMapper.updateEntityFromDto(carDetailsDto, carDetails);
 
-        return carDetailsRepository.save(carDetails);
+        return carDetailsMapper.entityToDto(
+                carDetailsRepository.save(carDetails));
     }
 
     private CarDetails getCarDetailsEntityById(Long carId) {

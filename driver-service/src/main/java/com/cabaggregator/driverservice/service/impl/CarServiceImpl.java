@@ -5,6 +5,7 @@ import com.cabaggregator.driverservice.core.dto.car.CarAddingDto;
 import com.cabaggregator.driverservice.core.dto.car.CarDto;
 import com.cabaggregator.driverservice.core.dto.car.CarFullDto;
 import com.cabaggregator.driverservice.core.dto.car.CarUpdatingDto;
+import com.cabaggregator.driverservice.core.dto.car.details.CarDetailsDto;
 import com.cabaggregator.driverservice.core.dto.car.details.CarDetailsSettingDto;
 import com.cabaggregator.driverservice.core.dto.page.PagedDto;
 import com.cabaggregator.driverservice.core.enums.sort.CarSort;
@@ -14,6 +15,7 @@ import com.cabaggregator.driverservice.core.mapper.PageMapper;
 import com.cabaggregator.driverservice.entity.Car;
 import com.cabaggregator.driverservice.entity.CarDetails;
 import com.cabaggregator.driverservice.exception.ResourceNotFoundException;
+import com.cabaggregator.driverservice.repository.CarDetailsRepository;
 import com.cabaggregator.driverservice.repository.CarRepository;
 import com.cabaggregator.driverservice.service.CarDetailsService;
 import com.cabaggregator.driverservice.service.CarService;
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CarServiceImpl implements CarService {
     private final CarRepository carRepository;
+    private final CarDetailsRepository carDetailsRepository;
 
     private final CarDetailsService carDetailsService;
 
@@ -52,15 +55,6 @@ public class CarServiceImpl implements CarService {
     public CarDto getCarById(Long id) {
         return carMapper.entityToDto(
                 getCarEntityById(id));
-    }
-
-    @Override
-    public Car getCarEntityById(Long id) {
-        return carRepository
-                .findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        ApplicationMessages.CAR_WITH_ID_NOT_FOUND,
-                        id));
     }
 
     @Override
@@ -105,12 +99,10 @@ public class CarServiceImpl implements CarService {
     public CarFullDto updateCarDetails(Long carId, CarDetailsSettingDto carDetailsDto) {
         carDetailsValidator.validateReleaseDate(carDetailsDto.releaseDate());
 
-        Car carToUpdate = getCarEntityById(carId);
+        CarDto carDto = carMapper.entityToDto(getCarEntityById(carId));
+        CarDetailsDto detailsDto = carDetailsService.saveCarDetails(carId, carDetailsDto);
 
-        CarDetails details = carDetailsService.saveCarDetails(carId, carDetailsDto);
-        carToUpdate.setCarDetails(details);
-
-        return carMapper.entityToFullDto(carToUpdate);
+        return new CarFullDto(carDto, detailsDto);
     }
 
     @Override
@@ -119,5 +111,13 @@ public class CarServiceImpl implements CarService {
         carValidator.validateExistenceOfCarWithId(id);
 
         carRepository.deleteById(id);
+    }
+
+    private Car getCarEntityById(Long id) {
+        return carRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        ApplicationMessages.CAR_WITH_ID_NOT_FOUND,
+                        id));
     }
 }

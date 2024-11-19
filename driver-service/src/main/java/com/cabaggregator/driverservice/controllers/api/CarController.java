@@ -1,5 +1,6 @@
 package com.cabaggregator.driverservice.controllers.api;
 
+import com.cabaggregator.driverservice.core.constant.ValidationErrors;
 import com.cabaggregator.driverservice.core.dto.car.CarAddingDto;
 import com.cabaggregator.driverservice.core.dto.car.CarDto;
 import com.cabaggregator.driverservice.core.dto.car.CarFullDto;
@@ -9,6 +10,7 @@ import com.cabaggregator.driverservice.core.dto.page.PagedDto;
 import com.cabaggregator.driverservice.core.enums.sort.CarSort;
 import com.cabaggregator.driverservice.service.CarService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +38,9 @@ public class CarController {
 
     @GetMapping
     public ResponseEntity<PagedDto<CarDto>> getPageOfCars(
-            @RequestParam(name = "offset") @Positive Integer offset,
+            @RequestParam(name = "offset")
+            @Min(value = 0, message = ValidationErrors.INVALID_NUMBER_MIN_VALUE)
+            Integer offset,
             @RequestParam(name = "limit") @Positive Integer limit,
             @RequestParam(name = "sort") CarSort sort) {
 

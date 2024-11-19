@@ -9,12 +9,14 @@ import com.cabaggregator.driverservice.core.dto.page.PagedDto;
 import com.cabaggregator.driverservice.core.enums.sort.DriverSort;
 import com.cabaggregator.driverservice.core.mapper.DriverMapper;
 import com.cabaggregator.driverservice.core.mapper.PageMapper;
+import com.cabaggregator.driverservice.entity.Car;
 import com.cabaggregator.driverservice.entity.Driver;
 import com.cabaggregator.driverservice.exception.ResourceNotFoundException;
+import com.cabaggregator.driverservice.repository.CarRepository;
 import com.cabaggregator.driverservice.repository.DriverRepository;
-import com.cabaggregator.driverservice.service.CarService;
 import com.cabaggregator.driverservice.service.DriverService;
 import com.cabaggregator.driverservice.util.PageRequestBuilder;
+import com.cabaggregator.driverservice.validator.CarValidator;
 import com.cabaggregator.driverservice.validator.DriverValidator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +27,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DriverServiceImpl implements DriverService {
     private final DriverRepository driverRepository;
-
-    private final CarService carService;
+    private final CarRepository carRepository;
 
     private final DriverMapper driverMapper;
     private final PageMapper pageMapper;
 
     private final DriverValidator driverValidator;
+    private final CarValidator carValidator;
 
     @Override
     public PagedDto<DriverDto> getPageOfDrivers(Integer offset, Integer limit, DriverSort sort) {
@@ -58,8 +60,7 @@ public class DriverServiceImpl implements DriverService {
 
         Driver driver = driverMapper.dtoToEntity(driverDto);
         driver.setRating(DefaultValues.DRIVER_RATING);
-        driver.setCar(
-                carService.getCarEntityById(driverDto.carId()));
+        driver.setCar(getCarEntityById(driverDto.carId()));
 
         return driverMapper.entityToDto(
                 driverRepository.save(driver));
@@ -105,6 +106,14 @@ public class DriverServiceImpl implements DriverService {
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         ApplicationMessages.DRIVER_WITH_ID_NOT_FOUND,
+                        id));
+    }
+
+    private Car getCarEntityById(Long id) {
+        return carRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        ApplicationMessages.CAR_WITH_ID_NOT_FOUND,
                         id));
     }
 }

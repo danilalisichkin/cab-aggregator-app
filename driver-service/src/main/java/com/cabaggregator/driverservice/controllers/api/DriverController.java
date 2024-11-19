@@ -39,7 +39,9 @@ public class DriverController {
 
     @GetMapping
     public ResponseEntity<PagedDto<DriverDto>> getPageOfDrivers(
-            @RequestParam(name = "offset") @Positive Integer offset,
+            @RequestParam(name = "offset")
+            @Min(value = 0, message = ValidationErrors.INVALID_NUMBER_MIN_VALUE)
+            Integer offset,
             @RequestParam(name = "limit") @Positive Integer limit,
             @RequestParam(name = "sort") DriverSort sort) {
 
