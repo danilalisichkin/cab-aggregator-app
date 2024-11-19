@@ -43,7 +43,7 @@ public class RestExceptionHandler {
                 .status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse(
                         messageBuilder.buildLocalizedMessage(e.getMessageKey(), e.getMessageArgs()),
-                        messageBuilder.buildLocalizedMessage(ErrorCauses.NOT_FOUND, null)));
+                        messageBuilder.buildLocalizedMessage(e.getErrorCauseKey(), null)));
     }
 
     @ExceptionHandler(BadRequestException.class)
@@ -52,7 +52,7 @@ public class RestExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(
                         messageBuilder.buildLocalizedMessage(e.getMessageKey(), e.getMessageArgs()),
-                        messageBuilder.buildLocalizedMessage(ErrorCauses.BAD_REQUEST, null)));
+                        messageBuilder.buildLocalizedMessage(e.getErrorCauseKey(), null)));
     }
 
     @ExceptionHandler({HttpMessageNotReadableException.class, MissingServletRequestParameterException.class})
@@ -77,31 +77,40 @@ public class RestExceptionHandler {
                         errorMap));
     }
 
+    @ExceptionHandler(ValidationErrorException.class)
+    public ResponseEntity<ErrorResponse> handleValidationErrorException(ValidationErrorException e) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(
+                        messageBuilder.buildLocalizedMessage(e.getMessageKey(), e.getMessageArgs()),
+                        messageBuilder.buildLocalizedMessage(e.getErrorCauseKey(), null)));
+    }
+
     @ExceptionHandler(DataUniquenessConflictException.class)
     public ResponseEntity<ErrorResponse> handleDataIUniquenessConflictException(ParameterizedException e) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(new ErrorResponse(
                         messageBuilder.buildLocalizedMessage(e.getMessageKey(), e.getMessageArgs()),
-                        messageBuilder.buildLocalizedMessage(ErrorCauses.UNIQUENESS_CONFLICT, null)));
+                        messageBuilder.buildLocalizedMessage(e.getErrorCauseKey(), null)));
     }
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException e) {
         return ResponseEntity
-                .status(HttpStatus.CONFLICT)
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(new ErrorResponse(
                         messageBuilder.buildLocalizedMessage(e.getMessageKey(), e.getMessageArgs()),
-                        messageBuilder.buildLocalizedMessage(ErrorCauses.UNAUTHORIZED, null)));
+                        messageBuilder.buildLocalizedMessage(e.getErrorCauseKey(), null)));
     }
 
     @ExceptionHandler(ForbiddenException.class)
     public ResponseEntity<ErrorResponse> handleForbiddenException(ForbiddenException e) {
         return ResponseEntity
-                .status(HttpStatus.CONFLICT)
+                .status(HttpStatus.FORBIDDEN)
                 .body(new ErrorResponse(
                         messageBuilder.buildLocalizedMessage(e.getMessageKey(), e.getMessageArgs()),
-                        messageBuilder.buildLocalizedMessage(ErrorCauses.FORBIDDEN, null)));
+                        messageBuilder.buildLocalizedMessage(e.getErrorCauseKey(), null)));
     }
 
     @ExceptionHandler(Exception.class)
