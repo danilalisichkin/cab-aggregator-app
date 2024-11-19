@@ -6,6 +6,12 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8080/realms/cab-aggregator-realm}
+  messages:
+    encoding: "UTF-8"
+    basename:
+      error-causes: "classpath:error_causes"
+      validation-errors: "classpath:validation_errors"
+      messages: "classpath:messages"
 server:
   port: ${SERVER_PORT:8083}
   forward-headers-strategy: framework

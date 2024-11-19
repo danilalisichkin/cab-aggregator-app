@@ -1,6 +1,10 @@
 package com.cabaggregator.authservice.controller.api;
 
+import com.cabaggregator.authservice.core.constant.ValidationErrors;
 import com.cabaggregator.authservice.core.enums.KeyCloakRole;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.UUID;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.http.HttpStatus;
@@ -20,35 +24,38 @@ import java.util.List;
 public class UserController {
 
     @GetMapping("/{id}/roles")
-    public ResponseEntity<List<RoleRepresentation>> getUserRoles(@PathVariable String id) {
+    public ResponseEntity<List<RoleRepresentation>> getUserRoles(
+            @PathVariable @NotEmpty @UUID(message = ValidationErrors.INVALID_UUID_FORMAT) String id) {
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserRepresentation> getUser(@PathVariable String id) {
+    public ResponseEntity<UserRepresentation> getUser(
+            @PathVariable @NotEmpty @UUID(message = ValidationErrors.INVALID_UUID_FORMAT) String id) {
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
+    public ResponseEntity<Void> deleteUser(
+            @PathVariable @NotEmpty @UUID(message = ValidationErrors.INVALID_UUID_FORMAT) String id) {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PostMapping("/{id}/role")
     public ResponseEntity<Void> assignRole(
-            @PathVariable String id,
-            @RequestParam("role") KeyCloakRole keycloakRole) {
+            @PathVariable @NotEmpty @UUID(message = ValidationErrors.INVALID_UUID_FORMAT) String id,
+            @RequestParam("role") @NotNull KeyCloakRole keycloakRole) {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping("/{id}/role")
     public ResponseEntity<Void> unassignRole(
-            @PathVariable String id,
-            @RequestParam("role") KeyCloakRole keycloakRole) {
+            @PathVariable @NotEmpty @UUID(message = ValidationErrors.INVALID_UUID_FORMAT) String id,
+            @RequestParam("role") @NotNull KeyCloakRole keycloakRole) {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
