@@ -1,0 +1,11 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <include file="db.v1.0-init-cars-table.xml" relativeToChangelogFile="true" />
+    <include file="db.v1.0-init-car-details-table.xml" relativeToChangelogFile="true" />
+    <include file="db.v1.0-init-drivers-table.xml" relativeToChangelogFile="true" />
+
+</databaseChangeLog>
