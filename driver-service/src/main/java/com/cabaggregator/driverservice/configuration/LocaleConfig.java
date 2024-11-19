@@ -13,39 +13,35 @@ import java.util.Locale;
 @Configuration
 public class LocaleConfig implements WebMvcConfigurer {
 
-    @Value("${spring.messages.basename.error-causes}")
-    private String errorCausesMessageSourcePath;
+    private final String errorCausesMessageSourcePath;
+    private final String validationErrorsMessageSourcePath;
+    private final String applicationMessagesSourcePath;
+    private final String messageEncoding;
 
-    @Value("${spring.messages.basename.validation-errors}")
-    private String validationErrorsMessageSourcePath;
-
-    @Value("${spring.messages.basename.messages}")
-    private String applicationMessagesSourcePath;
-
-    @Value("${spring.messages.encoding}")
-    private String messageEncoding;
-
-
-    @Bean
-    public MessageSource errorCausesMessageSource() {
-        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename(errorCausesMessageSourcePath);
-        messageSource.setDefaultEncoding(messageEncoding);
-        return messageSource;
+    public LocaleConfig(
+            @Value("${spring.messages.basename.error-causes}")
+            String errorCausesMessageSourcePath,
+            @Value("${spring.messages.basename.validation-errors}")
+            String validationErrorsMessageSourcePath,
+            @Value("${spring.messages.basename.messages}")
+            String applicationMessagesSourcePath,
+            @Value("${spring.messages.encoding}")
+            String messageEncoding) {
+        this.errorCausesMessageSourcePath = errorCausesMessageSourcePath;
+        this.validationErrorsMessageSourcePath = validationErrorsMessageSourcePath;
+        this.applicationMessagesSourcePath = applicationMessagesSourcePath;
+        this.messageEncoding = messageEncoding;
     }
 
     @Bean
-    public MessageSource validationErrorMessageSource() {
+    public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename(validationErrorsMessageSourcePath);
-        messageSource.setDefaultEncoding(messageEncoding);
-        return messageSource;
-    }
-
-    @Bean
-    public MessageSource applicationMessageSource() {
-        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename(applicationMessagesSourcePath);
+        messageSource.setBasename("classpath:validation");
+        messageSource.setDefaultEncoding("UTF-8");
+        messageSource.addBasenames(
+                errorCausesMessageSourcePath,
+                validationErrorsMessageSourcePath,
+                applicationMessagesSourcePath);
         messageSource.setDefaultEncoding(messageEncoding);
         return messageSource;
     }

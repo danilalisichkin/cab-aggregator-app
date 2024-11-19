@@ -5,11 +5,11 @@ import com.cabaggregator.driverservice.core.dto.car.CarDto;
 import com.cabaggregator.driverservice.core.dto.car.CarFullDto;
 import com.cabaggregator.driverservice.core.dto.car.CarUpdatingDto;
 import com.cabaggregator.driverservice.core.dto.car.details.CarDetailsSettingDto;
-import com.cabaggregator.driverservice.core.dto.page.PageRequestDto;
 import com.cabaggregator.driverservice.core.dto.page.PagedDto;
+import com.cabaggregator.driverservice.core.enums.sort.CarSort;
 
 public interface CarService {
-    PagedDto<CarDto> getPageOfCars(PageRequestDto pageRequestDto);
+    PagedDto<CarDto> getPageOfCars(Integer offset, Integer limit, CarSort sort);
 
     CarDto getCarById(Long id);
 

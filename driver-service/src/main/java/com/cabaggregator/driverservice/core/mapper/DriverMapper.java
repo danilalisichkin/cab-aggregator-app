@@ -5,6 +5,7 @@ import com.cabaggregator.driverservice.core.dto.driver.DriverDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverUpdatingDto;
 import com.cabaggregator.driverservice.entity.Driver;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface DriverMapper {
+    @Mapping(source = "car.id", target = "carId")
     DriverDto entityToDto(Driver driver);
 
     void updateEntityFromDto(DriverUpdatingDto driverDto, @MappingTarget Driver driver);

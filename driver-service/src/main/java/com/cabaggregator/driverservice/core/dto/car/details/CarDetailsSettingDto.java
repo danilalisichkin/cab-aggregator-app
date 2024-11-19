@@ -1,5 +1,6 @@
 package com.cabaggregator.driverservice.core.dto.car.details;
 
+import com.cabaggregator.driverservice.core.constant.ValidationErrors;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -11,8 +12,8 @@ public record CarDetailsSettingDto(
         LocalDate releaseDate,
 
         @NotNull
-        @Min(1)
-        @Max(8)
+        @Min(value = 1, message = ValidationErrors.INVALID_NUMBER_MIN_VALUE)
+        @Max(value = 8, message = ValidationErrors.INVALID_NUMBER_MAX_VALUE)
         Integer seatCapacity
 ) {
 }

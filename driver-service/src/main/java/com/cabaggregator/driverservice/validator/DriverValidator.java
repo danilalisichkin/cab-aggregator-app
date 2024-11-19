@@ -1,9 +1,9 @@
 package com.cabaggregator.driverservice.validator;
 
 import com.cabaggregator.driverservice.core.constant.ApplicationMessages;
+import com.cabaggregator.driverservice.exception.BadRequestException;
 import com.cabaggregator.driverservice.exception.DataUniquenessConflictException;
 import com.cabaggregator.driverservice.exception.ResourceNotFoundException;
-import com.cabaggregator.driverservice.repository.CarRepository;
 import com.cabaggregator.driverservice.repository.DriverRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -13,9 +13,15 @@ import org.springframework.stereotype.Component;
 public class DriverValidator {
     private final DriverRepository driverRepository;
 
-    private final CarRepository carRepository;
+    public void validateIdUniqueness(String id) {
+        if (driverRepository.existsById(id)) {
+            throw new DataUniquenessConflictException(
+                    ApplicationMessages.DRIVER_WITH_ID_ALREADY_EXISTS,
+                    id);
+        }
+    }
 
-    public void checkPhoneUniqueness(String phone) {
+    public void validatePhoneUniqueness(String phone) {
         if (driverRepository.existsByPhoneNumber(phone)) {
             throw new DataUniquenessConflictException(
                     ApplicationMessages.DRIVER_WITH_PHONE_ALREADY_EXISTS,
@@ -23,7 +29,7 @@ public class DriverValidator {
         }
     }
 
-    public void checkEmailUniqueness(String email) {
+    public void validateEmailUniqueness(String email) {
         if (driverRepository.existsByEmail(email)) {
             throw new DataUniquenessConflictException(
                     ApplicationMessages.DRIVER_WITH_EMAIL_ALREADY_EXISTS,
@@ -31,19 +37,19 @@ public class DriverValidator {
         }
     }
 
-    public void checkExistenceOfDriverWithId(Long id) {
+    public void validateDriverCarUniqueness(Long carId) {
+        if (driverRepository.existsByCarId(carId)) {
+            throw new BadRequestException(
+                    ApplicationMessages.CAR_WITH_ID_ALREADY_USED,
+                    carId);
+        }
+    }
+
+    public void validateExistenceOfDriverWithId(String id) {
         if (!driverRepository.existsById(id)) {
             throw new ResourceNotFoundException(
                     ApplicationMessages.DRIVER_WITH_ID_NOT_FOUND,
                     id);
-        }
-    }
-
-    public void checkExistenceOfDriverCar(Long carId) {
-        if (carId != null && !carRepository.existsById(carId)) {
-            throw new ResourceNotFoundException(
-                    ApplicationMessages.CAR_WITH_ID_NOT_FOUND,
-                    carId);
         }
     }
 }

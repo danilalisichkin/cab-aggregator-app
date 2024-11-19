@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,8 +22,11 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class CarDetails {
     @Id
+    private Long id;
+
     @OneToOne
-    @JoinColumn(name = "car_id", nullable = false)
+    @MapsId
+    @JoinColumn(name = "car_id")
     private Car car;
 
     @Column(nullable = false)
