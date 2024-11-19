@@ -5,7 +5,6 @@ import com.cabaggregator.driverservice.core.dto.driver.DriverAddingDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverUpdatingDto;
 import com.cabaggregator.driverservice.entity.Driver;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,24 +22,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Tag("unit")
 @ExtendWith(MockitoExtension.class)
-public class DriverMapperTest {
+class DriverMapperTest {
     private final DriverMapper mapper = Mappers.getMapper(DriverMapper.class);
-
-    private Driver driver;
-    private DriverDto driverDto;
-    private DriverAddingDto driverAddingDto;
-    private DriverUpdatingDto driverUpdatingDto;
-
-    @BeforeEach
-    void setUp() {
-        driver = DriverTestUtil.buildDriver();
-        driverDto = DriverTestUtil.buildDriverDto();
-        driverAddingDto = DriverTestUtil.buildDriverAddingDto();
-        driverUpdatingDto = DriverTestUtil.buildDriverUpdatingDto();
-    }
 
     @Test
     void entityToDto_ShouldConvertEntityToDto_WhenEntityIsNotNull() {
+        Driver driver = DriverTestUtil.buildDriver();
+        DriverDto driverDto = DriverTestUtil.buildDriverDto();
+
         DriverDto convertedDto = mapper.entityToDto(driver);
 
         assertThat(convertedDto).isNotNull();
@@ -50,7 +39,7 @@ public class DriverMapperTest {
         assertThat(convertedDto.firstName()).isEqualTo(driverDto.firstName());
         assertThat(convertedDto.lastName()).isEqualTo(driverDto.lastName());
         assertThat(convertedDto.rating()).isEqualTo(driverDto.rating());
-        assertThat(convertedDto.carId()).isNull();
+        assertThat(convertedDto.carId()).isEqualTo(driverDto.carId());
     }
 
     @Test
@@ -60,6 +49,9 @@ public class DriverMapperTest {
 
     @Test
     void updateEntityFromDto_ShouldUpdateEntity_WhenDtoIsNotNull() {
+        Driver driver = DriverTestUtil.buildDriver();
+        DriverUpdatingDto driverUpdatingDto = DriverTestUtil.buildDriverUpdatingDto();
+
         mapper.updateEntityFromDto(driverUpdatingDto, driver);
 
         assertThat(driver).isNotNull();
@@ -73,16 +65,21 @@ public class DriverMapperTest {
 
     @Test
     void updateEntityFromDto_ShouldThrowNullPointerException_WhenDtoIsNull() {
+        DriverUpdatingDto driverUpdatingDto = DriverTestUtil.buildDriverUpdatingDto();
+
         assertThatThrownBy(() -> mapper.updateEntityFromDto(driverUpdatingDto, null))
                 .isInstanceOf(NullPointerException.class);
     }
 
     @Test
     void dtoToEntity_ShouldConvertDtoToEntity_WhenDtoIsNotNull() {
+        Driver driver = DriverTestUtil.buildDriver();
+        DriverAddingDto driverAddingDto = DriverTestUtil.buildDriverAddingDto();
+
         Driver convertedEntity = mapper.dtoToEntity(driverAddingDto);
 
         assertThat(convertedEntity).isNotNull();
-        assertThat(convertedEntity.getId()).isNull();
+        assertThat(convertedEntity.getId()).isEqualTo(driverAddingDto.id());
         assertThat(convertedEntity.getPhoneNumber()).isEqualTo(driver.getPhoneNumber());
         assertThat(convertedEntity.getEmail()).isEqualTo(driver.getEmail());
         assertThat(convertedEntity.getFirstName()).isEqualTo(driver.getFirstName());
@@ -98,6 +95,9 @@ public class DriverMapperTest {
 
     @Test
     void entityListToDtoList_ShouldConvertEntityListToDtoList_WhenEntityListIsNotEmpty() {
+        Driver driver = DriverTestUtil.buildDriver();
+        DriverDto driverDto = DriverTestUtil.buildDriverDto();
+
         List<Driver> entityList = Arrays.asList(driver, driver);
         List<DriverDto> expectedDtoList = Arrays.asList(driverDto, driverDto);
 
@@ -113,7 +113,7 @@ public class DriverMapperTest {
             assertThat(convertedDto.firstName()).isEqualTo(expectedDto.firstName());
             assertThat(convertedDto.lastName()).isEqualTo(expectedDto.lastName());
             assertThat(convertedDto.rating()).isEqualTo(expectedDto.rating());
-            assertThat(convertedDto.carId()).isNull();
+            assertThat(convertedDto.carId()).isEqualTo(expectedDto.carId());
         }
     }
 
@@ -123,8 +123,9 @@ public class DriverMapperTest {
 
         List<DriverDto> result = mapper.entityListToDtoList(entityList);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result)
+                .isNotNull()
+                .isEmpty();
     }
 
     @Test
@@ -134,6 +135,8 @@ public class DriverMapperTest {
 
     @Test
     void entityPageToDtoPage_ShouldConvertEntityPageToDtoPage_WhenPageIsNotNull() {
+        Driver driver = DriverTestUtil.buildDriver();
+
         List<Driver> entityList = Arrays.asList(driver, driver);
         Page<Driver> entityPage = new PageImpl<>(entityList);
 

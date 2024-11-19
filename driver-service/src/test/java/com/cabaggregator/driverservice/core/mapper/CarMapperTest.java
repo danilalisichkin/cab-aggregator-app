@@ -1,15 +1,18 @@
 package com.cabaggregator.driverservice.core.mapper;
 
+import com.cabaggregator.driverservice.CarDetailsTestUtil;
 import com.cabaggregator.driverservice.CarTestUtil;
 import com.cabaggregator.driverservice.core.dto.car.CarAddingDto;
 import com.cabaggregator.driverservice.core.dto.car.CarDto;
+import com.cabaggregator.driverservice.core.dto.car.CarFullDto;
 import com.cabaggregator.driverservice.core.dto.car.CarUpdatingDto;
 import com.cabaggregator.driverservice.entity.Car;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mapstruct.factory.Mappers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -23,28 +26,23 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Tag("unit")
 @ExtendWith(MockitoExtension.class)
-public class CarMapperTest {
-    private final CarMapper mapper = Mappers.getMapper(CarMapper.class);
+class CarMapperTest {
+    @Mock
+    private CarDetailsMapper carDetailsMapper;
 
-    private Car car;
-    private CarDto carDto;
-    private CarAddingDto carAddingDto;
-    private CarUpdatingDto carUpdatingDto;
-
-    @BeforeEach
-    void setUp() {
-        car = CarTestUtil.buildCar();
-        carDto = CarTestUtil.buildCarDto();
-        carAddingDto = CarTestUtil.buildCarAddingDto();
-        carUpdatingDto = CarTestUtil.buildCarUpdatingDto();
-    }
+    @InjectMocks
+    private CarMapperImpl mapper;
 
     @Test
     void entityToDto_ShouldConvertEntityToDto_WhenEntityIsNotNull() {
+        Car car = CarTestUtil.buildCar();
+        CarDto carDto = CarTestUtil.buildCarDto();
+
         CarDto convertedDto = mapper.entityToDto(car);
 
-        assertThat(convertedDto).isNotNull();
-        assertThat(convertedDto).isEqualTo(carDto);
+        assertThat(convertedDto)
+                .isNotNull()
+                .isEqualTo(carDto);
     }
 
     @Test
@@ -53,7 +51,23 @@ public class CarMapperTest {
     }
 
     @Test
+    void entityToFullDto_ShouldConvertEntityToFullDto_WhenEntityIsNotNull() {
+        Car car = CarTestUtil.buildCar();
+        car.setCarDetails(CarDetailsTestUtil.buildCarDetails());
+        CarFullDto carFullDto = CarTestUtil.buildCarFullDto();
+        Mockito.when(carDetailsMapper.entityToDto(car.getCarDetails()))
+                .thenReturn(CarDetailsTestUtil.buildCarDetailsDto());
+
+        CarFullDto convertedDto = mapper.entityToFullDto(car);
+
+        assertThat(convertedDto).isEqualTo(carFullDto);
+    }
+
+    @Test
     void updateEntityFromDto_ShouldUpdateEntity_WhenDtoIsNotNull() {
+        Car car = CarTestUtil.buildCar();
+        CarUpdatingDto carUpdatingDto = CarTestUtil.buildCarUpdatingDto();
+
         mapper.updateEntityFromDto(carUpdatingDto, car);
 
         assertThat(car).isNotNull();
@@ -66,12 +80,17 @@ public class CarMapperTest {
 
     @Test
     void updateEntityFromDto_ShouldThrowNullPointerException_WhenDtoIsNull() {
+        CarUpdatingDto carUpdatingDto = CarTestUtil.buildCarUpdatingDto();
+
         assertThatThrownBy(() -> mapper.updateEntityFromDto(carUpdatingDto, null))
                 .isInstanceOf(NullPointerException.class);
     }
 
     @Test
     void dtoToEntity_ShouldConvertDtoToEntity_WhenDtoIsNotNull() {
+        Car car = CarTestUtil.buildCar();
+        CarAddingDto carAddingDto = CarTestUtil.buildCarAddingDto();
+
         Car convertedEntity = mapper.dtoToEntity(carAddingDto);
 
         assertThat(convertedEntity).isNotNull();
@@ -89,13 +108,17 @@ public class CarMapperTest {
 
     @Test
     void entityListToDtoList_ShouldConvertEntityListToDtoList_WhenEntityListIsNotEmpty() {
+        Car car = CarTestUtil.buildCar();
+        CarDto carDto = CarTestUtil.buildCarDto();
+
         List<Car> entityList = Arrays.asList(car, car);
         List<CarDto> expectedDtoList = Arrays.asList(carDto, carDto);
 
         List<CarDto> result = mapper.entityListToDtoList(entityList);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(expectedDtoList);
+        assertThat(result)
+                .isNotNull()
+                .isEqualTo(expectedDtoList);
     }
 
     @Test
@@ -104,8 +127,9 @@ public class CarMapperTest {
 
         List<CarDto> result = mapper.entityListToDtoList(entityList);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result)
+                .isNotNull()
+                .isEmpty();
     }
 
     @Test
@@ -115,6 +139,8 @@ public class CarMapperTest {
 
     @Test
     void entityPageToDtoPage_ShouldConvertEntityPageToDtoPage_WhenPageIsNotNull() {
+        Car car = CarTestUtil.buildCar();
+
         List<Car> entityList = Arrays.asList(car, car);
         Page<Car> entityPage = new PageImpl<>(entityList);
 

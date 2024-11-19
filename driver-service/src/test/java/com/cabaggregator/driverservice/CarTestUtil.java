@@ -2,13 +2,13 @@ package com.cabaggregator.driverservice;
 
 import com.cabaggregator.driverservice.core.dto.car.CarAddingDto;
 import com.cabaggregator.driverservice.core.dto.car.CarDto;
+import com.cabaggregator.driverservice.core.dto.car.CarFullDto;
 import com.cabaggregator.driverservice.core.dto.car.CarUpdatingDto;
 import com.cabaggregator.driverservice.entity.Car;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class CarTestUtil {
+@UtilityClass
+public class CarTestUtil {
     public static final Long CAR_ID = 2L;
     public static final String LICENSE_PLATE = "1234 AA-7";
     public static final String MAKE = "Ford";
@@ -39,6 +39,12 @@ public final class CarTestUtil {
                 COLOR);
     }
 
+    public static CarFullDto buildCarFullDto() {
+        return new CarFullDto(
+                buildCarDto(),
+                CarDetailsTestUtil.buildCarDetailsDto());
+    }
+
     public static CarUpdatingDto buildCarUpdatingDto() {
         return new CarUpdatingDto(
                 UPDATED_LICENSE_PLATE,
@@ -52,6 +58,7 @@ public final class CarTestUtil {
                 LICENSE_PLATE,
                 MAKE,
                 MODEL,
-                COLOR);
+                COLOR,
+                CarDetailsTestUtil.buildCarDetailsSettingDto());
     }
 }

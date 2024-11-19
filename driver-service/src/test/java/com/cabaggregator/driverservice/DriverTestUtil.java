@@ -4,12 +4,11 @@ import com.cabaggregator.driverservice.core.dto.driver.DriverAddingDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverUpdatingDto;
 import com.cabaggregator.driverservice.entity.Driver;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class DriverTestUtil {
-    public static final Long DRIVER_ID = 3L;
+@UtilityClass
+public class DriverTestUtil {
+    public static final String DRIVER_ID = "4665e57c-884a-433d-8fd2-55078f29eab9";
     public static final String PHONE_NUMBER = "375291234567";
     public static final String EMAIL = "test@mail.com";
     public static final String FIRST_NAME = "Adam";
@@ -22,7 +21,6 @@ public final class DriverTestUtil {
     public static final String UPDATED_FIRST_NAME = "John";
     public static final String UPDATED_LAST_NAME = "Johnson";
     public static final Double UPDATED_RATING = 4.0;
-    public static final Long UPDATED_CAR_ID = 3L;
 
     public static Driver buildDriver() {
         return Driver.builder()
@@ -58,9 +56,11 @@ public final class DriverTestUtil {
 
     public static DriverAddingDto buildDriverAddingDto() {
         return new DriverAddingDto(
+                DRIVER_ID,
                 PHONE_NUMBER,
                 EMAIL,
                 FIRST_NAME,
-                LAST_NAME);
+                LAST_NAME,
+                CAR_ID);
     }
 }

@@ -1,16 +1,14 @@
 package com.cabaggregator.driverservice;
 
-import com.cabaggregator.driverservice.core.dto.car.details.CarDetailsSettingDto;
 import com.cabaggregator.driverservice.core.dto.car.details.CarDetailsDto;
+import com.cabaggregator.driverservice.core.dto.car.details.CarDetailsSettingDto;
 import com.cabaggregator.driverservice.entity.CarDetails;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 
 import java.time.LocalDate;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class CarDetailsTestUtil {
-    public static final Long DETAILS_ID = 1L;
+@UtilityClass
+public class CarDetailsTestUtil {
     public static final LocalDate RELEASE_DATE = LocalDate.of(2024, 1, 1);
     public static final Integer SEAT_CAPACITY = 5;
 
@@ -19,7 +17,6 @@ public final class CarDetailsTestUtil {
 
     public static CarDetails buildCarDetails() {
         return CarDetails.builder()
-                .id(DETAILS_ID)
                 .releaseDate(RELEASE_DATE)
                 .seatCapacity(SEAT_CAPACITY)
                 .car(CarTestUtil.buildCar())
@@ -28,7 +25,6 @@ public final class CarDetailsTestUtil {
 
     public static CarDetailsDto buildCarDetailsDto() {
         return new CarDetailsDto(
-                DETAILS_ID,
                 RELEASE_DATE,
                 SEAT_CAPACITY);
     }

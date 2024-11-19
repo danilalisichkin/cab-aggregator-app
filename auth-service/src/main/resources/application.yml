@@ -1,6 +1,11 @@
 spring:
   application:
     name: auth-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8080/realms/cab-aggregator-realm}
 server:
   port: ${SERVER_PORT:8083}
   forward-headers-strategy: framework
