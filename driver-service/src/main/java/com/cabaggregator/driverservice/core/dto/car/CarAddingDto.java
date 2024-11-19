@@ -3,11 +3,13 @@ package com.cabaggregator.driverservice.core.dto.car;
 import com.cabaggregator.driverservice.core.constant.ValidationErrors;
 import com.cabaggregator.driverservice.core.constant.ValidationRegex;
 import com.cabaggregator.driverservice.core.dto.car.details.CarDetailsSettingDto;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+@Schema(description = "Entry to add new car with its details")
 public record CarAddingDto(
         @NotEmpty
         @Pattern(regexp = ValidationRegex.LICENCE_PLATE_BELARUS_FORMAT,
