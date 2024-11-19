@@ -1,21 +1,12 @@
 package com.cabaggregator.passengerservice.util;
 
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.UtilityClass;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Component;
 
-@Component
-@RequiredArgsConstructor
+@UtilityClass
 public class PageRequestBuilder {
-    public PageRequest buildPageRequest(int pageNumber, int pageSize, String sortField, String sortOrder) {
-        return PageRequest.of(
-                pageNumber - 1,
-                pageSize,
-                Sort.by(
-                        (sortOrder.equalsIgnoreCase("asc")
-                                ? Sort.Direction.ASC
-                                : Sort.Direction.DESC),
-                        sortField));
+    public static PageRequest buildPageRequest(Integer offset, Integer limit, Sort sort) {
+        return PageRequest.of(offset, limit, sort);
     }
 }

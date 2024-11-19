@@ -1,6 +1,6 @@
 package com.cabaggregator.passengerservice.validator;
 
-import com.cabaggregator.passengerservice.core.constant.MessageKeys;
+import com.cabaggregator.passengerservice.core.constant.ApplicationMessages;
 import com.cabaggregator.passengerservice.exception.DataUniquenessConflictException;
 import com.cabaggregator.passengerservice.exception.ResourceNotFoundException;
 import com.cabaggregator.passengerservice.repository.PassengerRepository;
@@ -13,26 +13,34 @@ public class PassengerValidator {
 
     private final PassengerRepository passengerRepository;
 
-    public void checkPhoneUniqueness(String phone) {
+    public void validateIdUniqueness(String id) {
+        if (passengerRepository.existsById(id)) {
+            throw new DataUniquenessConflictException(
+                    ApplicationMessages.PASSENGER_WITH_ID_ALREADY_EXISTS,
+                    id);
+        }
+    }
+
+    public void validatePhoneUniqueness(String phone) {
         if (passengerRepository.existsByPhoneNumber(phone)) {
             throw new DataUniquenessConflictException(
-                    MessageKeys.ERROR_PASSENGER_WITH_PHONE_ALREADY_EXISTS,
+                    ApplicationMessages.ERROR_PASSENGER_WITH_PHONE_ALREADY_EXISTS,
                     phone);
         }
     }
 
-    public void checkEmailUniqueness(String email) {
+    public void validateEmailUniqueness(String email) {
         if (passengerRepository.existsByEmail(email)) {
             throw new DataUniquenessConflictException(
-                    MessageKeys.ERROR_PASSENGER_WITH_EMAIL_ALREADY_EXISTS,
+                    ApplicationMessages.ERROR_PASSENGER_WITH_EMAIL_ALREADY_EXISTS,
                     email);
         }
     }
 
-    public void checkExistenceOfPassengerWithId(long id) {
+    public void validateExistenceOfPassengerWithId(String id) {
         if (!passengerRepository.existsById(id)) {
             throw new ResourceNotFoundException(
-                    MessageKeys.ERROR_PASSENGER_WITH_ID_NOT_FOUND,
+                    ApplicationMessages.ERROR_PASSENGER_WITH_ID_NOT_FOUND,
                     id);
         }
     }

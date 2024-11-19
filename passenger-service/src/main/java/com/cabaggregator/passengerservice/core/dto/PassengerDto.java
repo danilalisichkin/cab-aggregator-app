@@ -4,11 +4,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Server response with stored passenger data")
 public record PassengerDto(
-        long id,
+        String id,
         String phoneNumber,
         String email,
         String firstName,
         String lastName,
-        double rating
+        Double rating
 ) {
 }
