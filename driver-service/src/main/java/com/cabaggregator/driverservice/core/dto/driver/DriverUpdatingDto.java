@@ -2,6 +2,7 @@ package com.cabaggregator.driverservice.core.dto.driver;
 
 import com.cabaggregator.driverservice.core.constant.ValidationErrors;
 import com.cabaggregator.driverservice.core.constant.ValidationRegex;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -10,6 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+@Schema(description = "Entry to update existing driver")
 public record DriverUpdatingDto(
         @NotEmpty
         @Pattern(regexp = ValidationRegex.PHONE_BELARUS_FORMAT,

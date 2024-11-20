@@ -1,12 +1,14 @@
 package com.cabaggregator.driverservice.core.dto.car.details;
 
 import com.cabaggregator.driverservice.core.constant.ValidationErrors;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
+@Schema(description = "Entry to set details of existing car")
 public record CarDetailsSettingDto(
         @NotNull
         LocalDate releaseDate,

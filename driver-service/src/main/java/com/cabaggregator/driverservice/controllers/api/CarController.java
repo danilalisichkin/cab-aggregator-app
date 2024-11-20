@@ -1,6 +1,6 @@
 package com.cabaggregator.driverservice.controllers.api;
 
-import com.cabaggregator.driverservice.core.constant.ValidationErrors;
+import com.cabaggregator.driverservice.controllers.api.doc.CarControllerDocumentation;
 import com.cabaggregator.driverservice.core.dto.car.CarAddingDto;
 import com.cabaggregator.driverservice.core.dto.car.CarDto;
 import com.cabaggregator.driverservice.core.dto.car.CarFullDto;
@@ -10,9 +10,9 @@ import com.cabaggregator.driverservice.core.dto.page.PagedDto;
 import com.cabaggregator.driverservice.core.enums.sort.CarSort;
 import com.cabaggregator.driverservice.service.CarService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -33,14 +33,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/cars")
 @RequiredArgsConstructor
-public class CarController {
+public class CarController implements CarControllerDocumentation {
     private final CarService carService;
 
+    @Override
     @GetMapping
     public ResponseEntity<PagedDto<CarDto>> getPageOfCars(
-            @RequestParam(name = "offset")
-            @Min(value = 0, message = ValidationErrors.INVALID_NUMBER_MIN_VALUE)
-            Integer offset,
+            @RequestParam(name = "offset") @PositiveOrZero Integer offset,
             @RequestParam(name = "limit") @Positive Integer limit,
             @RequestParam(name = "sort") CarSort sort) {
 
@@ -51,6 +50,7 @@ public class CarController {
         return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
+    @Override
     @GetMapping("/{id}")
     public ResponseEntity<CarDto> getCar(@PathVariable @NotNull Long id) {
         log.info("Getting car with id={}", id);
@@ -60,6 +60,7 @@ public class CarController {
         return ResponseEntity.status(HttpStatus.OK).body(car);
     }
 
+    @Override
     @GetMapping("/{id}/full")
     public ResponseEntity<CarFullDto> getFullCar(@PathVariable @NotNull Long id) {
         log.info("Getting car with id={} including its details", id);
@@ -69,6 +70,7 @@ public class CarController {
         return ResponseEntity.status(HttpStatus.OK).body(carDetails);
     }
 
+    @Override
     @PostMapping
     public ResponseEntity<CarDto> saveCar(@RequestBody @Valid CarAddingDto carAddingDto) {
         log.info("Saving car with licence plate={}", carAddingDto.licensePlate());
@@ -78,6 +80,7 @@ public class CarController {
         return ResponseEntity.status(HttpStatus.CREATED).body(car);
     }
 
+    @Override
     @PutMapping("/{id}")
     public ResponseEntity<CarDto> updateCar(
             @PathVariable @NotNull Long id,
@@ -89,6 +92,7 @@ public class CarController {
         return ResponseEntity.status(HttpStatus.OK).body(car);
     }
 
+    @Override
     @PutMapping("/{id}/details")
     public ResponseEntity<CarFullDto> updateCarDetails(
             @PathVariable @NotNull Long id,
@@ -100,6 +104,7 @@ public class CarController {
         return ResponseEntity.status(HttpStatus.OK).body(carDetails);
     }
 
+    @Override
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCar(@NotNull @PathVariable Long id) {
         log.info("Deleting car with id={}", id);

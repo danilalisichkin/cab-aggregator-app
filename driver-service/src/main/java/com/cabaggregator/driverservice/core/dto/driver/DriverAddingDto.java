@@ -2,6 +2,7 @@ package com.cabaggregator.driverservice.core.dto.driver;
 
 import com.cabaggregator.driverservice.core.constant.ValidationErrors;
 import com.cabaggregator.driverservice.core.constant.ValidationRegex;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -9,6 +10,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.UUID;
 
+@Schema(description = "Entry to add new driver")
 public record DriverAddingDto(
         @NotEmpty
         @UUID(message = ValidationErrors.INVALID_UUID_FORMAT)

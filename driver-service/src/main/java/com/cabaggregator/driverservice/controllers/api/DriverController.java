@@ -1,5 +1,6 @@
 package com.cabaggregator.driverservice.controllers.api;
 
+import com.cabaggregator.driverservice.controllers.api.doc.DriverControllerDocumentation;
 import com.cabaggregator.driverservice.core.constant.ValidationErrors;
 import com.cabaggregator.driverservice.core.dto.driver.DriverAddingDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverDto;
@@ -34,9 +35,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/drivers")
 @RequiredArgsConstructor
-public class DriverController {
+public class DriverController implements DriverControllerDocumentation {
     private final DriverService driverService;
 
+    @Override
     @GetMapping
     public ResponseEntity<PagedDto<DriverDto>> getPageOfDrivers(
             @RequestParam(name = "offset")
@@ -53,6 +55,7 @@ public class DriverController {
         return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
+    @Override
     @GetMapping("/{id}")
     public ResponseEntity<DriverDto> getDriver(
             @PathVariable @NotEmpty @UUID(message = ValidationErrors.INVALID_UUID_FORMAT) String id) {
@@ -64,6 +67,7 @@ public class DriverController {
         return ResponseEntity.status(HttpStatus.OK).body(driver);
     }
 
+    @Override
     @PostMapping
     public ResponseEntity<DriverDto> saveDriver(@RequestBody @Valid DriverAddingDto driverAddingDTO) {
         log.info("Saving driver with phone={}", driverAddingDTO.phoneNumber());
@@ -73,6 +77,7 @@ public class DriverController {
         return ResponseEntity.status(HttpStatus.CREATED).body(driver);
     }
 
+    @Override
     @PutMapping("/{id}")
     public ResponseEntity<DriverDto> updateDriver(
             @PathVariable @NotEmpty @UUID(message = ValidationErrors.INVALID_UUID_FORMAT) String id,
@@ -85,6 +90,7 @@ public class DriverController {
         return ResponseEntity.status(HttpStatus.OK).body(driver);
     }
 
+    @Override
     @PutMapping("/{id}/rating")
     public ResponseEntity<DriverDto> updateDriverRating(
             @PathVariable @NotEmpty @UUID(message = ValidationErrors.INVALID_UUID_FORMAT) String id,
@@ -100,6 +106,7 @@ public class DriverController {
         return ResponseEntity.status(HttpStatus.OK).body(driver);
     }
 
+    @Override
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDriver(
             @PathVariable @NotEmpty @UUID(message = ValidationErrors.INVALID_UUID_FORMAT) String id) {
