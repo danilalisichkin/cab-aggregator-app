@@ -1,5 +1,6 @@
 package com.cabaggregator.authservice.sevice.impl;
 
+import com.cabaggregator.authservice.controller.api.client.KeycloakFeignClient;
 import com.cabaggregator.authservice.core.constant.ApplicationMessages;
 import com.cabaggregator.authservice.core.dto.KeycloakAccessTokenDto;
 import com.cabaggregator.authservice.core.dto.UserLoginDto;
@@ -9,8 +10,8 @@ import com.cabaggregator.authservice.exception.ResourceNotFoundException;
 import com.cabaggregator.authservice.exception.UnauthorizedException;
 import com.cabaggregator.authservice.keycloak.config.KeycloakClientConfig;
 import com.cabaggregator.authservice.keycloak.config.KeycloakServerConfig;
-import com.cabaggregator.authservice.sevice.KeycloakService;
 import com.cabaggregator.authservice.keycloak.util.KeycloakResponseValidator;
+import com.cabaggregator.authservice.sevice.KeycloakService;
 import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,9 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +39,7 @@ public class KeycloakServiceImpl implements KeycloakService {
     private final UserRepresentation userRepresentation;
     private final CredentialRepresentation credentialRepresentation;
 
+    private final KeycloakFeignClient keycloakFeignClient;
     private final KeycloakAccessTokenMapper accessTokenMapper;
 
     @Override
@@ -46,6 +50,7 @@ public class KeycloakServiceImpl implements KeycloakService {
         List<UserRepresentation> users = usersResource.search(userRegisterDto.phoneNumber());
         UserRepresentation createdUser = users.getFirst();
         sendVerificationEmail(createdUser.getId());
+
         return createdUser;
     }
 
@@ -71,9 +76,15 @@ public class KeycloakServiceImpl implements KeycloakService {
 
     @Override
     public KeycloakAccessTokenDto refreshAccessToken(String refreshToken) {
-        // TODO: implement, using Feign?
+        Map<String, Object> request = new HashMap<>();
+        request.put(OAuth2Constants.GRANT_TYPE, OAuth2Constants.REFRESH_TOKEN);
+        request.put(OAuth2Constants.CLIENT_ID, kcClientConfig.getClientId());
+        request.put(OAuth2Constants.CLIENT_SECRET, kcClientConfig.getClientSecret());
+        request.put(OAuth2Constants.REFRESH_TOKEN, refreshToken);
 
-        return null;
+        AccessTokenResponse accessToken = keycloakFeignClient.refreshToken(request);
+
+        return accessTokenMapper.tokenToDto(accessToken);
     }
 
     @Override
