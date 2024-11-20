@@ -8,6 +8,8 @@ import com.cabaggregator.driverservice.core.dto.page.PagedDto;
 import com.cabaggregator.driverservice.core.enums.sort.DriverSort;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -26,6 +28,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface DriverControllerDocumentation {
 
     @Operation(summary = "Get page", description = "Allows to get a page of existing drivers")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful response"),
+            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters"),
+            @ApiResponse(responseCode = "400", description = "Bad request: missing required fields"),
+    })
     ResponseEntity<PagedDto<DriverDto>> getPageOfDrivers(
             @Parameter(name = "offset", description = "The starting point of the page", required = true)
             @RequestParam(name = "offset") @PositiveOrZero Integer offset,
@@ -36,22 +43,51 @@ public interface DriverControllerDocumentation {
             @Parameter(name = "sort", description = "Sorting criteria for the drivers")
             @RequestParam(name = "sort") DriverSort sort);
 
-    @Operation(summary = "Get driver by ID", description = "Allows to get existing driver by its ID")
+    @Operation(summary = "Get driver", description = "Allows to get existing driver by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful response"),
+            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters"),
+            @ApiResponse(responseCode = "400", description = "Bad request: missing required fields"),
+            @ApiResponse(responseCode = "404", description = "Driver not found: driver with ID does not exist")
+    })
     ResponseEntity<DriverDto> getDriver(
             @Parameter(name = "id", description = "ID of the driver", required = true)
             @PathVariable @NotEmpty @UUID(message = ValidationErrors.INVALID_UUID_FORMAT) String id);
 
-    @Operation(summary = "Add/save a driver", description = "Allows to add/save a new driver")
+    @Operation(summary = "Add/save driver", description = "Allows to add/save a new driver")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful response"),
+            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters"),
+            @ApiResponse(responseCode = "400", description = "Bad request: missing required fields"),
+            @ApiResponse(responseCode = "404", description = "Car not found: car with ID does not exist"),
+            @ApiResponse(responseCode = "409", description = "Conflict: phone number already belongs to another driver"),
+            @ApiResponse(responseCode = "409", description = "Conflict: email already belongs to another driver"),
+            @ApiResponse(responseCode = "409", description = "Conflict: car already belongs to another driver")
+    })
     ResponseEntity<DriverDto> saveDriver(
             @RequestBody @Valid DriverAddingDto driverAddingDTO);
 
     @Operation(summary = "Update driver", description = "Allows to update existing driver by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful response"),
+            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters"),
+            @ApiResponse(responseCode = "400", description = "Bad request: missing required fields"),
+            @ApiResponse(responseCode = "404", description = "Driver not found: driver with ID does not exist"),
+            @ApiResponse(responseCode = "409", description = "Conflict: phone number already belongs to another driver"),
+            @ApiResponse(responseCode = "409", description = "Conflict: email already belongs to another driver")
+    })
     ResponseEntity<DriverDto> updateDriver(
             @Parameter(name = "id", description = "ID of the driver to be updated", required = true)
             @PathVariable @NotEmpty @UUID(message = ValidationErrors.INVALID_UUID_FORMAT) String id,
             @RequestBody @Valid DriverUpdatingDto driverDto);
 
-    @Operation(summary = "Update driver rating", description = "Allows to update the rating of an existing driver by its ID")
+    @Operation(summary = "Update rating", description = "Allows to update the rating of an existing driver by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful response"),
+            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters"),
+            @ApiResponse(responseCode = "400", description = "Bad request: missing required fields"),
+            @ApiResponse(responseCode = "404", description = "Driver not found: driver with ID does not exist")
+    })
     ResponseEntity<DriverDto> updateDriverRating(
             @Parameter(name = "id", description = "ID of the driver whose rating is to be updated", required = true)
             @PathVariable @NotEmpty @UUID(message = ValidationErrors.INVALID_UUID_FORMAT) String id,
@@ -63,6 +99,12 @@ public interface DriverControllerDocumentation {
             Double rating);
 
     @Operation(summary = "Delete driver", description = "Allows to delete existing driver by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Successful response"),
+            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters"),
+            @ApiResponse(responseCode = "400", description = "Bad request: missing required fields"),
+            @ApiResponse(responseCode = "404", description = "Driver not found: driver with ID does not exist")
+    })
     ResponseEntity<Void> deleteDriver(
             @Parameter(name = "id", description = "ID of the driver to be deleted", required = true)
             @PathVariable @NotEmpty @UUID(message = ValidationErrors.INVALID_UUID_FORMAT) String id);
