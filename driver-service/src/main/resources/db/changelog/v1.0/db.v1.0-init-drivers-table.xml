@@ -1,0 +1,80 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="v1.0-create-drivers-table" author="danilalisichkin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="drivers"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="drivers">
+            <column name="id" type="VARCHAR(50)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_drivers"/>
+            </column>
+            <column name="phone_number" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rating" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="car_id" type="BIGINT"/>
+        </createTable>
+
+        <rollback>
+            <dropTable tableName="drivers"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="v1.0-add-constraints-driver-car-id" author="danilalisichkin">
+        <addUniqueConstraint columnNames="car_id" constraintName="uc_drivers_car" tableName="drivers"/>
+
+        <rollback>
+            <dropUniqueConstraint constraintName="uc_drivers_car" tableName="drivers"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="v1.0-add-constraints-driver-email" author="danilalisichkin">
+        <addUniqueConstraint columnNames="email" constraintName="uc_drivers_email" tableName="drivers"/>
+
+        <rollback>
+            <dropUniqueConstraint constraintName="uc_drivers_email" tableName="drivers"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="v1.0-add-constraints-driver-phone-number" author="danilalisichkin">
+        <addUniqueConstraint columnNames="phone_number" constraintName="uc_drivers_phonenumber" tableName="drivers"/>
+
+        <rollback>
+            <dropUniqueConstraint constraintName="uc_drivers_phonenumber" tableName="drivers"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="v1.0-add-relation-between-driver-and-car" author="danilalisichkin">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="cars"/>
+        </preConditions>
+
+        <addForeignKeyConstraint baseColumnNames="car_id" baseTableName="drivers"
+                                 constraintName="FK_DRIVERS_ON_CAR" referencedColumnNames="id"
+                                 referencedTableName="cars"/>
+
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="drivers" constraintName="FK_DRIVERS_ON_CAR"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
