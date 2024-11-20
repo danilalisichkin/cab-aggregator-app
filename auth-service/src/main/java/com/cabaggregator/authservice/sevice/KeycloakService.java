@@ -1,17 +1,17 @@
 package com.cabaggregator.authservice.sevice;
 
+import com.cabaggregator.authservice.core.dto.KeycloakAccessTokenDto;
 import com.cabaggregator.authservice.core.dto.UserLoginDto;
 import com.cabaggregator.authservice.core.dto.UserRegisterDto;
 import org.keycloak.admin.client.resource.UserResource;
-import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.idm.UserRepresentation;
 
-public interface KeyCloakService {
+public interface KeycloakService {
     UserRepresentation createUser(UserRegisterDto userRegisterDto);
 
-    AccessTokenResponse getAccessToken(UserLoginDto userLoginDto);
+    KeycloakAccessTokenDto getAccessToken(UserLoginDto userLoginDto);
 
-    AccessTokenResponse refreshAccessToken(String refreshToken);
+    KeycloakAccessTokenDto refreshAccessToken(String refreshToken);
 
     UserResource findUserResourceByUserId(String userId);
 

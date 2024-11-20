@@ -1,6 +1,7 @@
 package com.cabaggregator.authservice.security;
 
-import com.cabaggregator.authservice.core.enums.KeyCloakRole;
+import com.cabaggregator.authservice.core.enums.KeycloakRole;
+import com.cabaggregator.authservice.keycloak.KeycloakRealmRoleConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,7 +19,7 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests(c -> c
                         .requestMatchers("api/v1/auth/**").permitAll()
-                        .requestMatchers("api/v1/users/**").hasRole(KeyCloakRole.ADMIN.getValue())
+                        .requestMatchers("api/v1/users/**").hasRole(KeycloakRole.ADMIN.getValue())
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(configurer ->
                         configurer
@@ -32,7 +33,7 @@ public class SecurityConfig {
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-        converter.setJwtGrantedAuthoritiesConverter(new KeyCloakRealmRoleConverter());
+        converter.setJwtGrantedAuthoritiesConverter(new KeycloakRealmRoleConverter());
         return converter;
     }
 }

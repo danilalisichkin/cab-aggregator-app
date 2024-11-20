@@ -1,9 +1,10 @@
 package com.cabaggregator.authservice.controller.api;
 
+import com.cabaggregator.authservice.core.dto.KeycloakAccessTokenDto;
 import com.cabaggregator.authservice.core.dto.UserLoginDto;
 import com.cabaggregator.authservice.core.dto.UserRegisterDto;
 import jakarta.validation.Valid;
-import org.keycloak.representations.AccessTokenResponse;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     @PostMapping("/sign-in")
-    public ResponseEntity<AccessTokenResponse> signIn(@RequestBody @Valid UserLoginDto loginDto) {
+    public ResponseEntity<KeycloakAccessTokenDto> signIn(@RequestBody @Valid UserLoginDto loginDto) {
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -30,7 +31,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<AccessTokenResponse> refreshToken(@RequestBody String refreshToken) {
+    public ResponseEntity<KeycloakAccessTokenDto> refreshToken(@RequestBody @NotEmpty String refreshToken) {
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }

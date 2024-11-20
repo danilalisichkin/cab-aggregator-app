@@ -1,5 +1,6 @@
-package com.cabaggregator.authservice.security;
+package com.cabaggregator.authservice.keycloak.config;
 
+import lombok.RequiredArgsConstructor;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.GroupsResource;
@@ -7,46 +8,24 @@ import org.keycloak.admin.client.resource.RolesResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 
 @Configuration
-public class KeyCloakConfig {
-    private final String clientId;
-    private final String clientSecret;
-    private final String realm;
-    private final String serverUrl;
-    private final String grantType;
-
-    public KeyCloakConfig(
-            @Value("${app.keycloak.admin.client-id}")
-            String clientId,
-            @Value("${app.keycloak.admin.client-secret}")
-            String clientSecret,
-            @Value("${app.keycloak.realm}")
-            String realm,
-            @Value("${app.keycloak.server-url}")
-            String serverUrl,
-            @Value("${app.keycloak.grant-type}")
-            String grantType) {
-
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
-        this.realm = realm;
-        this.serverUrl = serverUrl;
-        this.grantType = grantType;
-    }
+@RequiredArgsConstructor
+public class KeycloakResourceConfig {
+    private final KeycloakServerConfig kcServerConfig;
+    private final KeycloakAdminConfig kcAdminConfig;
 
     @Bean
     public Keycloak keycloak() {
         return KeycloakBuilder.builder()
-                .serverUrl(serverUrl)
-                .realm(realm)
-                .clientId(clientId)
-                .clientSecret(clientSecret)
-                .grantType(grantType)
+                .serverUrl(kcServerConfig.getServerUrl())
+                .realm(kcServerConfig.getRealm())
+                .clientId(kcAdminConfig.getClientId())
+                .clientSecret(kcAdminConfig.getClientSecret())
+                .grantType(kcServerConfig.getGrantType())
                 .build();
     }
 
@@ -57,7 +36,7 @@ public class KeyCloakConfig {
 
     @Bean
     public UsersResource usersResource(Keycloak keycloak) {
-        return keycloak.realm(realm).users();
+        return keycloak.realm(kcServerConfig.getRealm()).users();
     }
 
     @Bean
@@ -67,12 +46,12 @@ public class KeyCloakConfig {
 
     @Bean
     public RolesResource rolesResource(Keycloak keycloak) {
-        return keycloak.realm(realm).roles();
+        return keycloak.realm(kcServerConfig.getRealm()).roles();
     }
 
     @Bean
     public GroupsResource groupsResource(Keycloak keycloak) {
-        return keycloak.realm(realm).groups();
+        return keycloak.realm(kcServerConfig.getRealm()).groups();
     }
 
     @Bean

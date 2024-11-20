@@ -1,7 +1,7 @@
 package com.cabaggregator.authservice.sevice.impl;
 
 import com.cabaggregator.authservice.core.constant.ApplicationMessages;
-import com.cabaggregator.authservice.core.enums.KeyCloakRole;
+import com.cabaggregator.authservice.core.enums.KeycloakRole;
 import com.cabaggregator.authservice.exception.BadRequestException;
 import com.cabaggregator.authservice.exception.ResourceNotFoundException;
 import jakarta.ws.rs.NotFoundException;
@@ -20,7 +20,7 @@ public class RoleServiceImpl implements com.cabaggregator.authservice.sevice.Rol
     private final RolesResource rolesResource;
 
     @Override
-    public void assignRoleToUser(KeyCloakRole role, UserResource userResource) {
+    public void assignRoleToUser(KeycloakRole role, UserResource userResource) {
         RoleRepresentation keycloakRole = getRoleRepresentation(role);
 
         try {
@@ -31,7 +31,7 @@ public class RoleServiceImpl implements com.cabaggregator.authservice.sevice.Rol
     }
 
     @Override
-    public void unassignRoleFromUser(KeyCloakRole role, UserResource userResource) {
+    public void unassignRoleFromUser(KeycloakRole role, UserResource userResource) {
         RoleRepresentation keycloakRole = getRoleRepresentation(role);
         try {
             userResource.roles().realmLevel().remove(Collections.singletonList(keycloakRole));
@@ -51,7 +51,7 @@ public class RoleServiceImpl implements com.cabaggregator.authservice.sevice.Rol
         }
     }
 
-    private RoleRepresentation getRoleRepresentation(KeyCloakRole keycloakRole) {
+    private RoleRepresentation getRoleRepresentation(KeycloakRole keycloakRole) {
         try {
             return rolesResource.get(keycloakRole.getValue()).toRepresentation();
         } catch (NotFoundException e) {

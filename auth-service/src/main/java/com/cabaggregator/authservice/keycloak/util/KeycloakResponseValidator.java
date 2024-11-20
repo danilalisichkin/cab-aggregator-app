@@ -1,4 +1,4 @@
-package com.cabaggregator.authservice.util;
+package com.cabaggregator.authservice.keycloak.util;
 
 import com.cabaggregator.authservice.core.constant.ApplicationMessages;
 import com.cabaggregator.authservice.exception.BadRequestException;
@@ -11,7 +11,7 @@ import org.keycloak.representations.idm.ErrorRepresentation;
 import org.springframework.http.HttpStatus;
 
 @UtilityClass
-public class KeyCloakResponseValidator {
+public class KeycloakResponseValidator {
 
     public static void validate(Response response) {
         HttpStatus statusCode = HttpStatus.valueOf(response.getStatus());
@@ -30,9 +30,9 @@ public class KeyCloakResponseValidator {
 
     private static String handleConflict(String errorMessage) {
         return switch (errorMessage) {
-            case KeyCloakErrorMessages.USER_WITH_SAME_EMAIL_EXISTS ->
+            case KeycloakErrorMessages.USER_WITH_SAME_EMAIL_EXISTS ->
                     ApplicationMessages.REGISTER_USER_WITH_USED_EMAIL;
-            case KeyCloakErrorMessages.USER_WITH_SAME_USERNAME_EXISTS ->
+            case KeycloakErrorMessages.USER_WITH_SAME_USERNAME_EXISTS ->
                     ApplicationMessages.REGISTER_USER_WITH_USED_PHONE;
             default -> throw new InternalServerErrorException(
                     buildExceptionMessage(errorMessage, HttpStatus.CONFLICT));
@@ -41,7 +41,7 @@ public class KeyCloakResponseValidator {
 
     private static String handleUnauthorized(String errorMessage) {
         return switch (errorMessage) {
-            case KeyCloakErrorMessages.INVALID_REFRESH_TOKEN ->
+            case KeycloakErrorMessages.INVALID_REFRESH_TOKEN ->
                     ApplicationMessages.INVALID_REFRESH_TOKEN;
             default -> throw new InternalServerErrorException(
                     buildExceptionMessage(errorMessage, HttpStatus.UNAUTHORIZED));
@@ -50,9 +50,9 @@ public class KeyCloakResponseValidator {
 
     private static String handleBadRequest(String errorMessage) {
         return switch (errorMessage) {
-            case KeyCloakErrorMessages.INVALID_REFRESH_TOKEN ->
+            case KeycloakErrorMessages.INVALID_REFRESH_TOKEN ->
                     ApplicationMessages.INVALID_REFRESH_TOKEN;
-            case KeyCloakErrorMessages.REFRESH_TOKEN_EXPIRED ->
+            case KeycloakErrorMessages.REFRESH_TOKEN_EXPIRED ->
                     ApplicationMessages.REFRESH_TOKEN_EXPIRED;
             default -> throw new InternalServerErrorException(
                     buildExceptionMessage(errorMessage, HttpStatus.BAD_REQUEST));

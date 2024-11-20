@@ -1,16 +1,19 @@
 package com.cabaggregator.authservice.sevice.impl;
 
 import com.cabaggregator.authservice.core.constant.ApplicationMessages;
+import com.cabaggregator.authservice.core.dto.KeycloakAccessTokenDto;
 import com.cabaggregator.authservice.core.dto.UserLoginDto;
 import com.cabaggregator.authservice.core.dto.UserRegisterDto;
+import com.cabaggregator.authservice.core.mapper.KeycloakAccessTokenMapper;
 import com.cabaggregator.authservice.exception.ResourceNotFoundException;
 import com.cabaggregator.authservice.exception.UnauthorizedException;
-import com.cabaggregator.authservice.sevice.KeyCloakService;
-import com.cabaggregator.authservice.util.KeyCloakResponseValidator;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.cabaggregator.authservice.keycloak.config.KeycloakClientConfig;
+import com.cabaggregator.authservice.keycloak.config.KeycloakServerConfig;
+import com.cabaggregator.authservice.sevice.KeycloakService;
+import com.cabaggregator.authservice.keycloak.util.KeycloakResponseValidator;
 import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.core.Response;
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
@@ -19,51 +22,27 @@ import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Slf4j
 @Service
-public class KeyCloakServiceImpl implements KeyCloakService {
+@RequiredArgsConstructor
+public class KeycloakServiceImpl implements KeycloakService {
+    private final KeycloakServerConfig kcServerConfig;
+    private final KeycloakClientConfig kcClientConfig;
+
     private final UsersResource usersResource;
     private final UserRepresentation userRepresentation;
     private final CredentialRepresentation credentialRepresentation;
 
-    private final String realm;
-    private final String serverUrl;
-    private final String clientId;
-    private final String clientSecret;
-
-    @Autowired
-    public KeyCloakServiceImpl(
-            UsersResource usersResource,
-            UserRepresentation userRepresentation,
-            CredentialRepresentation credentialRepresentation, ObjectMapper objectMapper,
-            @Value("${app.keycloak.realm}")
-            String realm,
-            @Value("${app.keycloak.server-url}")
-            String serverUrl,
-            @Value("${app.keycloak.user.client-id}")
-            String clientId,
-            @Value("${app.keycloak.user.client-secret}")
-            String clientSecret) {
-        this.usersResource = usersResource;
-        this.userRepresentation = userRepresentation;
-        this.credentialRepresentation = credentialRepresentation;
-        this.realm = realm;
-        this.serverUrl = serverUrl;
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
-    }
+    private final KeycloakAccessTokenMapper accessTokenMapper;
 
     @Override
     public UserRepresentation createUser(UserRegisterDto userRegisterDto) {
         buildUserRepresentation(userRegisterDto);
         Response response = usersResource.create(userRepresentation);
-        KeyCloakResponseValidator.validate(response);
+        KeycloakResponseValidator.validate(response);
         List<UserRepresentation> users = usersResource.search(userRegisterDto.phoneNumber());
         UserRepresentation createdUser = users.getFirst();
         sendVerificationEmail(createdUser.getId());
@@ -71,25 +50,27 @@ public class KeyCloakServiceImpl implements KeyCloakService {
     }
 
     @Override
-    public AccessTokenResponse getAccessToken(UserLoginDto userLoginDto) {
+    public KeycloakAccessTokenDto getAccessToken(UserLoginDto userLoginDto) {
         Keycloak keycloakUser = KeycloakBuilder.builder()
-                .serverUrl(serverUrl)
-                .realm(realm)
+                .serverUrl(kcServerConfig.getServerUrl())
+                .realm(kcServerConfig.getRealm())
                 .grantType(OAuth2Constants.PASSWORD)
-                .clientId(clientId)
-                .clientSecret(clientSecret)
+                .clientId(kcClientConfig.getClientId())
+                .clientSecret(kcClientConfig.getClientSecret())
                 .username(userLoginDto.identifier())
                 .password(userLoginDto.password())
                 .build();
         try {
-            return keycloakUser.tokenManager().getAccessToken();
+            AccessTokenResponse accessToken = keycloakUser.tokenManager().getAccessToken();
+
+            return accessTokenMapper.tokenToDto(accessToken);
         } catch (NotAuthorizedException e) {
             throw new UnauthorizedException(ApplicationMessages.WRONG_LOGIN_OR_PASSWORD);
         }
     }
 
     @Override
-    public AccessTokenResponse refreshAccessToken(String refreshToken) {
+    public KeycloakAccessTokenDto refreshAccessToken(String refreshToken) {
         // TODO: implement, using Feign?
 
         return null;
@@ -113,7 +94,7 @@ public class KeyCloakServiceImpl implements KeyCloakService {
     @Override
     public void deleteUser(String userId) {
         Response response = usersResource.delete(userId);
-        KeyCloakResponseValidator.validate(response);
+        KeycloakResponseValidator.validate(response);
     }
 
     @Override

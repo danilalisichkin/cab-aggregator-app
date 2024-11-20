@@ -1,4 +1,4 @@
-package com.cabaggregator.authservice.security;
+package com.cabaggregator.authservice.keycloak;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class KeyCloakRealmRoleConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
+public class KeycloakRealmRoleConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
 
     @Override
     public Collection<GrantedAuthority> convert(Jwt jwt) {
