@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FeignExceptionConvertor {
 
-    public static Response convertToKeyCloakResponse(final FeignException exception) {
+    public static Response convertToKeycloakResponse(final FeignException exception) {
         ErrorRepresentation keycloakError = new ErrorRepresentation();
         ObjectMapper objectMapper = new ObjectMapper();
 

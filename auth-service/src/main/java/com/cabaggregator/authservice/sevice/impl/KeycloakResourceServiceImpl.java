@@ -85,7 +85,7 @@ public class KeycloakResourceServiceImpl implements KeycloakResourceService {
         try {
             return keycloakFeignClient.refreshToken(request);
         } catch (FeignException e) {
-            Response keycloakResponse = FeignExceptionConvertor.convertToKeyCloakResponse(e);
+            Response keycloakResponse = FeignExceptionConvertor.convertToKeycloakResponse(e);
             KeycloakResponseValidator.validate(keycloakResponse);
 
             return null;
