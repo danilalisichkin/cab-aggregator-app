@@ -8,12 +8,14 @@ import com.cabaggregator.driverservice.repository.DriverRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 @RequiredArgsConstructor
 public class DriverValidator {
     private final DriverRepository driverRepository;
 
-    public void validateIdUniqueness(String id) {
+    public void validateIdUniqueness(UUID id) {
         if (driverRepository.existsById(id)) {
             throw new DataUniquenessConflictException(
                     ApplicationMessages.DRIVER_WITH_ID_ALREADY_EXISTS,
@@ -45,7 +47,7 @@ public class DriverValidator {
         }
     }
 
-    public void validateExistenceOfDriverWithId(String id) {
+    public void validateExistenceOfDriverWithId(UUID id) {
         if (!driverRepository.existsById(id)) {
             throw new ResourceNotFoundException(
                     ApplicationMessages.DRIVER_WITH_ID_NOT_FOUND,

@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +46,7 @@ public interface CarControllerDocumentation {
     })
     ResponseEntity<CarDto> getCar(
             @Parameter(name = "id", description = "ID of the car", required = true)
-            @PathVariable @NotNull Long id);
+            @PathVariable Long id);
 
     @Operation(summary = "Get full car", description = "Allows to get existing car with details by its ID")
     @ApiResponses(value = {
@@ -58,11 +57,11 @@ public interface CarControllerDocumentation {
     })
     ResponseEntity<CarFullDto> getFullCar(
             @Parameter(name = "id", description = "ID of the car", required = true)
-            @PathVariable @NotNull Long id);
+            @PathVariable Long id);
 
     @Operation(summary = "Add/save car", description = "Allows to add/save new car")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful response"),
+            @ApiResponse(responseCode = "201", description = "Successful response"),
             @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters"),
             @ApiResponse(responseCode = "400", description = "Bad request: missing required fields"),
             @ApiResponse(responseCode = "400", description = "Bad request: invalid car release date provided"),
@@ -81,7 +80,7 @@ public interface CarControllerDocumentation {
     })
     ResponseEntity<CarDto> updateCar(
             @Parameter(name = "id", description = "ID of the car to be updated", required = true)
-            @PathVariable @NotNull Long id,
+            @PathVariable Long id,
             @RequestBody @Valid CarUpdatingDto carDto);
 
     @Operation(summary = "Update car details", description = "Allows to update details of existing car by its ID")
@@ -94,7 +93,7 @@ public interface CarControllerDocumentation {
     })
     ResponseEntity<CarFullDto> updateCarDetails(
             @Parameter(name = "id", description = "ID of the car to update details", required = true)
-            @PathVariable @NotNull Long id,
+            @PathVariable Long id,
             @RequestBody @Valid CarDetailsSettingDto carDetailsDto);
 
     @Operation(summary = "Delete car", description = "Allows to delete existing car with details by its ID")
@@ -106,5 +105,5 @@ public interface CarControllerDocumentation {
     })
     ResponseEntity<Void> deleteCar(
             @Parameter(name = "id", description = "ID of the car to be deleted", required = true)
-            @NotNull @PathVariable Long id);
+            @PathVariable Long id);
 }

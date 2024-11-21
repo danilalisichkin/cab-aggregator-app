@@ -4,11 +4,14 @@ import com.cabaggregator.driverservice.core.dto.driver.DriverAddingDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverUpdatingDto;
 import com.cabaggregator.driverservice.entity.Driver;
-import lombok.experimental.UtilityClass;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@UtilityClass
-public class DriverTestUtil {
-    public static final String DRIVER_ID = "4665e57c-884a-433d-8fd2-55078f29eab9";
+import java.util.UUID;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class DriverTestUtil {
+    public static final UUID DRIVER_ID = UUID.fromString("4665e57c-884a-433d-8fd2-55078f29eab9");
     public static final String PHONE_NUMBER = "375291234567";
     public static final String EMAIL = "test@mail.com";
     public static final String FIRST_NAME = "Adam";

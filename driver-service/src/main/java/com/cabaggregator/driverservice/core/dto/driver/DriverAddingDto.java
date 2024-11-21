@@ -8,13 +8,13 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import org.hibernate.validator.constraints.UUID;
+
+import java.util.UUID;
 
 @Schema(description = "Entry to add new driver")
 public record DriverAddingDto(
-        @NotEmpty
-        @UUID(message = ValidationErrors.INVALID_UUID_FORMAT)
-        String id,
+        @NotNull
+        UUID id,
 
         @NotEmpty
         @Pattern(regexp = ValidationRegex.PHONE_BELARUS_FORMAT,

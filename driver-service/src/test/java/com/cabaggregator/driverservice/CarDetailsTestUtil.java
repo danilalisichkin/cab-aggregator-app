@@ -3,12 +3,13 @@ package com.cabaggregator.driverservice;
 import com.cabaggregator.driverservice.core.dto.car.details.CarDetailsDto;
 import com.cabaggregator.driverservice.core.dto.car.details.CarDetailsSettingDto;
 import com.cabaggregator.driverservice.entity.CarDetails;
-import lombok.experimental.UtilityClass;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@UtilityClass
-public class CarDetailsTestUtil {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class CarDetailsTestUtil {
     public static final LocalDate RELEASE_DATE = LocalDate.of(2024, 1, 1);
     public static final Integer SEAT_CAPACITY = 5;
 
