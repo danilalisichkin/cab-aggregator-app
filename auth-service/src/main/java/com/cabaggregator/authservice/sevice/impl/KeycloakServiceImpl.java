@@ -12,6 +12,8 @@ import com.cabaggregator.authservice.keycloak.config.KeycloakClientConfig;
 import com.cabaggregator.authservice.keycloak.config.KeycloakServerConfig;
 import com.cabaggregator.authservice.keycloak.util.KeycloakResponseValidator;
 import com.cabaggregator.authservice.sevice.KeycloakService;
+import com.cabaggregator.authservice.util.FeignExceptionConvertor;
+import feign.FeignException;
 import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +49,7 @@ public class KeycloakServiceImpl implements KeycloakService {
         buildUserRepresentation(userRegisterDto);
         Response response = usersResource.create(userRepresentation);
         KeycloakResponseValidator.validate(response);
+
         List<UserRepresentation> users = usersResource.search(userRegisterDto.phoneNumber());
         UserRepresentation createdUser = users.getFirst();
         sendVerificationEmail(createdUser.getId());
@@ -82,9 +85,15 @@ public class KeycloakServiceImpl implements KeycloakService {
         request.put(OAuth2Constants.CLIENT_SECRET, kcClientConfig.getClientSecret());
         request.put(OAuth2Constants.REFRESH_TOKEN, refreshToken);
 
-        AccessTokenResponse accessToken = keycloakFeignClient.refreshToken(request);
+        try {
+            AccessTokenResponse accessToken = keycloakFeignClient.refreshToken(request);
 
-        return accessTokenMapper.tokenToDto(accessToken);
+            return accessTokenMapper.tokenToDto(accessToken);
+        } catch (FeignException e) {
+            Response keycloakResponse = FeignExceptionConvertor.convertToKeyCloakResponse(e);
+            KeycloakResponseValidator.validate(keycloakResponse);
+            return null;
+        }
     }
 
     @Override
