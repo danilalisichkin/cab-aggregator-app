@@ -1,9 +1,10 @@
 package com.cabaggregator.authservice.core.constant;
 
-import lombok.experimental.UtilityClass;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@UtilityClass
-public class ErrorCauses {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class ErrorCauses {
     public static final String BAD_REQUEST = "error.cause.bad.request";
     public static final String VALIDATION = "error.cause.validation";
     public static final String UNAUTHORIZED = "error.cause.unauthorized";
