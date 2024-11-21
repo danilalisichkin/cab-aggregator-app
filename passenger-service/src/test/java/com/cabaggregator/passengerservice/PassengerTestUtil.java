@@ -6,9 +6,11 @@ import com.cabaggregator.passengerservice.core.dto.PassengerUpdatingDto;
 import com.cabaggregator.passengerservice.entity.Passenger;
 import lombok.experimental.UtilityClass;
 
+import java.util.UUID;
+
 @UtilityClass
 public class PassengerTestUtil {
-    public static final String ID = "4665e57c-114a-433d-6ac2-55048a29eab9";
+    public static final UUID ID = UUID.fromString("1000e57c-114a-433d-6ac2-55048a29eab9");
     public static final String PHONE_NUMBER = "375291234567";
     public static final String EMAIL = "test@mail.com";
     public static final String FIRST_NAME = "testFirstName";

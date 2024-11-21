@@ -20,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class PassengerServiceImpl implements PassengerService {
@@ -41,7 +43,7 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @Override
-    public PassengerDto getPassengerById(String id) {
+    public PassengerDto getPassengerById(UUID id) {
         return passengerMapper.entityToDto(
                 getPassengerEntityById(id));
     }
@@ -62,7 +64,7 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     @Transactional
-    public PassengerDto updatePassenger(String id, PassengerUpdatingDto passengerDto) {
+    public PassengerDto updatePassenger(UUID id, PassengerUpdatingDto passengerDto) {
         Passenger passengerToUpdate = getPassengerEntityById(id);
 
         if (!passengerDto.phoneNumber().equals(passengerToUpdate.getPhoneNumber())) {
@@ -80,7 +82,7 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     @Transactional
-    public PassengerDto updatePassengerRating(String id, Double rating) {
+    public PassengerDto updatePassengerRating(UUID id, Double rating) {
         Passenger passengerToUpdate = getPassengerEntityById(id);
 
         passengerToUpdate.setRating(rating);
@@ -91,13 +93,13 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     @Transactional
-    public void deletePassengerById(String id) {
+    public void deletePassengerById(UUID id) {
         passengerValidator.validateExistenceOfPassengerWithId(id);
 
         passengerRepository.deleteById(id);
     }
 
-    private Passenger getPassengerEntityById(String id) {
+    private Passenger getPassengerEntityById(UUID id) {
         return passengerRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(

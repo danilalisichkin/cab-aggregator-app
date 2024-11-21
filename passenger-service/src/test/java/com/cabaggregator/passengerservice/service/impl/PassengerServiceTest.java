@@ -19,6 +19,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -91,7 +92,7 @@ class PassengerServiceTest {
     void updatePassenger_ShouldThrowResourceNotFoundException_WhenPassengerNotFound() {
         PassengerUpdatingDto passengerUpdatingDto = PassengerTestUtil.buildPassengerUpdatingDto();
 
-        final String idOfNotExistingPassenger = "1000e57c-114a-433d-6ac2-55048a29eab9";
+        UUID idOfNotExistingPassenger = UUID.fromString("1000e57c-114a-433d-6ac2-55048a29eab9");
 
         Mockito.when(passengerRepository.findById(idOfNotExistingPassenger))
                 .thenReturn(Optional.empty());

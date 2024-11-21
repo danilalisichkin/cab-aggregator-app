@@ -7,13 +7,15 @@ import com.cabaggregator.passengerservice.repository.PassengerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 @RequiredArgsConstructor
 public class PassengerValidator {
 
     private final PassengerRepository passengerRepository;
 
-    public void validateIdUniqueness(String id) {
+    public void validateIdUniqueness(UUID id) {
         if (passengerRepository.existsById(id)) {
             throw new DataUniquenessConflictException(
                     ApplicationMessages.PASSENGER_WITH_ID_ALREADY_EXISTS,
@@ -37,7 +39,7 @@ public class PassengerValidator {
         }
     }
 
-    public void validateExistenceOfPassengerWithId(String id) {
+    public void validateExistenceOfPassengerWithId(UUID id) {
         if (!passengerRepository.existsById(id)) {
             throw new ResourceNotFoundException(
                     ApplicationMessages.ERROR_PASSENGER_WITH_ID_NOT_FOUND,

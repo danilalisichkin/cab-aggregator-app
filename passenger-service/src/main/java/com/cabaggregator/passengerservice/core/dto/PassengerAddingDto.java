@@ -8,29 +8,29 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import org.hibernate.validator.constraints.UUID;
+
+import java.util.UUID;
 
 @Schema(description = "Entry to add new passenger")
 public record PassengerAddingDto(
-        @NotEmpty
-        @UUID(message = ValidationErrors.INVALID_UUID_FORMAT)
-        String id,
-
         @NotNull
+        UUID id,
+
+        @NotEmpty
         @Pattern(regexp = ValidationRegex.PHONE_BELARUS_FORMAT,
                 message = ValidationErrors.INVALID_PHONE_FORMAT)
         String phoneNumber,
 
-        @NotNull
+        @NotEmpty
         @Email
         @Size(max = 50, message = ValidationErrors.INVALID_STRING_MAX_LENGTH)
         String email,
 
-        @NotNull
+        @NotEmpty
         @Size(max = 50, message = ValidationErrors.INVALID_STRING_MAX_LENGTH)
         String firstName,
 
-        @NotNull
+        @NotEmpty
         @Size(max = 50, message = ValidationErrors.INVALID_STRING_MAX_LENGTH)
         String lastName
 ) {
