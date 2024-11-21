@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum KeyCloakRole {
+public enum KeycloakRole {
     ADMIN("ADMIN"),
     PASSENGER("PASSENGER"),
     DRIVER("DRIVER");
