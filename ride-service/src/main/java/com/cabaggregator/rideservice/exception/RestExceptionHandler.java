@@ -1,6 +1,6 @@
 package com.cabaggregator.rideservice.exception;
 
-import com.cabaggregator.rideservice.core.constant.MessageKeys;
+import com.cabaggregator.rideservice.core.constant.ErrorCauses;
 import com.cabaggregator.rideservice.core.dto.error.ErrorResponse;
 import com.cabaggregator.rideservice.core.dto.error.MultiErrorResponse;
 import com.cabaggregator.rideservice.util.MessageBuilder;
@@ -29,13 +29,22 @@ import java.util.function.BiConsumer;
 public class RestExceptionHandler {
     private final MessageBuilder messageBuilder;
 
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ErrorResponse> handleForbiddenException(ForbiddenException e) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(new ErrorResponse(
+                        e.getLocalizedMessage(),
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.FORBIDDEN, null)));
+    }
+
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFoundException(Exception e) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse(
                         e.getLocalizedMessage(),
-                        messageBuilder.buildLocalizedMessage(MessageKeys.ErrorCauses.NOT_FOUND, null)));
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.NOT_FOUND, null)));
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -44,7 +53,7 @@ public class RestExceptionHandler {
                 .status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse(
                         messageBuilder.buildLocalizedMessage(e.getMessageKey(), e.getMessageArgs()),
-                        messageBuilder.buildLocalizedMessage(MessageKeys.ErrorCauses.NOT_FOUND, null)));
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.NOT_FOUND, null)));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
@@ -53,7 +62,7 @@ public class RestExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(
                         e.getMessage(),
-                        messageBuilder.buildLocalizedMessage(MessageKeys.ErrorCauses.BAD_REQUEST, null)));
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.BAD_REQUEST, null)));
     }
 
     @ExceptionHandler(BadRequestException.class)
@@ -62,7 +71,7 @@ public class RestExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(
                         messageBuilder.buildLocalizedMessage(e.getMessageKey(), e.getMessageArgs()),
-                        messageBuilder.buildLocalizedMessage(MessageKeys.ErrorCauses.BAD_REQUEST, null)));
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.BAD_REQUEST, null)));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -70,8 +79,8 @@ public class RestExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(
-                        messageBuilder.buildLocalizedMessage(MessageKeys.ErrorCauses.CANT_READ_REQUEST, null),
-                        messageBuilder.buildLocalizedMessage(MessageKeys.ErrorCauses.BAD_REQUEST, null)));
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.CANT_READ_REQUEST, null),
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.BAD_REQUEST, null)));
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class})
@@ -83,7 +92,7 @@ public class RestExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new MultiErrorResponse(
-                        messageBuilder.buildLocalizedMessage(MessageKeys.ErrorCauses.VALIDATION, null),
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.VALIDATION, null),
                         errorMap));
     }
 
@@ -93,7 +102,7 @@ public class RestExceptionHandler {
                 .status(HttpStatus.CONFLICT)
                 .body(new ErrorResponse(
                         e.getMessage(),
-                        messageBuilder.buildLocalizedMessage(MessageKeys.ErrorCauses.UNIQUENESS_CONFLICT, null)));
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.UNIQUENESS_CONFLICT, null)));
     }
 
     @ExceptionHandler(DataUniquenessConflictException.class)
@@ -102,7 +111,7 @@ public class RestExceptionHandler {
                 .status(HttpStatus.CONFLICT)
                 .body(new ErrorResponse(
                         messageBuilder.buildLocalizedMessage(e.getMessageKey(), e.getMessageArgs()),
-                        messageBuilder.buildLocalizedMessage(MessageKeys.ErrorCauses.UNIQUENESS_CONFLICT, null)));
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.UNIQUENESS_CONFLICT, null)));
     }
 
     @ExceptionHandler(Exception.class)
@@ -112,8 +121,8 @@ public class RestExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse(
-                        messageBuilder.buildLocalizedMessage(MessageKeys.ErrorCauses.CONTACT_DEVELOPERS, null),
-                        messageBuilder.buildLocalizedMessage(MessageKeys.ErrorCauses.INTERNAL, null)));
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.CONTACT_DEVELOPERS, null),
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.INTERNAL, null)));
     }
 
     private void getValidationErrors(Map<String, List<String>> errorMap, Exception e) {

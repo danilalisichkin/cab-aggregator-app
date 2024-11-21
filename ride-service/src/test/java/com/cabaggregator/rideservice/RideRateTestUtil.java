@@ -2,12 +2,11 @@ package com.cabaggregator.rideservice;
 
 import com.cabaggregator.rideservice.core.dto.ride.rate.RideRateDto;
 import com.cabaggregator.rideservice.entity.RideRate;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import org.bson.types.ObjectId;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class RideRateTestUtil {
+@UtilityClass
+public class RideRateTestUtil {
     public static final ObjectId RIDE_RATE_ID = new ObjectId();
     public static final ObjectId RIDE_ID = RideTestUtil.RIDE_ID;
     public static final Integer PASSENGER_RATE = 5;
@@ -27,7 +26,6 @@ public final class RideRateTestUtil {
                 RIDE_RATE_ID,
                 RIDE_ID,
                 PASSENGER_RATE,
-                DRIVER_RATE
-        );
+                DRIVER_RATE);
     }
 }

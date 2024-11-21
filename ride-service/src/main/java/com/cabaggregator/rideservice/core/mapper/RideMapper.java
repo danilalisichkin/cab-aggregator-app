@@ -1,9 +1,8 @@
 package com.cabaggregator.rideservice.core.mapper;
 
 import com.cabaggregator.rideservice.core.dto.ride.RideDto;
-import com.cabaggregator.rideservice.core.dto.ride.RideUpdatingDto;
-import com.cabaggregator.rideservice.core.dto.ride.booking.RideBookingAddingDto;
-import com.cabaggregator.rideservice.core.dto.ride.booking.RideBookingUpdatingDto;
+import com.cabaggregator.rideservice.core.dto.ride.order.RideOrderAddingDto;
+import com.cabaggregator.rideservice.core.dto.ride.order.RideOrderUpdatingDto;
 import com.cabaggregator.rideservice.entity.Ride;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -22,12 +21,9 @@ public interface RideMapper {
     @Mapping(source = "paymentMethod.value", target = "paymentMethod")
     RideDto entityToDto(Ride ride);
 
-    @Mapping(target = "promoCodeId", ignore = true)
-    Ride dtoToEntity(RideBookingAddingDto dto);
+    Ride dtoToEntity(RideOrderAddingDto dto);
 
-    void updateEntityFromDto(RideUpdatingDto dto, @MappingTarget Ride ride);
-
-    void updateEntityFromBookingDto(RideBookingUpdatingDto dto, @MappingTarget Ride ride);
+    void updateEntityFromOrderDto(RideOrderUpdatingDto dto, @MappingTarget Ride ride);
 
     List<RideDto> entityListToDtoList(List<Ride> rides);
 

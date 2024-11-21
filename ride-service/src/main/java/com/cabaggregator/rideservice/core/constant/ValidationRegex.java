@@ -1,9 +1,8 @@
 package com.cabaggregator.rideservice.core.constant;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ValidationRegex {
+@UtilityClass
+public class ValidationRegex {
     public static final String SORT_ORDER = "(?i)^(asc|desc)$";
 }

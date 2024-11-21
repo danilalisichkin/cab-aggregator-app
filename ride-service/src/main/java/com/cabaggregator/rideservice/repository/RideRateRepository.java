@@ -10,4 +10,6 @@ import java.util.Optional;
 @Repository
 public interface RideRateRepository extends MongoRepository<RideRate, ObjectId> {
     Optional<RideRate> findByRideId(ObjectId rideId);
+
+    boolean existsByRideId(ObjectId rideId);
 }

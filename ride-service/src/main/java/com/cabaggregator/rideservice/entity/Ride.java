@@ -9,11 +9,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Data
@@ -25,12 +25,11 @@ public class Ride {
     @Id
     private ObjectId id;
 
-    private Long passengerId;
+    private String passengerId;
 
-    private Long driverId;
+    private String driverId;
 
-    @Indexed(unique = true)
-    private ObjectId promoCodeId;
+    private String promoCode;
 
     private ServiceCategory serviceCategory;
 
@@ -42,13 +41,17 @@ public class Ride {
 
     private String destinationAddress;
 
-    private BigDecimal cost;
+    private BigDecimal price;
+
+    private LocalDateTime orderTime;
 
     private LocalDateTime startTime;
 
     private LocalDateTime endTime;
 
-    public void setCost(BigDecimal cost) {
-        this.cost = cost.setScale(2, RoundingMode.HALF_UP);
+    private Duration estimatedDuration;
+
+    public void setPrice(BigDecimal price) {
+        this.price = price.setScale(2, RoundingMode.HALF_UP);
     }
 }

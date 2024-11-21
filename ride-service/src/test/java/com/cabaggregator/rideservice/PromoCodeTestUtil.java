@@ -3,16 +3,14 @@ package com.cabaggregator.rideservice;
 import com.cabaggregator.rideservice.core.dto.promo.PromoCodeAddingDto;
 import com.cabaggregator.rideservice.core.dto.promo.PromoCodeDto;
 import com.cabaggregator.rideservice.core.dto.promo.PromoCodeUpdatingDto;
-import com.cabaggregator.rideservice.core.dto.ride.promo.RidePromoCodeDto;
 import com.cabaggregator.rideservice.entity.PromoCode;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import org.bson.types.ObjectId;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class PromoCodeTestUtil {
+@UtilityClass
+public class PromoCodeTestUtil {
     public static final ObjectId PROMO_CODE_ID = new ObjectId();
     public static final String VALUE = "PROMO2024";
     public static final Integer DISCOUNT = 5;
@@ -55,12 +53,5 @@ public final class PromoCodeTestUtil {
                 DISCOUNT,
                 START_DATE,
                 END_DATE);
-    }
-
-    public static RidePromoCodeDto buildRidePromoCodeDto() {
-        return new RidePromoCodeDto(
-                VALUE,
-                DISCOUNT
-        );
     }
 }
