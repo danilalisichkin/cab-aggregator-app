@@ -5,8 +5,6 @@ import com.cabaggregator.passengerservice.core.dto.PassengerAddingDto;
 import com.cabaggregator.passengerservice.core.dto.PassengerDto;
 import com.cabaggregator.passengerservice.core.dto.PassengerUpdatingDto;
 import com.cabaggregator.passengerservice.entity.Passenger;
-import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,31 +18,23 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Tag("unit")
 @ExtendWith(MockitoExtension.class)
-public class PassengerMapperTest {
+class PassengerMapperTest {
     private final PassengerMapper mapper = Mappers.getMapper(PassengerMapper.class);
-
-    private Passenger passenger;
-    private PassengerDto passengerDto;
-    private PassengerUpdatingDto passengerUpdatingDto;
-    private PassengerAddingDto passengerAddingDto;
-
-    @BeforeEach
-    void setUp() {
-        passenger = PassengerTestUtil.buildPassenger();
-        passengerDto = PassengerTestUtil.buildPassengerDto();
-        passengerUpdatingDto = PassengerTestUtil.buildPassengerUpdatingDto();
-        passengerAddingDto = PassengerTestUtil.buildPassengerAddingDto();
-    }
 
     @Test
     void entityToDto_ShouldConvertEntityToDto_WhenEntityIsNotNull() {
+        Passenger passenger = PassengerTestUtil.buildPassenger();
+        PassengerDto passengerDto = PassengerTestUtil.buildPassengerDto();
+
         PassengerDto convertedDto = mapper.entityToDto(passenger);
 
-        assertThat(convertedDto).isNotNull();
-        assertThat(convertedDto).isEqualTo(passengerDto);
+        assertThat(convertedDto)
+                .isNotNull()
+                .isEqualTo(passengerDto);
     }
 
     @Test
@@ -53,55 +43,63 @@ public class PassengerMapperTest {
     }
 
     @Test
-    void updatingDtoToEntity_ShouldConvertDtoToEntity_WhenDtoIsNotNull() {
-        final long expectedId = 0L;
+    void updateEntityFromDto_ShouldUpdateEntity_WhenDtoIsNotNull() {
+        Passenger passenger = PassengerTestUtil.buildPassenger();
+        PassengerUpdatingDto passengerUpdatingDto = PassengerTestUtil.buildPassengerUpdatingDto();
 
-        Passenger convertedEntity = mapper.updatingDtoToEntity(passengerUpdatingDto);
+        mapper.updateEntityFromDto(passengerUpdatingDto, passenger);
 
-        assertThat(convertedEntity).isNotNull();
-        assertThat(convertedEntity.getId()).isEqualTo(expectedId);
-        assertThat(convertedEntity.getPhoneNumber()).isEqualTo(passengerUpdatingDto.phoneNumber());
-        assertThat(convertedEntity.getEmail()).isEqualTo(passengerUpdatingDto.email());
-        assertThat(convertedEntity.getFirstName()).isEqualTo(passengerUpdatingDto.firstName());
-        assertThat(convertedEntity.getLastName()).isEqualTo(passengerUpdatingDto.lastName());
-        assertThat(convertedEntity.getRating()).isEqualTo(passengerUpdatingDto.rating());
+        assertThat(passenger).isNotNull();
+        assertThat(passenger.getId()).isEqualTo(PassengerTestUtil.ID);
+        assertThat(passenger.getPhoneNumber()).isEqualTo(PassengerTestUtil.UPDATED_PHONE_NUMBER);
+        assertThat(passenger.getEmail()).isEqualTo(PassengerTestUtil.UPDATED_EMAIL);
+        assertThat(passenger.getFirstName()).isEqualTo(PassengerTestUtil.UPDATED_FIRST_NAME);
+        assertThat(passenger.getLastName()).isEqualTo(PassengerTestUtil.UPDATED_LAST_NAME);
+        assertThat(passenger.getRating()).isEqualTo(PassengerTestUtil.UPDATED_RATING);
     }
 
     @Test
-    void updatingDtoToEntity_ShouldReturnNull_WhenDtoIsNull() {
-        assertThat(mapper.updatingDtoToEntity(null)).isNull();
+    void updateEntityFromDto_ShouldThrowNullPointerException_WhenDtoIsNull() {
+        PassengerUpdatingDto passengerUpdatingDto = PassengerTestUtil.buildPassengerUpdatingDto();
+
+        assertThatThrownBy(() -> mapper.updateEntityFromDto(passengerUpdatingDto, null))
+                .isInstanceOf(NullPointerException.class);
     }
 
     @Test
-    void addingDtoToEntity_ShouldConvertDtoToEntity_WhenDtoIsNotNull() {
-        final long expectedId = 0L;
-        final double expectedRating = 0.0;
+    void dtoToEntity_ShouldConvertDtoToEntity_WhenDtoIsNotNull() {
+        Passenger passenger = PassengerTestUtil.buildPassenger();
+        PassengerAddingDto passengerAddingDto = PassengerTestUtil.buildPassengerAddingDto();
 
-        Passenger convertedEntity = mapper.addingDtoToEntity(passengerAddingDto);
+        Passenger convertedEntity = mapper.dtoToEntity(passengerAddingDto);
 
         assertThat(convertedEntity).isNotNull();
-        assertThat(convertedEntity.getId()).isEqualTo(expectedId);
+        assertThat(convertedEntity.getId()).isEqualTo(passenger.getId());
         assertThat(convertedEntity.getPhoneNumber()).isEqualTo(passenger.getPhoneNumber());
         assertThat(convertedEntity.getEmail()).isEqualTo(passenger.getEmail());
         assertThat(convertedEntity.getFirstName()).isEqualTo(passenger.getFirstName());
         assertThat(convertedEntity.getLastName()).isEqualTo(passenger.getLastName());
-        assertThat(convertedEntity.getRating()).isEqualTo(expectedRating);
+        assertThat(convertedEntity.getRating()).isNull();
     }
 
     @Test
-    void addingDtoToEntity_ShouldReturnNull_WhenDtoIsNull() {
-        assertThat(mapper.addingDtoToEntity(null)).isNull();
+    void dtoToEntity_ShouldReturnNull_WhenDtoIsNull() {
+        assertThat(mapper.dtoToEntity(null)).isNull();
     }
 
     @Test
     void entityListToDtoList_ShouldConvertEntityListToDtoList_WhenListIsNotNull() {
+        Passenger passenger = PassengerTestUtil.buildPassenger();
+        PassengerDto passengerDto = PassengerTestUtil.buildPassengerDto();
+
         List<Passenger> passengers = Arrays.asList(passenger, passenger);
         List<PassengerDto> expectedList = Arrays.asList(passengerDto, passengerDto);
 
         List<PassengerDto> result = mapper.entityListToDtoList(passengers);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(expectedList);
+        assertThat(result)
+                .isNotNull()
+                .isEqualTo(expectedList);
     }
 
     @Test
@@ -110,8 +108,9 @@ public class PassengerMapperTest {
 
         List<PassengerDto> result = mapper.entityListToDtoList(passengers);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result)
+                .isNotNull()
+                .isEmpty();
     }
 
     @Test
@@ -121,6 +120,8 @@ public class PassengerMapperTest {
 
     @Test
     void entityPageToDtoPage_ShouldConvertEntityPageToDtoPage_WhenPageIsNotNull() {
+        Passenger passenger = PassengerTestUtil.buildPassenger();
+
         List<Passenger> passengers = Arrays.asList(passenger, passenger);
         Page<Passenger> passengersPage = new PageImpl<>(passengers);
 

@@ -6,11 +6,9 @@ import java.util.List;
 
 @Schema(description = "Server response representing a paginated list of items")
 public record PagedDto<T>(
-        int page,
-        int pageSize,
-        int totalPages,
-        long totalItems,
-        int itemsOnPage,
+        Integer page,
+        Integer pageSize,
+        Integer totalPages,
         List<T> content
 ) {
 }

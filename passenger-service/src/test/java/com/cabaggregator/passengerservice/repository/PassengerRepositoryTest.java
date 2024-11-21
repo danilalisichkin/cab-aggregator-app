@@ -2,7 +2,6 @@ package com.cabaggregator.passengerservice.repository;
 
 import com.cabaggregator.passengerservice.PassengerTestUtil;
 import com.cabaggregator.passengerservice.entity.Passenger;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -49,7 +48,7 @@ public class PassengerRepositoryTest {
     }
 
     @Test
-    public void findByPhoneNumber_ShouldReturnPassenger_WhenPassengerExists() {
+    void findByPhoneNumber_ShouldReturnPassenger_WhenPassengerExists() {
         Passenger savedPassenger = passengerRepository.save(passenger);
         Optional<Passenger> foundPassenger = passengerRepository.findByPhoneNumber(savedPassenger.getPhoneNumber());
 
@@ -57,14 +56,14 @@ public class PassengerRepositoryTest {
     }
 
     @Test
-    public void findByPhoneNumber_ShouldReturnNull_WhenPassengerDoesNotExist() {
+    void findByPhoneNumber_ShouldReturnNull_WhenPassengerDoesNotExist() {
         Optional<Passenger> foundPassenger = passengerRepository.findByPhoneNumber(passenger.getPhoneNumber());
 
         assertThat(foundPassenger).isEmpty();
     }
 
     @Test
-    public void findByEmail_ShouldReturnPassenger_WhenPassengerExists() {
+    void findByEmail_ShouldReturnPassenger_WhenPassengerExists() {
         Passenger savedPassenger = passengerRepository.save(passenger);
         Optional<Passenger> foundPassenger = passengerRepository.findByEmail(savedPassenger.getEmail());
 
@@ -72,14 +71,14 @@ public class PassengerRepositoryTest {
     }
 
     @Test
-    public void findByEmail_ShouldReturnNull_WhenPassengerDoesNotExist() {
+    void findByEmail_ShouldReturnNull_WhenPassengerDoesNotExist() {
         Optional<Passenger> foundPassenger = passengerRepository.findByEmail(passenger.getEmail());
 
         assertThat(foundPassenger).isEmpty();
     }
 
     @Test
-    public void existsByPhoneNumber_ShouldReturnTrue_WhenPassengerExists() {
+    void existsByPhoneNumber_ShouldReturnTrue_WhenPassengerExists() {
         passengerRepository.save(passenger);
 
         boolean result = passengerRepository.existsByPhoneNumber(passenger.getPhoneNumber());
@@ -88,14 +87,14 @@ public class PassengerRepositoryTest {
     }
 
     @Test
-    public void existsByPhoneNumber_ShouldReturnFalse_WhenPassengerWithPhoneNumberDoesNotExist() {
+    void existsByPhoneNumber_ShouldReturnFalse_WhenPassengerWithPhoneNumberDoesNotExist() {
         boolean result = passengerRepository.existsByPhoneNumber(passenger.getPhoneNumber());
 
         assertThat(result).isFalse();
     }
 
     @Test
-    public void existsByEmail_ShouldReturnTrue_WhenPassengerExists() {
+    void existsByEmail_ShouldReturnTrue_WhenPassengerExists() {
         passengerRepository.save(passenger);
 
         boolean result = passengerRepository.existsByEmail(passenger.getEmail());
@@ -104,7 +103,7 @@ public class PassengerRepositoryTest {
     }
 
     @Test
-    public void existsByEmail_ShouldReturnFalse_WhenPassengerDoesNotExist() {
+    void existsByEmail_ShouldReturnFalse_WhenPassengerDoesNotExist() {
         boolean result = passengerRepository.existsByEmail(passenger.getEmail());
 
         assertThat(result).isFalse();

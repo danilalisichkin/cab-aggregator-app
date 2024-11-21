@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Tag("unit")
 @RequiredArgsConstructor
 @ExtendWith(MockitoExtension.class)
-public class PassengerValidatorTest {
+class PassengerValidatorTest {
     @InjectMocks
     private PassengerValidator passengerValidator;
 
@@ -40,7 +40,7 @@ public class PassengerValidatorTest {
         Mockito.when(passengerRepository.existsByPhoneNumber(PassengerTestUtil.PHONE_NUMBER))
                 .thenReturn(false);
 
-        assertThatCode(() -> passengerValidator.checkPhoneUniqueness(PassengerTestUtil.PHONE_NUMBER))
+        assertThatCode(() -> passengerValidator.validatePhoneUniqueness(PassengerTestUtil.PHONE_NUMBER))
                 .doesNotThrowAnyException();
     }
 
@@ -49,7 +49,7 @@ public class PassengerValidatorTest {
         Mockito.when(passengerRepository.existsByPhoneNumber(PassengerTestUtil.PHONE_NUMBER))
                 .thenReturn(true);
 
-        assertThatThrownBy(() -> passengerValidator.checkPhoneUniqueness(PassengerTestUtil.PHONE_NUMBER))
+        assertThatThrownBy(() -> passengerValidator.validatePhoneUniqueness(PassengerTestUtil.PHONE_NUMBER))
                 .isInstanceOf(DataUniquenessConflictException.class);
     }
 
@@ -58,7 +58,7 @@ public class PassengerValidatorTest {
         Mockito.when(passengerRepository.existsByEmail(PassengerTestUtil.EMAIL))
                 .thenReturn(false);
 
-        assertThatCode(() -> passengerValidator.checkEmailUniqueness(PassengerTestUtil.EMAIL))
+        assertThatCode(() -> passengerValidator.validateEmailUniqueness(PassengerTestUtil.EMAIL))
                 .doesNotThrowAnyException();
     }
 
@@ -67,7 +67,7 @@ public class PassengerValidatorTest {
         Mockito.when(passengerRepository.existsByEmail(PassengerTestUtil.EMAIL))
                 .thenReturn(true);
 
-        assertThatThrownBy(() -> passengerValidator.checkEmailUniqueness(PassengerTestUtil.EMAIL))
+        assertThatThrownBy(() -> passengerValidator.validateEmailUniqueness(PassengerTestUtil.EMAIL))
                 .isInstanceOf(DataUniquenessConflictException.class);
     }
 
@@ -76,7 +76,7 @@ public class PassengerValidatorTest {
         Mockito.when(passengerRepository.existsById(passenger.getId()))
                 .thenReturn(false);
 
-        assertThatThrownBy(() -> passengerValidator.checkExistenceOfPassengerWithId(passenger.getId()))
+        assertThatThrownBy(() -> passengerValidator.validateExistenceOfPassengerWithId(passenger.getId()))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
@@ -85,7 +85,7 @@ public class PassengerValidatorTest {
         Mockito.when(passengerRepository.existsById(passenger.getId()))
                 .thenReturn(true);
 
-        assertThatCode(() -> passengerValidator.checkExistenceOfPassengerWithId(passenger.getId()))
+        assertThatCode(() -> passengerValidator.validateExistenceOfPassengerWithId(passenger.getId()))
                 .doesNotThrowAnyException();
     }
 }

@@ -1,4 +1,10 @@
 spring:
+  messages:
+    encoding: "UTF-8"
+    basename:
+      error-causes: "classpath:error_causes"
+      validation-errors: "classpath:validation_errors"
+      messages: "classpath:messages"
   application:
     name: passenger-service
   datasource:

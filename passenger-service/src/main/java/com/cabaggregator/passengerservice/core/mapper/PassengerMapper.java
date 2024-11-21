@@ -6,6 +6,7 @@ import com.cabaggregator.passengerservice.core.dto.PassengerUpdatingDto;
 import com.cabaggregator.passengerservice.entity.Passenger;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
@@ -15,9 +16,9 @@ import java.util.List;
 public interface PassengerMapper {
     PassengerDto entityToDto(Passenger passenger);
 
-    Passenger updatingDtoToEntity(PassengerUpdatingDto dto);
+    void updateEntityFromDto(PassengerUpdatingDto passengerDto, @MappingTarget Passenger passenger);
 
-    Passenger addingDtoToEntity(PassengerAddingDto dto);
+    Passenger dtoToEntity(PassengerAddingDto dto);
 
     List<PassengerDto> entityListToDtoList(List<Passenger> passengers);
 

@@ -13,7 +13,7 @@
 
         <createTable tableName="passengers">
             <column name="id"
-                    type="BIGINT">
+                    type="UUID">
                 <constraints nullable="false"
                              primaryKey="true"
                              primaryKeyName="pk_passengers"/>

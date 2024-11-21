@@ -1,17 +1,18 @@
 package com.cabaggregator.passengerservice.service.impl;
 
-import com.cabaggregator.passengerservice.core.constant.MessageKeys;
-import com.cabaggregator.passengerservice.core.constant.PassengerFieldDefaultValues;
+import com.cabaggregator.passengerservice.core.constant.ApplicationMessages;
+import com.cabaggregator.passengerservice.core.constant.DefaultValues;
 import com.cabaggregator.passengerservice.core.dto.PagedDto;
 import com.cabaggregator.passengerservice.core.dto.PassengerAddingDto;
 import com.cabaggregator.passengerservice.core.dto.PassengerDto;
 import com.cabaggregator.passengerservice.core.dto.PassengerUpdatingDto;
+import com.cabaggregator.passengerservice.core.enums.sort.PassengerSort;
 import com.cabaggregator.passengerservice.core.mapper.PageMapper;
 import com.cabaggregator.passengerservice.core.mapper.PassengerMapper;
 import com.cabaggregator.passengerservice.entity.Passenger;
 import com.cabaggregator.passengerservice.exception.ResourceNotFoundException;
 import com.cabaggregator.passengerservice.repository.PassengerRepository;
-import com.cabaggregator.passengerservice.service.IPassengerService;
+import com.cabaggregator.passengerservice.service.PassengerService;
 import com.cabaggregator.passengerservice.util.PageRequestBuilder;
 import com.cabaggregator.passengerservice.validator.PassengerValidator;
 import jakarta.transaction.Transactional;
@@ -19,23 +20,22 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
-public class PassengerService implements IPassengerService {
-
+public class PassengerServiceImpl implements PassengerService {
     private final PassengerRepository passengerRepository;
 
     private final PassengerMapper passengerMapper;
-
     private final PageMapper pageMapper;
 
     private final PassengerValidator passengerValidator;
 
-    private final PageRequestBuilder pageRequestBuilder;
 
     @Override
-    public PagedDto<PassengerDto> getPageOfPassengers(int pageNumber, int pageSize, String sortField, String sortOrder) {
-        PageRequest request = pageRequestBuilder.buildPageRequest(pageNumber, pageSize, sortField, sortOrder);
+    public PagedDto<PassengerDto> getPageOfPassengers(Integer offset, Integer limit, PassengerSort sort) {
+        PageRequest request = PageRequestBuilder.buildPageRequest(offset, limit, sort.getSortValue());
 
         return pageMapper.pageToPagedDto(
                 passengerMapper.entityPageToDtoPage(
@@ -43,7 +43,7 @@ public class PassengerService implements IPassengerService {
     }
 
     @Override
-    public PassengerDto getPassengerById(long id) {
+    public PassengerDto getPassengerById(UUID id) {
         return passengerMapper.entityToDto(
                 getPassengerEntityById(id));
     }
@@ -51,11 +51,12 @@ public class PassengerService implements IPassengerService {
     @Override
     @Transactional
     public PassengerDto savePassenger(PassengerAddingDto passengerDto) {
-        passengerValidator.checkPhoneUniqueness(passengerDto.phoneNumber());
-        passengerValidator.checkEmailUniqueness(passengerDto.email());
+        passengerValidator.validateIdUniqueness(passengerDto.id());
+        passengerValidator.validatePhoneUniqueness(passengerDto.phoneNumber());
+        passengerValidator.validateEmailUniqueness(passengerDto.email());
 
-        Passenger passenger = passengerMapper.addingDtoToEntity(passengerDto);
-        passenger.setRating(PassengerFieldDefaultValues.DEFAULT_RATING);
+        Passenger passenger = passengerMapper.dtoToEntity(passengerDto);
+        passenger.setRating(DefaultValues.DEFAULT_RATING);
 
         return passengerMapper.entityToDto(
                 passengerRepository.save(passenger));
@@ -63,33 +64,46 @@ public class PassengerService implements IPassengerService {
 
     @Override
     @Transactional
-    public PassengerDto updatePassenger(long id, PassengerUpdatingDto passengerDto) {
+    public PassengerDto updatePassenger(UUID id, PassengerUpdatingDto passengerDto) {
         Passenger passengerToUpdate = getPassengerEntityById(id);
 
         if (!passengerDto.phoneNumber().equals(passengerToUpdate.getPhoneNumber())) {
-            passengerValidator.checkPhoneUniqueness(passengerDto.phoneNumber());
+            passengerValidator.validatePhoneUniqueness(passengerDto.phoneNumber());
         }
         if (!passengerDto.email().equals(passengerToUpdate.getEmail())) {
-            passengerValidator.checkEmailUniqueness(passengerDto.email());
+            passengerValidator.validateEmailUniqueness(passengerDto.email());
         }
 
+        passengerMapper.updateEntityFromDto(passengerDto, passengerToUpdate);
+
         return passengerMapper.entityToDto(
-                passengerRepository.save(
-                        passengerMapper.updatingDtoToEntity(passengerDto)));
+                passengerRepository.save(passengerToUpdate));
     }
 
     @Override
     @Transactional
-    public void deletePassengerById(long id) {
-        passengerValidator.checkExistenceOfPassengerWithId(id);
+    public PassengerDto updatePassengerRating(UUID id, Double rating) {
+        Passenger passengerToUpdate = getPassengerEntityById(id);
+
+        passengerToUpdate.setRating(rating);
+
+        return passengerMapper.entityToDto(
+                passengerRepository.save(passengerToUpdate));
+    }
+
+    @Override
+    @Transactional
+    public void deletePassengerById(UUID id) {
+        passengerValidator.validateExistenceOfPassengerWithId(id);
+
         passengerRepository.deleteById(id);
     }
 
-    private Passenger getPassengerEntityById(long id) {
+    private Passenger getPassengerEntityById(UUID id) {
         return passengerRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        MessageKeys.ERROR_PASSENGER_WITH_ID_NOT_FOUND,
+                        ApplicationMessages.ERROR_PASSENGER_WITH_ID_NOT_FOUND,
                         id));
     }
 }

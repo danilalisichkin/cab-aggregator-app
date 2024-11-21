@@ -7,14 +7,22 @@ import com.cabaggregator.passengerservice.entity.Passenger;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PassengerTestUtil {
-    public static final long ID = 1L;
+    public static final UUID ID = UUID.fromString("1000e57c-114a-433d-6ac2-55048a29eab9");
     public static final String PHONE_NUMBER = "375291234567";
     public static final String EMAIL = "test@mail.com";
     public static final String FIRST_NAME = "testFirstName";
     public static final String LAST_NAME = "testLastName";
-    public static final double RATING = 5.0;
+    public static final Double RATING = 5.0;
+
+    public static final String UPDATED_PHONE_NUMBER = "375297654321";
+    public static final String UPDATED_EMAIL = "test2@mail.com";
+    public static final String UPDATED_FIRST_NAME = "test2FirstName";
+    public static final String UPDATED_LAST_NAME = "test2LastName";
+    public static final Double UPDATED_RATING = 2.0;
 
     public static Passenger buildPassenger() {
         return Passenger.builder()
@@ -39,15 +47,16 @@ public final class PassengerTestUtil {
 
     public static PassengerUpdatingDto buildPassengerUpdatingDto() {
         return new PassengerUpdatingDto(
-                PHONE_NUMBER,
-                EMAIL,
-                FIRST_NAME,
-                LAST_NAME,
-                RATING);
+                UPDATED_PHONE_NUMBER,
+                UPDATED_EMAIL,
+                UPDATED_FIRST_NAME,
+                UPDATED_LAST_NAME,
+                UPDATED_RATING);
     }
 
     public static PassengerAddingDto buildPassengerAddingDto() {
         return new PassengerAddingDto(
+                ID,
                 PHONE_NUMBER,
                 EMAIL,
                 FIRST_NAME,

@@ -1,17 +1,19 @@
 package com.cabaggregator.passengerservice.controller.api;
 
 import com.cabaggregator.passengerservice.controller.api.doc.PassengerControllerDocumentation;
-import com.cabaggregator.passengerservice.core.constant.MessageKeys;
-import com.cabaggregator.passengerservice.core.constant.ValidationRegex;
+import com.cabaggregator.passengerservice.core.constant.ValidationErrors;
 import com.cabaggregator.passengerservice.core.dto.PagedDto;
 import com.cabaggregator.passengerservice.core.dto.PassengerAddingDto;
 import com.cabaggregator.passengerservice.core.dto.PassengerDto;
 import com.cabaggregator.passengerservice.core.dto.PassengerUpdatingDto;
-import com.cabaggregator.passengerservice.service.IPassengerService;
+import com.cabaggregator.passengerservice.core.enums.sort.PassengerSort;
+import com.cabaggregator.passengerservice.service.PassengerService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,34 +29,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @Slf4j
 @Validated
 @RestController
 @RequestMapping("/api/v1/passengers")
 @RequiredArgsConstructor
 public class PassengerController implements PassengerControllerDocumentation {
-    private final IPassengerService passengerService;
+    private final PassengerService passengerService;
 
     @Override
     @GetMapping
     public ResponseEntity<PagedDto<PassengerDto>> getPageOfPassengers(
-            @Positive @RequestParam(required = false, name = "page", defaultValue = "1") int pageNumber,
-            @Positive @RequestParam(required = false, name = "size", defaultValue = "10") int pageSize,
-            @RequestParam(required = false, name = "sort", defaultValue = "id") String sortField,
-            @Pattern(regexp = ValidationRegex.SORT_ORDER,
-                    message = MessageKeys.VALIDATION_INVALID_SORT_ORDER)
-            @RequestParam(required = false, name = "order", defaultValue = "desc") String sortOrder) {
+            @RequestParam(name = "offset") @PositiveOrZero Integer offset,
+            @RequestParam(name = "limit") @Positive Integer limit,
+            @RequestParam(name = "sort") PassengerSort sort) {
 
         log.info("Sending page of passengers");
 
-        PagedDto<PassengerDto> page = passengerService.getPageOfPassengers(pageNumber, pageSize, sortField, sortOrder);
+        PagedDto<PassengerDto> page = passengerService.getPageOfPassengers(offset, limit, sort);
 
         return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<PassengerDto> getPassenger(@NotNull @PathVariable long id) {
+    public ResponseEntity<PassengerDto> getPassenger(@PathVariable @org.hibernate.validator.constraints.UUID UUID id) {
+
         log.info("Getting passenger with id={}", id);
 
         PassengerDto passenger = passengerService.getPassengerById(id);
@@ -64,7 +66,9 @@ public class PassengerController implements PassengerControllerDocumentation {
 
     @Override
     @PostMapping
-    public ResponseEntity<PassengerDto> savePassenger(@Valid @RequestBody PassengerAddingDto passengerAddingDto) {
+    public ResponseEntity<PassengerDto> savePassenger(
+            @RequestBody @Valid PassengerAddingDto passengerAddingDto) {
+
         log.info("Saving passenger with phone={}", passengerAddingDto.phoneNumber());
 
         PassengerDto passenger = passengerService.savePassenger(passengerAddingDto);
@@ -75,8 +79,8 @@ public class PassengerController implements PassengerControllerDocumentation {
     @Override
     @PutMapping("/{id}")
     public ResponseEntity<PassengerDto> updatePassenger(
-            @NotNull @PathVariable long id,
-            @Valid @RequestBody PassengerUpdatingDto passengerDto) {
+            @PathVariable UUID id,
+            @RequestBody @Valid PassengerUpdatingDto passengerDto) {
 
         log.info("Updating passenger with id={}", id);
 
@@ -86,8 +90,25 @@ public class PassengerController implements PassengerControllerDocumentation {
     }
 
     @Override
+    @PutMapping("/{id}/rating")
+    public ResponseEntity<PassengerDto> updatePassengerRating(
+            @PathVariable UUID id,
+            @RequestBody @NotNull
+            @Min(value = 0, message = ValidationErrors.INVALID_NUMBER_MIN_VALUE)
+            @Max(value = 5, message = ValidationErrors.INVALID_NUMBER_MAX_VALUE)
+            Double rating) {
+
+        log.info("Updating rating of passenger with id={}", id);
+
+        PassengerDto passenger = passengerService.updatePassengerRating(id, rating);
+
+        return ResponseEntity.status(HttpStatus.OK).body(passenger);
+    }
+
+    @Override
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePassengerById(@NotNull @PathVariable long id) {
+    public ResponseEntity<Void> deletePassenger(@PathVariable UUID id) {
+
         log.info("Deleting passenger with id={}", id);
 
         passengerService.deletePassengerById(id);
