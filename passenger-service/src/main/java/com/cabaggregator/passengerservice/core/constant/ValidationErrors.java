@@ -1,9 +1,10 @@
 package com.cabaggregator.passengerservice.core.constant;
 
-import lombok.experimental.UtilityClass;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@UtilityClass
-public class ValidationErrors {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class ValidationErrors {
     public static final String INVALID_PHONE_FORMAT = "{validation.invalid.phone.format}";
     public static final String INVALID_LICENCE_PLATE_FORMAT = "{validation.invalid.licence.plate.format}";
     public static final String INVALID_LENGTH = "{validation.invalid.length}";

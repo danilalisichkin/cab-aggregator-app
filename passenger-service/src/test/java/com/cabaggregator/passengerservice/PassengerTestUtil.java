@@ -4,12 +4,13 @@ import com.cabaggregator.passengerservice.core.dto.PassengerAddingDto;
 import com.cabaggregator.passengerservice.core.dto.PassengerDto;
 import com.cabaggregator.passengerservice.core.dto.PassengerUpdatingDto;
 import com.cabaggregator.passengerservice.entity.Passenger;
-import lombok.experimental.UtilityClass;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-@UtilityClass
-public class PassengerTestUtil {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class PassengerTestUtil {
     public static final UUID ID = UUID.fromString("1000e57c-114a-433d-6ac2-55048a29eab9");
     public static final String PHONE_NUMBER = "375291234567";
     public static final String EMAIL = "test@mail.com";
