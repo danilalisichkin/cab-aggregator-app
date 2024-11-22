@@ -6,7 +6,7 @@ import org.keycloak.representations.idm.RoleRepresentation;
 
 import java.util.List;
 
-public interface RoleService {
+public interface KeycloakRoleService {
     void assignRoleToUser(KeycloakRole role, UserResource userResource);
 
     void unassignRoleFromUser(KeycloakRole role, UserResource userResource);

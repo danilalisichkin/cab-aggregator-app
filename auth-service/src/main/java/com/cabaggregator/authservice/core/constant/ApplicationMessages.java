@@ -1,9 +1,10 @@
 package com.cabaggregator.authservice.core.constant;
 
-import lombok.experimental.UtilityClass;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@UtilityClass
-public class ApplicationMessages {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class ApplicationMessages {
     public static final String INVALID_REFRESH_TOKEN = "error.invalid.refresh.token";
     public static final String INVALID_ACCESS_TOKEN = "error.invalid.access.token";
     public static final String REFRESH_TOKEN_EXPIRED = "error.refresh.token.expired";

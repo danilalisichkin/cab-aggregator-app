@@ -4,6 +4,7 @@ import com.cabaggregator.authservice.core.constant.ApplicationMessages;
 import com.cabaggregator.authservice.core.enums.KeycloakRole;
 import com.cabaggregator.authservice.exception.BadRequestException;
 import com.cabaggregator.authservice.exception.ResourceNotFoundException;
+import com.cabaggregator.authservice.sevice.KeycloakRoleService;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.admin.client.resource.RolesResource;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class RoleServiceImpl implements com.cabaggregator.authservice.sevice.RoleService {
+public class KeycloakRoleServiceImpl implements KeycloakRoleService {
     private final RolesResource rolesResource;
 
     @Override
