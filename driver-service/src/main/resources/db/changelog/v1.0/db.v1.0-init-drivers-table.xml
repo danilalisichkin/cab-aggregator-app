@@ -13,13 +13,13 @@
         </preConditions>
 
         <createTable tableName="drivers">
-            <column name="id" type="UUID">
+            <column name="id" type="VARCHAR(50)">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_drivers"/>
             </column>
             <column name="phone_number" type="VARCHAR(20)">
                 <constraints nullable="false"/>
             </column>
-            <column name="email" type="VARCHAR(50)">
+            <column name="email" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="first_name" type="VARCHAR(50)">
