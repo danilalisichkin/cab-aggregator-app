@@ -83,7 +83,7 @@ public class CarController implements CarControllerDocumentation {
     @Override
     @PutMapping("/{id}")
     public ResponseEntity<CarDto> updateCar(
-            @PathVariable @NotNull Long id,
+            @PathVariable Long id,
             @RequestBody @Valid CarUpdatingDto carDto) {
         log.info("Updating car with id={}", carDto.licensePlate());
 
@@ -95,7 +95,7 @@ public class CarController implements CarControllerDocumentation {
     @Override
     @PutMapping("/{id}/details")
     public ResponseEntity<CarFullDto> updateCarDetails(
-            @PathVariable @NotNull Long id,
+            @PathVariable Long id,
             @RequestBody @Valid CarDetailsSettingDto carDetailsDto) {
         log.info("Updating details of car with id={}", id);
 
@@ -106,7 +106,7 @@ public class CarController implements CarControllerDocumentation {
 
     @Override
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCar(@NotNull @PathVariable Long id) {
+    public ResponseEntity<Void> deleteCar(@PathVariable Long id) {
         log.info("Deleting car with id={}", id);
 
         carService.deleteCarById(id);

@@ -1,0 +1,31 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="v1.1-update-id-to-uuid" author="danilalisichkin">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="drivers" columnName="id"/>
+        </preConditions>
+
+        <modifyDataType tableName="drivers" columnName="id" newDataType="UUID"/>
+
+        <rollback>
+            <modifyDataType tableName="drivers" columnName="id" newDataType="VARCHAR(50)"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="v1.1-update-email-length" author="danilalisichkin">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="drivers" columnName="email"/>
+        </preConditions>
+
+        <modifyDataType tableName="drivers" columnName="email" newDataType="VARCHAR(50)"/>
+
+        <rollback>
+            <modifyDataType tableName="drivers" columnName="email" newDataType="VARCHAR(255)"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

@@ -11,12 +11,11 @@ import com.cabaggregator.driverservice.service.DriverService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.validator.constraints.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -30,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @Slf4j
 @Validated
 @RestController
@@ -41,9 +42,7 @@ public class DriverController implements DriverControllerDocumentation {
     @Override
     @GetMapping
     public ResponseEntity<PagedDto<DriverDto>> getPageOfDrivers(
-            @RequestParam(name = "offset")
-            @Min(value = 0, message = ValidationErrors.INVALID_NUMBER_MIN_VALUE)
-            Integer offset,
+            @RequestParam(name = "offset") @PositiveOrZero Integer offset,
             @RequestParam(name = "limit") @Positive Integer limit,
             @RequestParam(name = "sort") DriverSort sort) {
 
@@ -57,9 +56,7 @@ public class DriverController implements DriverControllerDocumentation {
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<DriverDto> getDriver(
-            @PathVariable @NotEmpty @UUID(message = ValidationErrors.INVALID_UUID_FORMAT) String id) {
-
+    public ResponseEntity<DriverDto> getDriver(@PathVariable UUID id) {
         log.info("Sending driver with id={}", id);
 
         DriverDto driver = driverService.getDriverById(id);
@@ -80,7 +77,7 @@ public class DriverController implements DriverControllerDocumentation {
     @Override
     @PutMapping("/{id}")
     public ResponseEntity<DriverDto> updateDriver(
-            @PathVariable @NotEmpty @UUID(message = ValidationErrors.INVALID_UUID_FORMAT) String id,
+            @PathVariable UUID id,
             @RequestBody @Valid DriverUpdatingDto driverDto) {
 
         log.info("Updating driver with id={}", id);
@@ -93,7 +90,7 @@ public class DriverController implements DriverControllerDocumentation {
     @Override
     @PutMapping("/{id}/rating")
     public ResponseEntity<DriverDto> updateDriverRating(
-            @PathVariable @NotEmpty @UUID(message = ValidationErrors.INVALID_UUID_FORMAT) String id,
+            @PathVariable UUID id,
             @RequestBody @NotNull
             @Min(value = 0, message = ValidationErrors.INVALID_NUMBER_MIN_VALUE)
             @Max(value = 5, message = ValidationErrors.INVALID_NUMBER_MAX_VALUE)
@@ -108,9 +105,7 @@ public class DriverController implements DriverControllerDocumentation {
 
     @Override
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDriver(
-            @PathVariable @NotEmpty @UUID(message = ValidationErrors.INVALID_UUID_FORMAT) String id) {
-
+    public ResponseEntity<Void> deleteDriver(@PathVariable UUID id) {
         log.info("Deleting driver with id={}", id);
 
         driverService.deleteDriverById(id);

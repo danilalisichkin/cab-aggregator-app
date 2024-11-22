@@ -14,15 +14,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
-import org.hibernate.validator.constraints.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.UUID;
 
 @Tag(name = "Driver API Controller", description = "Provides CRUD operations with drivers")
 public interface DriverControllerDocumentation {
@@ -52,11 +52,11 @@ public interface DriverControllerDocumentation {
     })
     ResponseEntity<DriverDto> getDriver(
             @Parameter(name = "id", description = "ID of the driver", required = true)
-            @PathVariable @NotEmpty @UUID(message = ValidationErrors.INVALID_UUID_FORMAT) String id);
+            @PathVariable UUID id);
 
     @Operation(summary = "Add/save driver", description = "Allows to add/save a new driver")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful response"),
+            @ApiResponse(responseCode = "201", description = "Successful response"),
             @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters"),
             @ApiResponse(responseCode = "400", description = "Bad request: missing required fields"),
             @ApiResponse(responseCode = "404", description = "Car not found: car with ID does not exist"),
@@ -78,7 +78,8 @@ public interface DriverControllerDocumentation {
     })
     ResponseEntity<DriverDto> updateDriver(
             @Parameter(name = "id", description = "ID of the driver to be updated", required = true)
-            @PathVariable @NotEmpty @UUID(message = ValidationErrors.INVALID_UUID_FORMAT) String id,
+            @PathVariable UUID id,
+
             @RequestBody @Valid DriverUpdatingDto driverDto);
 
     @Operation(summary = "Update rating", description = "Allows to update the rating of an existing driver by its ID")
@@ -90,7 +91,7 @@ public interface DriverControllerDocumentation {
     })
     ResponseEntity<DriverDto> updateDriverRating(
             @Parameter(name = "id", description = "ID of the driver whose rating is to be updated", required = true)
-            @PathVariable @NotEmpty @UUID(message = ValidationErrors.INVALID_UUID_FORMAT) String id,
+            @PathVariable UUID id,
 
             @Parameter(name = "rating", description = "New rating for the driver (0-5)", required = true)
             @RequestBody @NotNull
@@ -107,5 +108,5 @@ public interface DriverControllerDocumentation {
     })
     ResponseEntity<Void> deleteDriver(
             @Parameter(name = "id", description = "ID of the driver to be deleted", required = true)
-            @PathVariable @NotEmpty @UUID(message = ValidationErrors.INVALID_UUID_FORMAT) String id);
+            @PathVariable UUID id);
 }

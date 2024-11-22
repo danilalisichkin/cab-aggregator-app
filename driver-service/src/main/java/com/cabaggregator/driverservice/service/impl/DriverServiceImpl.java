@@ -23,6 +23,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class DriverServiceImpl implements DriverService {
@@ -45,7 +47,7 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public DriverDto getDriverById(String id) {
+    public DriverDto getDriverById(UUID id) {
         return driverMapper.entityToDto(
                 getDriverEntityById(id));
     }
@@ -68,7 +70,7 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     @Transactional
-    public DriverDto updateDriver(String id, DriverUpdatingDto driverDto) {
+    public DriverDto updateDriver(UUID id, DriverUpdatingDto driverDto) {
         Driver driverToUpdate = getDriverEntityById(id);
         if (!driverToUpdate.getPhoneNumber().equals(driverDto.phoneNumber())) {
             driverValidator.validatePhoneUniqueness(driverDto.phoneNumber());
@@ -85,7 +87,7 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     @Transactional
-    public DriverDto updateDriverRating(String id, Double rating) {
+    public DriverDto updateDriverRating(UUID id, Double rating) {
         Driver driverToUpdate = getDriverEntityById(id);
 
         driverToUpdate.setRating(rating);
@@ -95,13 +97,13 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public void deleteDriverById(String id) {
+    public void deleteDriverById(UUID id) {
         driverValidator.validateExistenceOfDriverWithId(id);
 
         driverRepository.deleteById(id);
     }
 
-    private Driver getDriverEntityById(String id) {
+    private Driver getDriverEntityById(UUID id) {
         return driverRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
