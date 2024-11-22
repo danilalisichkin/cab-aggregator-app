@@ -13,5 +13,4 @@ public final class ValidationErrors {
     public static final String INVALID_NUMBER_VALUE = "{validation.invalid.number.value}";
     public static final String INVALID_NUMBER_MIN_VALUE = "{validation.invalid.number.min.value}";
     public static final String INVALID_NUMBER_MAX_VALUE = "{validation.invalid.number.max.value}";
-    public static final String INVALID_UUID_FORMAT = "{validation.invalid.uuid.format}";
 }
