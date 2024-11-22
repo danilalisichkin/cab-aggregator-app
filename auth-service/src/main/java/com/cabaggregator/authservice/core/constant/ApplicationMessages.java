@@ -16,4 +16,5 @@ public final class ApplicationMessages {
     public static final String USER_NOT_FOUND = "error.user.not.found";
     public static final String USER_ROLE_NOT_FOUND = "error.user.role.not.found";
     public static final String WRONG_LOGIN_OR_PASSWORD = "error.wrong.login.or.password";
+    public static final String EMAIL_NOT_EXIST = "error.email.not.exist";
 }

@@ -30,8 +30,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         UserRole userRole = userRegisterDto.role();
 
         switch (userRole) {
-            case UserRole.DRIVER -> createKeyCloakUser(userRegisterDto, KeycloakRole.PASSENGER);
-            case UserRole.PASSENGER -> createKeyCloakUser(userRegisterDto, KeycloakRole.DRIVER);
+            case UserRole.DRIVER -> createKeyCloakUser(userRegisterDto, KeycloakRole.DRIVER);
+            case UserRole.PASSENGER -> createKeyCloakUser(userRegisterDto, KeycloakRole.PASSENGER);
             default -> throw new BadRequestException(
                     ApplicationMessages.REGISTER_USER_WITH_ROLE_PROHIBITED,
                     userRegisterDto.role().getValue());

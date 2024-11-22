@@ -18,6 +18,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(c -> c
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-resources/**",
+                                "/v3/api-docs/**",
+                                "/webjars/**"
+                        ).permitAll()
                         .requestMatchers("api/v1/auth/**").permitAll()
                         .requestMatchers("api/v1/users/**").hasRole(KeycloakRole.ADMIN.getValue())
                         .anyRequest().authenticated())
