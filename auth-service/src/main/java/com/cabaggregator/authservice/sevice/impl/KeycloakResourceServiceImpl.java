@@ -2,6 +2,7 @@ package com.cabaggregator.authservice.sevice.impl;
 
 import com.cabaggregator.authservice.controller.api.client.KeycloakFeignClient;
 import com.cabaggregator.authservice.core.constant.ApplicationMessages;
+import com.cabaggregator.authservice.exception.BadRequestException;
 import com.cabaggregator.authservice.exception.ResourceNotFoundException;
 import com.cabaggregator.authservice.exception.UnauthorizedException;
 import com.cabaggregator.authservice.keycloak.config.KeycloakClientConfig;
@@ -10,6 +11,7 @@ import com.cabaggregator.authservice.keycloak.util.KeycloakResponseValidator;
 import com.cabaggregator.authservice.sevice.KeycloakResourceService;
 import com.cabaggregator.authservice.util.FeignExceptionConvertor;
 import feign.FeignException;
+import jakarta.ws.rs.InternalServerErrorException;
 import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
@@ -115,7 +117,12 @@ public class KeycloakResourceServiceImpl implements KeycloakResourceService {
 
     @Override
     public void sendVerificationEmail(String userId) {
-        usersResource.get(userId).sendVerifyEmail();
+        try {
+            usersResource.get(userId).sendVerifyEmail();
+        } catch (InternalServerErrorException e) {
+            deleteUser(userId);
+            throw new BadRequestException(ApplicationMessages.EMAIL_NOT_EXIST);
+        }
     }
 
     private void buildUserRepresentation(

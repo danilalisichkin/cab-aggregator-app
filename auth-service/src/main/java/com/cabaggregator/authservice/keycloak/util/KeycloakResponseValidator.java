@@ -16,7 +16,12 @@ public final class KeycloakResponseValidator {
 
     public static void validate(Response response) {
         HttpStatus statusCode = HttpStatus.valueOf(response.getStatus());
-        String errorMessage = response.readEntity(ErrorRepresentation.class).getErrorMessage();
+        if (statusCode.value() < 400) {
+            return;
+        }
+
+        ErrorRepresentation error = response.readEntity(ErrorRepresentation.class);
+        String errorMessage = error.getErrorMessage();
 
         String responseMessage = switch (statusCode) {
             case CONFLICT -> handleConflict(errorMessage);
@@ -67,6 +72,6 @@ public final class KeycloakResponseValidator {
     }
 
     private static String buildExceptionMessage(String message, HttpStatus status) {
-        return String.format("KeyCloak error: status: %d, response message: %s", status.value(), message);
+        return String.format("Keycloak error: status: %d, response message: %s", status.value(), message);
     }
 }
