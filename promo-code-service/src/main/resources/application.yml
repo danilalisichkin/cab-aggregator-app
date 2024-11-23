@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: promo-code-service
+  messages:
+    basename:
+      encoding: "UTF-8"
+      error-causes: "classpath:error_causes"
+      messages: "classpath:messages"
+server:
+  port: ${SERVER_PORT:8083}
