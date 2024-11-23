@@ -30,8 +30,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         UserRole userRole = userRegisterDto.role();
 
         switch (userRole) {
-            case UserRole.DRIVER -> createKeyCloakUser(userRegisterDto, KeycloakRole.DRIVER);
-            case UserRole.PASSENGER -> createKeyCloakUser(userRegisterDto, KeycloakRole.PASSENGER);
+            case UserRole.DRIVER -> createKeycloakUser(userRegisterDto, KeycloakRole.DRIVER);
+            case UserRole.PASSENGER -> createKeycloakUser(userRegisterDto, KeycloakRole.PASSENGER);
             default -> throw new BadRequestException(
                     ApplicationMessages.REGISTER_USER_WITH_ROLE_PROHIBITED,
                     userRegisterDto.role().getValue());
@@ -54,7 +54,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return accessTokenMapper.tokenToDto(token);
     }
 
-    private void createKeyCloakUser(UserRegisterDto userRegisterDto, KeycloakRole role) {
+    private void createKeycloakUser(UserRegisterDto userRegisterDto, KeycloakRole role) {
         UserRepresentation user = kcResourceService.createUser(
                 userRegisterDto.phoneNumber(),
                 userRegisterDto.email(),

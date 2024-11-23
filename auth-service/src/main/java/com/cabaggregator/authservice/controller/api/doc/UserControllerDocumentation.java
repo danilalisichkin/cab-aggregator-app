@@ -19,72 +19,72 @@ import java.util.UUID;
 @Tag(name = "User API Controller", description = "Provides operations with users and their roles")
 public interface UserControllerDocumentation {
 
-    @Operation(summary = "Get user roles", description = "Allows to get roles of existing user")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Successful response"),
-            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters"),
-            @ApiResponse(responseCode = "400", description = "Bad request: missing required fields"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized: missing access token"),
-            @ApiResponse(responseCode = "403", description = "Forbidden: insufficient access rights"),
-            @ApiResponse(responseCode = "404", description = "User not found: user with ID does not exist")
-    })
-    ResponseEntity<List<RoleRepresentation>> getUserRoles(
-            @Parameter(name = "id", description = "ID of the user", required = true)
-            @PathVariable UUID id);
-
-    @Operation(summary = "Get user", description = "Allows to get existing user by its ID")
+    @Operation(summary = "Get user roles", description = "Allows retrieval of roles assigned to a user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful response"),
-            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters"),
-            @ApiResponse(responseCode = "400", description = "Bad request: missing required fields"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized: missing access token"),
+            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters or missing required fields"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized: missing or invalid access token"),
             @ApiResponse(responseCode = "403", description = "Forbidden: insufficient access rights"),
-            @ApiResponse(responseCode = "404", description = "User not found: user with ID does not exist")
+            @ApiResponse(responseCode = "404", description = "Not found: user with the given ID does not exist")
+    })
+    ResponseEntity<List<RoleRepresentation>> getUserRoles(
+            @Parameter(name = "id", description = "ID of the user",required = true,
+                    example = "123e4567-e89b-12d3-a456-426614174000")
+            @PathVariable UUID id);
+
+    @Operation(summary = "Get user", description = "Allows retrieval of a user by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful response"),
+            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters or missing required fields"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized: missing or invalid access token"),
+            @ApiResponse(responseCode = "403", description = "Forbidden: insufficient access rights"),
+            @ApiResponse(responseCode = "404", description = "Not found: user with the given ID does not exist")
     })
     ResponseEntity<UserRepresentation> getUser(
-            @Parameter(name = "id", description = "ID of the user", required = true)
+            @Parameter(name = "id", description = "ID of the user", required = true,
+                    example = "123e4567-e89b-12d3-a456-426614174000")
             @PathVariable UUID id);
 
-    @Operation(summary = "Delete user", description = "Allows to delete existing user by its ID")
+    @Operation(summary = "Delete user", description = "Allows deletion of a user by ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Successful response"),
-            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters"),
-            @ApiResponse(responseCode = "400", description = "Bad request: missing required fields"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized: missing access token"),
+            @ApiResponse(responseCode = "204", description = "User successfully deleted"),
+            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters or missing required fields"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized: missing or invalid access token"),
             @ApiResponse(responseCode = "403", description = "Forbidden: insufficient access rights"),
-            @ApiResponse(responseCode = "404", description = "User not found: user with ID does not exist")
+            @ApiResponse(responseCode = "404", description = "Not found: user with the given ID does not exist")
     })
     ResponseEntity<Void> deleteUser(
-            @Parameter(name = "id", description = "ID of the user", required = true)
+            @Parameter(name = "id", description = "ID of the user", required = true,
+                    example = "123e4567-e89b-12d3-a456-426614174000")
             @PathVariable UUID id);
 
-    @Operation(summary = "Assign role", description = "Allows to assign role to existing user")
+    @Operation(summary = "Assign role", description = "Assigns a role to an existing user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Successful response"),
-            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters"),
-            @ApiResponse(responseCode = "400", description = "Bad request: missing required fields"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized: missing access token"),
+            @ApiResponse(responseCode = "204", description = "Role successfully assigned"),
+            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters or missing required fields"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized: missing or invalid access token"),
             @ApiResponse(responseCode = "403", description = "Forbidden: insufficient access rights"),
-            @ApiResponse(responseCode = "404", description = "User not found: user with ID does not exist")
+            @ApiResponse(responseCode = "404", description = "Not found: user with the given ID does not exist")
     })
     ResponseEntity<Void> assignRole(
-            @Parameter(name = "id", description = "ID of the user", required = true)
+            @Parameter(name = "id", description = "ID of the user", required = true,
+                    example = "123e4567-e89b-12d3-a456-426614174000")
             @PathVariable UUID id,
-            @Parameter(name = "role", description = "Role to be assign", required = true)
+            @Parameter(name = "role", description = "Role to assign", required = true, example = "PASSENGER")
             @RequestParam("role") @NotNull KeycloakRole keycloakRole);
 
-    @Operation(summary = "Unassign role", description = "Allows to unassign role from existing user")
+    @Operation(summary = "Unassign role", description = "Removes a role from an existing user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Successful response"),
-            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters"),
-            @ApiResponse(responseCode = "400", description = "Bad request: missing required fields"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized: missing access token"),
+            @ApiResponse(responseCode = "204", description = "Role successfully removed"),
+            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters or missing required fields"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized: missing or invalid access token"),
             @ApiResponse(responseCode = "403", description = "Forbidden: insufficient access rights"),
-            @ApiResponse(responseCode = "404", description = "User not found: user with ID does not exist")
+            @ApiResponse(responseCode = "404", description = "Not found: user with the given ID does not exist")
     })
     ResponseEntity<Void> unassignRole(
-            @Parameter(name = "id", description = "ID of the user", required = true)
+            @Parameter(name = "id", description = "ID of the user", required = true,
+                    example = "123e4567-e89b-12d3-a456-426614174000")
             @PathVariable UUID id,
-            @Parameter(name = "role", description = "Role to be unassign", required = true)
+            @Parameter(name = "role", description = "Role to unassign", required = true, example = "DRIVER")
             @RequestParam("role") @NotNull KeycloakRole keycloakRole);
 }

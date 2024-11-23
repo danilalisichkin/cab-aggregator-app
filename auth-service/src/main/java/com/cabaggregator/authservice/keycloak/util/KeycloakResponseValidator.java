@@ -72,6 +72,6 @@ public final class KeycloakResponseValidator {
     }
 
     private static String buildExceptionMessage(String message, HttpStatus status) {
-        return String.format("KeyCloak error: status: %d, response message: %s", status.value(), message);
+        return String.format("Keycloak error: status: %d, response message: %s", status.value(), message);
     }
 }
