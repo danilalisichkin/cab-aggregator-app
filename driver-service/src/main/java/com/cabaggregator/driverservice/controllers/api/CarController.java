@@ -1,20 +1,22 @@
 package com.cabaggregator.driverservice.controllers.api;
 
 import com.cabaggregator.driverservice.controllers.api.doc.CarControllerDocumentation;
+import com.cabaggregator.driverservice.core.constant.ValidationErrors;
 import com.cabaggregator.driverservice.core.dto.car.CarAddingDto;
 import com.cabaggregator.driverservice.core.dto.car.CarDto;
 import com.cabaggregator.driverservice.core.dto.car.CarFullDto;
 import com.cabaggregator.driverservice.core.dto.car.CarUpdatingDto;
 import com.cabaggregator.driverservice.core.dto.car.details.CarDetailsSettingDto;
-import com.cabaggregator.driverservice.core.dto.page.PagedDto;
-import com.cabaggregator.driverservice.core.enums.sort.CarSort;
+import com.cabaggregator.driverservice.core.dto.page.PageDto;
+import com.cabaggregator.driverservice.core.enums.sort.CarSortField;
 import com.cabaggregator.driverservice.service.CarService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -38,21 +40,23 @@ public class CarController implements CarControllerDocumentation {
 
     @Override
     @GetMapping
-    public ResponseEntity<PagedDto<CarDto>> getPageOfCars(
-            @RequestParam(name = "offset") @PositiveOrZero Integer offset,
-            @RequestParam(name = "limit") @Positive Integer limit,
-            @RequestParam(name = "sort") CarSort sort) {
+    public ResponseEntity<PageDto<CarDto>> getPageOfCars(
+            @RequestParam(defaultValue = "0") @PositiveOrZero Integer offset,
+            @RequestParam(defaultValue = "10") @Positive
+            @Max(value = 20, message = ValidationErrors.INVALID_NUMBER_MAX_VALUE) Integer limit,
+            @RequestParam(defaultValue = "id") CarSortField sortBy,
+            @RequestParam(defaultValue = "ASC") Sort.Direction sortOrder) {
 
         log.info("Sending page of cars");
 
-        PagedDto<CarDto> page = carService.getPageOfCars(offset, limit, sort);
+        PageDto<CarDto> page = carService.getPageOfCars(offset, limit, sortBy, sortOrder);
 
         return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<CarDto> getCar(@PathVariable @NotNull Long id) {
+    public ResponseEntity<CarDto> getCar(@PathVariable Long id) {
         log.info("Getting car with id={}", id);
 
         CarDto car = carService.getCarById(id);
@@ -62,7 +66,7 @@ public class CarController implements CarControllerDocumentation {
 
     @Override
     @GetMapping("/{id}/full")
-    public ResponseEntity<CarFullDto> getFullCar(@PathVariable @NotNull Long id) {
+    public ResponseEntity<CarFullDto> getFullCar(@PathVariable Long id) {
         log.info("Getting car with id={} including its details", id);
 
         CarFullDto carDetails = carService.getFullCarById(id);

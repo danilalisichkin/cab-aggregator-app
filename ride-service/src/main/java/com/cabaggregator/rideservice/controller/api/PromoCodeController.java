@@ -1,17 +1,20 @@
 package com.cabaggregator.rideservice.controller.api;
 
 import com.cabaggregator.rideservice.core.constant.ValidationErrors;
-import com.cabaggregator.rideservice.core.dto.page.PagedDto;
+import com.cabaggregator.rideservice.core.dto.page.PageDto;
 import com.cabaggregator.rideservice.core.dto.promo.PromoCodeAddingDto;
 import com.cabaggregator.rideservice.core.dto.promo.PromoCodeDto;
 import com.cabaggregator.rideservice.core.dto.promo.PromoCodeUpdatingDto;
-import com.cabaggregator.rideservice.core.enums.sort.PromoCodeSort;
+import com.cabaggregator.rideservice.core.enums.sort.PromoCodeSortField;
 import com.cabaggregator.rideservice.service.PromoCodeService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,13 +37,15 @@ public class PromoCodeController {
     private final PromoCodeService promoCodeService;
 
     @GetMapping
-    public ResponseEntity<PagedDto<PromoCodeDto>> getPageOfPromoCodes(
+    public ResponseEntity<PageDto<PromoCodeDto>> getPageOfPromoCodes(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken,
-            @RequestParam(name = "offset") @Positive Integer offset,
-            @RequestParam(name = "limit") @Positive Integer limit,
-            @RequestParam(name = "sort") PromoCodeSort sort) {
+            @RequestParam(defaultValue = "0") @PositiveOrZero Integer offset,
+            @RequestParam(defaultValue = "10") @Positive
+            @Max(value = 20, message = ValidationErrors.INVALID_NUMBER_MAX_VALUE) Integer limit,
+            @RequestParam(defaultValue = "id") PromoCodeSortField sortBy,
+            @RequestParam(defaultValue = "ASC") Sort.Direction sortOrder) {
 
-        PagedDto<PromoCodeDto> page = promoCodeService.getPageOfPromoCodes(accessToken, offset, limit, sort);
+        PageDto<PromoCodeDto> page = promoCodeService.getPageOfPromoCodes(accessToken, offset, limit, sortBy, sortOrder);
 
         return ResponseEntity.status(HttpStatus.OK).body(page);
     }

@@ -5,11 +5,13 @@ import com.cabaggregator.driverservice.core.dto.car.CarDto;
 import com.cabaggregator.driverservice.core.dto.car.CarFullDto;
 import com.cabaggregator.driverservice.core.dto.car.CarUpdatingDto;
 import com.cabaggregator.driverservice.core.dto.car.details.CarDetailsSettingDto;
-import com.cabaggregator.driverservice.core.dto.page.PagedDto;
-import com.cabaggregator.driverservice.core.enums.sort.CarSort;
+import com.cabaggregator.driverservice.core.dto.page.PageDto;
+import com.cabaggregator.driverservice.core.enums.sort.CarSortField;
+import org.springframework.data.domain.Sort;
 
 public interface CarService {
-    PagedDto<CarDto> getPageOfCars(Integer offset, Integer limit, CarSort sort);
+    PageDto<CarDto> getPageOfCars(
+            Integer offset, Integer limit, CarSortField sortField, Sort.Direction sortOrder);
 
     CarDto getCarById(Long id);
 

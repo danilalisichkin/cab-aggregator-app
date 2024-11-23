@@ -2,7 +2,7 @@ package com.cabaggregator.rideservice.core.dto.page;
 
 import java.util.List;
 
-public record PagedDto<T>(
+public record PageDto<T>(
         Integer page,
         Integer pageSize,
         Integer totalPages,

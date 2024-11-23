@@ -1,12 +1,12 @@
 package com.cabaggregator.rideservice.service.impl;
 
 import com.cabaggregator.rideservice.core.constant.ApplicationMessages;
-import com.cabaggregator.rideservice.core.dto.page.PagedDto;
+import com.cabaggregator.rideservice.core.dto.page.PageDto;
 import com.cabaggregator.rideservice.core.dto.promo.PromoCodeAddingDto;
 import com.cabaggregator.rideservice.core.dto.promo.PromoCodeDto;
 import com.cabaggregator.rideservice.core.dto.promo.PromoCodeUpdatingDto;
 import com.cabaggregator.rideservice.core.enums.UserRole;
-import com.cabaggregator.rideservice.core.enums.sort.PromoCodeSort;
+import com.cabaggregator.rideservice.core.enums.sort.PromoCodeSortField;
 import com.cabaggregator.rideservice.core.mapper.PageMapper;
 import com.cabaggregator.rideservice.core.mapper.PromoCodeMapper;
 import com.cabaggregator.rideservice.entity.PromoCode;
@@ -20,6 +20,7 @@ import com.cabaggregator.rideservice.validator.PromoCodeValidator;
 import com.cabaggregator.rideservice.validator.UserRoleValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,12 +38,14 @@ public class PromoCodeServiceImpl implements PromoCodeService {
     private final UserRoleValidator userRoleValidator;
 
     @Override
-    public PagedDto<PromoCodeDto> getPageOfPromoCodes(String accessToken, Integer offset, Integer limit, PromoCodeSort sort) {
+    public PageDto<PromoCodeDto> getPageOfPromoCodes(
+            String accessToken, Integer offset, Integer limit, PromoCodeSortField sortField, Sort.Direction sortOrder) {
+
         userRoleValidator.validateUserIsAdmin(getUserRole(accessToken));
 
-        PageRequest request = PageRequestBuilder.buildPageRequest(offset, limit, sort.getSortValue());
+        PageRequest request = PageRequestBuilder.buildPageRequest(offset, limit, sortField.getValue(), sortOrder);
 
-        return pageMapper.pageToPagedDto(
+        return pageMapper.pageToPageDto(
                 promoCodeMapper.entityPageToDtoPage(
                         promoCodeRepository.findAll(request)));
     }

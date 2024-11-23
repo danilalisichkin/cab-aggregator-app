@@ -1,6 +1,6 @@
 package com.cabaggregator.passengerservice.core.mapper;
 
-import com.cabaggregator.passengerservice.core.dto.PagedDto;
+import com.cabaggregator.passengerservice.core.dto.page.PageDto;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -19,11 +19,11 @@ class PageMapperTest {
     private final PageMapper mapper = new PageMapper();
 
     @Test
-    void pageToPagedDto_ShouldReturnPagedDto_WhenPageIsNotNull() {
+    void pageToPageDto_ShouldReturnPagedDto_WhenPageIsNotEmpty() {
         final Integer expectedPage = 1;
         final Integer expectedPageSize = 2;
         final Integer expectedTotalPages = 1;
-        final long expectedTotalItems = 2;
+        final int expectedTotalItems = 2;
 
         List<Object> expectedContent = Arrays.asList("item1", "item2");
 
@@ -35,7 +35,7 @@ class PageMapperTest {
 
         Page<Object> page = new PageImpl<>(expectedContent, pageable, expectedTotalItems);
 
-        PagedDto<Object> result = mapper.pageToPagedDto(page);
+        PageDto<Object> result = mapper.pageToPageDto(page);
 
         assertThat(result).isNotNull();
         assertThat(result.page()).isEqualTo(expectedPage);
@@ -45,7 +45,7 @@ class PageMapperTest {
     }
 
     @Test
-    void pageToPagedDto_ShouldReturnPagedDtoWithNoContent_WhenPageIsEmpty() {
+    void pageToPageDto_ShouldReturnPagedDtoWithNoContent_WhenPageIsEmpty() {
         final Integer expectedPage = 1;
         final Integer expectedPageSize = 0;
         final Integer expectedTotalPages = 1;
@@ -63,14 +63,15 @@ class PageMapperTest {
 
         Page<Object> page = new PageImpl<>(expectedContent, pageable, requestedTotalItems);
 
-        PagedDto<Object> result = mapper.pageToPagedDto(page);
+        PageDto<Object> result = mapper.pageToPageDto(page);
 
         assertThat(result).isNotNull();
         assertThat(result.page()).isEqualTo(expectedPage);
         assertThat(result.pageSize()).isEqualTo(expectedPageSize);
         assertThat(result.totalPages()).isEqualTo(expectedTotalPages);
-        assertThat(result.content()).isNotNull();
-        assertThat(result.content()).hasSize(expectedTotalItems);
-        assertThat(result.content()).isEqualTo(expectedContent);
+        assertThat(result.content())
+                .isNotNull()
+                .hasSize(expectedTotalItems)
+                .isEqualTo(expectedContent);
     }
 }
