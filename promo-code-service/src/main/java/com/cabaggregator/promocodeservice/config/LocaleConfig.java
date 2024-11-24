@@ -13,7 +13,7 @@ import java.util.Locale;
 @Configuration
 @RequiredArgsConstructor
 public class LocaleConfig implements WebMvcConfigurer {
-    private final com.cabaggregator.promocodeservice.config.MessageConfig messageConfig;
+    private final MessageConfig messageConfig;
 
     @Bean
     public MessageSource messageSource() {
