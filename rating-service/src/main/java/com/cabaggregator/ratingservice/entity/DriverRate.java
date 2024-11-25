@@ -29,5 +29,5 @@ public class DriverRate {
 
     private Integer rate;
 
-    Set<FeedbackOption> feedbackOptions;
+    private Set<FeedbackOption> feedbackOptions;
 }
