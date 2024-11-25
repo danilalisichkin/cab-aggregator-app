@@ -1,4 +1,4 @@
-package com.cabaggregator.rideservice.config;
+package com.cabaggregator.driverservice.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
