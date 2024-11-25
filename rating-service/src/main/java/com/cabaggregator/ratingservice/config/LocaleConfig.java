@@ -1,6 +1,8 @@
 package com.cabaggregator.ratingservice.config;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,8 +14,9 @@ import java.util.Locale;
 
 @Configuration
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class LocaleConfig implements WebMvcConfigurer {
-    private final MessageConfig messageConfig;
+    MessageConfig messageConfig;
 
     @Bean
     public MessageSource messageSource() {
