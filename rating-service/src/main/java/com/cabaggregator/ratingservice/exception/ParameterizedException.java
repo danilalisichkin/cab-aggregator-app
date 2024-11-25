@@ -1,12 +1,15 @@
 package com.cabaggregator.ratingservice.exception;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ParameterizedException extends RuntimeException {
-    private final String errorCauseKey;
-    private final String messageKey;
-    private final Object[] messageArgs;
+    String errorCauseKey;
+    String messageKey;
+    Object[] messageArgs;
 
     public ParameterizedException(String errorCauseKey, String messageKey, Object[] messageArgs) {
         super(messageKey);

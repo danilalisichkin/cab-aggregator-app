@@ -4,7 +4,9 @@ import com.cabaggregator.ratingservice.core.constant.ErrorCauses;
 import com.cabaggregator.ratingservice.core.dto.error.ErrorResponse;
 import com.cabaggregator.ratingservice.core.dto.error.MultiErrorResponse;
 import com.cabaggregator.ratingservice.util.MessageBuilder;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +27,9 @@ import java.util.function.BiConsumer;
 @Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RestExceptionHandler {
-    private final MessageBuilder messageBuilder;
+    MessageBuilder messageBuilder;
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFoundException(Exception e) {
