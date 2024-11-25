@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -27,7 +27,7 @@ public class PromoCode {
     private Integer discountPercentage;
 
     @Column(nullable = false)
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     @Column(nullable = false)
     private Long limits;

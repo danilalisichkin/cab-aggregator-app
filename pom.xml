@@ -14,6 +14,7 @@
         <module>auth-service</module>
         <module>driver-service</module>
         <module>eureka-server</module>
+        <module>promo-code-service</module>
         <module>passenger-service</module>
         <module>ride-service</module>
     </modules>
