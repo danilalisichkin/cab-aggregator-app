@@ -1,4 +1,4 @@
-package com.cabaggregator.rideservice.config;
+package com.cabaggregator.promocodeservice.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -20,7 +20,6 @@ public class LocaleConfig implements WebMvcConfigurer {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.addBasenames(
                 messageConfig.getErrorCauses(),
-                messageConfig.getValidationErrors(),
                 messageConfig.getMessages());
         messageSource.setDefaultEncoding(
                 messageConfig.getEncoding());
