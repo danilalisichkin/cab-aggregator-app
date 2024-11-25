@@ -2,8 +2,8 @@ spring:
   application:
     name: ride-service
   messages:
-    encoding: "UTF-8"
     basename:
+      encoding: "UTF-8"
       error-causes: "classpath:error_causes"
       validation-errors: "classpath:validation_errors"
       messages: "classpath:messages"
