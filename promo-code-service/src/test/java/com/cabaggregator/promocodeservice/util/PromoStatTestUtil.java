@@ -1,5 +1,7 @@
 package com.cabaggregator.promocodeservice.util;
 
+import com.cabaggregator.promocodeservice.core.dto.promo.stat.PromoStatAddingDto;
+import com.cabaggregator.promocodeservice.core.dto.promo.stat.PromoStatDto;
 import com.cabaggregator.promocodeservice.entity.PromoStat;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -17,5 +19,18 @@ public final class PromoStatTestUtil {
                 .userId(USER_ID)
                 .promoCode(PromoCodeTestUtil.buildPromoCode())
                 .build();
+    }
+
+    public static PromoStatDto buildPromoStatDto() {
+        return new PromoStatDto(
+                ID,
+                USER_ID,
+                PromoCodeTestUtil.VALUE);
+    }
+
+    public static PromoStatAddingDto buildPromoStatAddingDto() {
+        return new PromoStatAddingDto(
+                USER_ID,
+                PromoCodeTestUtil.VALUE);
     }
 }
