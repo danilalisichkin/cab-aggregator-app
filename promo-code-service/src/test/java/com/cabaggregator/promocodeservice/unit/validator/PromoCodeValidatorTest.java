@@ -18,11 +18,12 @@ import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @Tag("unit")
 @ExtendWith(MockitoExtension.class)
-public class PromoCodeValidatorTest {
+class PromoCodeValidatorTest {
     @Mock
     private PromoCodeRepository promoCodeRepository;
 
@@ -59,6 +60,8 @@ public class PromoCodeValidatorTest {
 
         assertThatThrownBy(() -> promoCodeValidator.validateEndDate(dateInPast))
                 .isInstanceOf(ValidationErrorException.class);
+
+        verifyNoInteractions(promoCodeRepository);
     }
 
     @Test
@@ -67,6 +70,8 @@ public class PromoCodeValidatorTest {
 
         assertThatCode(() -> promoCodeValidator.validateEndDate(dateInFuture))
                 .doesNotThrowAnyException();
+
+        verifyNoInteractions(promoCodeRepository);
     }
 
     @Test
@@ -75,6 +80,8 @@ public class PromoCodeValidatorTest {
 
         assertThatThrownBy(() -> promoCodeValidator.validatePromoCodeExpiration(expirationDateInPast))
                 .isInstanceOf(BadRequestException.class);
+
+        verifyNoInteractions(promoCodeRepository);
     }
 
     @Test
@@ -83,5 +90,7 @@ public class PromoCodeValidatorTest {
 
         assertThatCode(() -> promoCodeValidator.validatePromoCodeExpiration(expirationDateInFuture))
                 .doesNotThrowAnyException();
+
+        verifyNoInteractions(promoCodeRepository);
     }
 }

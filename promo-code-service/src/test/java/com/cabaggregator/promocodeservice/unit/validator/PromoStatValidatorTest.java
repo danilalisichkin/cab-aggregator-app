@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 
 @Tag("unit")
 @ExtendWith(MockitoExtension.class)
-public class PromoStatValidatorTest {
+class PromoStatValidatorTest {
     @Mock
     private PromoStatRepository promoStatRepository;
 
