@@ -19,14 +19,13 @@ public final class DriverRateTestUtil {
     public static final Set<FeedbackOption> FEEDBACK_OPTIONS =
             Set.of(FeedbackOption.COMFORTABLE_RIDE, FeedbackOption.GOOD_MUSIC);
 
-    public static DriverRate buildDriverRate() {
+    public static DriverRate.DriverRateBuilder getDriverRateBuilder() {
         return DriverRate.builder()
                 .id(ID)
                 .rideId(RIDE_ID)
                 .driverId(DRIVER_ID)
                 .passengerId(PASSENGER_ID)
                 .rate(RATE)
-                .feedbackOptions(FEEDBACK_OPTIONS)
-                .build();
+                .feedbackOptions(FEEDBACK_OPTIONS);
     }
 }
