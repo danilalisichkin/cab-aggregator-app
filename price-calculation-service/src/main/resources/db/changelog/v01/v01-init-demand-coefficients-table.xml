@@ -5,50 +5,29 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
         objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
 
-    <changeSet id="v1.0-create-demand-coefficients-table" author="danilalisichkin">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="demand_coefficients"/>
-            </not>
-        </preConditions>
+    <changeSet id="v01-create-demand-coefficients-table" author="danilalisichkin">
 
         <createTable tableName="demand_coefficients">
-            <column autoIncrement="true"
-                    name="id"
-                    type="INT">
+            <column name="demand"
+                    type="VARCHAR(20)">
                 <constraints nullable="false"
                              primaryKey="true"
-                             primaryKeyName="pk_demand_coefficients"/>
+                             primaryKeyName="pk_demand"/>
             </column>
             <column name="min_orders"
                     type="INT">
                 <constraints nullable="false"/>
             </column>
             <column name="price_coefficient"
-                    type="DOUBLE">
+                    type="NUMERIC(4,2)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-
-        <rollback>
-            <dropTable tableName="demand_coefficients"/>
-        </rollback>
-    </changeSet>
-
-    <changeSet id="v1.1-create-index-for-min-orders-column" author="danilalisichkin">
-        <preConditions onFail="MARK_RAN">
-            <tableExists tableName="demand_coefficients"/>
-        </preConditions>
 
         <createIndex indexName="idx_demand_coefficients_min_orders"
                      tableName="demand_coefficients">
             <column name="min_orders"/>
         </createIndex>
 
-        <rollback>
-            <dropIndex indexName="idx_demand_coefficients_min_orders"
-                       tableName="demand_coefficients"/>
-        </rollback>
     </changeSet>
-    
 </databaseChangeLog>

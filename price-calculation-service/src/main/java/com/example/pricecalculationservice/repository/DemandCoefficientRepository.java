@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface DemandCoefficientRepository extends JpaRepository<DemandCoefficient, Integer> {
+public interface DemandCoefficientRepository extends JpaRepository<DemandCoefficient, String> {
     @Query("SELECT d FROM DemandCoefficient d " +
             "WHERE d.minOrders <= :currentOrders " +
             "ORDER BY d.minOrders DESC LIMIT 1")
