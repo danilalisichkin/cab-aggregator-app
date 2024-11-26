@@ -1,11 +1,11 @@
 package com.cabaggregator.promocodeservice.core.dto.promo.code;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public record PromoCodeDto(
         String value,
         Integer discountPercentage,
-        LocalDateTime endDate,
+        LocalDate endDate,
         Long limits
 ) {
 }
