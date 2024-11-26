@@ -1,5 +1,6 @@
 package com.example.pricecalculationservice.integration.repository;
 
+import com.example.pricecalculationservice.config.PostgreSQLContainerConfig;
 import com.example.pricecalculationservice.entity.RideFare;
 import com.example.pricecalculationservice.repository.RideFareRepository;
 import com.example.pricecalculationservice.util.RideFareTestUtil;
@@ -8,10 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
+import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Optional;
@@ -21,42 +19,30 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Tag("integration")
 @DataJpaTest
 @Testcontainers
+@ContextConfiguration(classes = PostgreSQLContainerConfig.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class RideFareRepositoryTest {
+class RideFareRepositoryTest {
     @Autowired
     private RideFareRepository rideFareRepository;
 
-    @Container
-    public static PostgreSQLContainer<?> postgresqlContainer = new PostgreSQLContainer<>("postgres:14-alpine")
-            .withDatabaseName("price_calculation_database")
-            .withUsername("postgres")
-            .withPassword("root");
-
-    @DynamicPropertySource
-    public static void setProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgresqlContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", postgresqlContainer::getUsername);
-        registry.add("spring.datasource.password", postgresqlContainer::getPassword);
-    }
-
     @Test
     void findByFareName_ShouldReturnRideFare_WhenRideFareExists() {
-        RideFare rideFare = RideFareTestUtil.buildRideFare();
-        rideFare.setId(null);
-
+        RideFare rideFare = RideFareTestUtil.getRideFareBuilder()
+                .id(null)
+                .build();
         rideFareRepository.save(rideFare);
 
-        Optional<RideFare> result = rideFareRepository.findByFareName(rideFare.getFareName());
+        Optional<RideFare> actual = rideFareRepository.findByFareName(rideFare.getFareName());
 
-        assertThat(result)
+        assertThat(actual)
                 .isNotEmpty()
                 .contains(rideFare);
     }
 
     @Test
     void findByFareName_ShouldReturnEmptyOptional_WhenRideFareDoesNotExist() {
-        Optional<RideFare> result = rideFareRepository.findByFareName(RideFareTestUtil.FARE_NAME);
+        Optional<RideFare> actual = rideFareRepository.findByFareName(RideFareTestUtil.FARE_NAME);
 
-        assertThat(result).isEmpty();
+        assertThat(actual).isEmpty();
     }
 }

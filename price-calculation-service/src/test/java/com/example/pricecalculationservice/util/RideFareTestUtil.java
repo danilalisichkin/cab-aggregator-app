@@ -11,12 +11,11 @@ public final class RideFareTestUtil {
     public static final Double BASE_PRICE_PER_KILOMETER = 5.0;
     public static final Double BASE_PRICE_PER_MINUTE = 3.0;
 
-    public static RideFare buildRideFare() {
+    public static RideFare.RideFareBuilder getRideFareBuilder() {
         return RideFare.builder()
                 .id(ID)
                 .fareName(FARE_NAME)
                 .basePricePerKilometer(BASE_PRICE_PER_KILOMETER)
-                .basePricePerMinute(BASE_PRICE_PER_MINUTE)
-                .build();
+                .basePricePerMinute(BASE_PRICE_PER_MINUTE);
     }
 }
