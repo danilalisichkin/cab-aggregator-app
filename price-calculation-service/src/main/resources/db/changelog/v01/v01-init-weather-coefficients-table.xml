@@ -1,0 +1,33 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="v01-create-weather-coefficients-table" author="danilalisichkin">
+
+        <createTable tableName="weather_coefficients">
+            <column name="weather"
+                    type="VARCHAR(20)">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_weather_coefficients"/>
+            </column>
+            <column name="price_coefficient"
+                    type="NUMERIC(4,2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint columnNames="weather"
+                             constraintName="uc_weather_coefficients_weather"
+                             tableName="weather_coefficients"/>
+
+        <createIndex indexName="idx_weather_coefficients_weather"
+                     tableName="weather_coefficients">
+            <column name="weather"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>
