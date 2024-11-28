@@ -5,8 +5,8 @@ import com.cabaggregator.driverservice.core.constant.DefaultValues;
 import com.cabaggregator.driverservice.core.dto.driver.DriverAddingDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverUpdatingDto;
-import com.cabaggregator.driverservice.core.dto.page.PagedDto;
-import com.cabaggregator.driverservice.core.enums.sort.DriverSort;
+import com.cabaggregator.driverservice.core.dto.page.PageDto;
+import com.cabaggregator.driverservice.core.enums.sort.DriverSortField;
 import com.cabaggregator.driverservice.core.mapper.DriverMapper;
 import com.cabaggregator.driverservice.core.mapper.PageMapper;
 import com.cabaggregator.driverservice.entity.Car;
@@ -21,6 +21,7 @@ import com.cabaggregator.driverservice.validator.DriverValidator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -38,10 +39,12 @@ public class DriverServiceImpl implements DriverService {
     private final CarValidator carValidator;
 
     @Override
-    public PagedDto<DriverDto> getPageOfDrivers(Integer offset, Integer limit, DriverSort sort) {
-        PageRequest request = PageRequestBuilder.buildPageRequest(offset, limit, sort.getSortValue());
+    public PageDto<DriverDto> getPageOfDrivers(
+            Integer offset, Integer limit, DriverSortField sortField, Sort.Direction sortOrder) {
 
-        return pageMapper.pageToPagedDto(
+        PageRequest request = PageRequestBuilder.buildPageRequest(offset, limit, sortField.getValue(), sortOrder);
+
+        return pageMapper.pageToPageDto(
                 driverMapper.entityPageToDtoPage(
                         driverRepository.findAll(request)));
     }

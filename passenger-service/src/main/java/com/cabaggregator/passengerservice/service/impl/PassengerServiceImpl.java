@@ -2,11 +2,11 @@ package com.cabaggregator.passengerservice.service.impl;
 
 import com.cabaggregator.passengerservice.core.constant.ApplicationMessages;
 import com.cabaggregator.passengerservice.core.constant.DefaultValues;
-import com.cabaggregator.passengerservice.core.dto.PagedDto;
-import com.cabaggregator.passengerservice.core.dto.PassengerAddingDto;
-import com.cabaggregator.passengerservice.core.dto.PassengerDto;
-import com.cabaggregator.passengerservice.core.dto.PassengerUpdatingDto;
-import com.cabaggregator.passengerservice.core.enums.sort.PassengerSort;
+import com.cabaggregator.passengerservice.core.dto.page.PageDto;
+import com.cabaggregator.passengerservice.core.dto.passenger.PassengerAddingDto;
+import com.cabaggregator.passengerservice.core.dto.passenger.PassengerDto;
+import com.cabaggregator.passengerservice.core.dto.passenger.PassengerUpdatingDto;
+import com.cabaggregator.passengerservice.core.enums.sort.PassengerSortField;
 import com.cabaggregator.passengerservice.core.mapper.PageMapper;
 import com.cabaggregator.passengerservice.core.mapper.PassengerMapper;
 import com.cabaggregator.passengerservice.entity.Passenger;
@@ -18,6 +18,7 @@ import com.cabaggregator.passengerservice.validator.PassengerValidator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -34,10 +35,12 @@ public class PassengerServiceImpl implements PassengerService {
 
 
     @Override
-    public PagedDto<PassengerDto> getPageOfPassengers(Integer offset, Integer limit, PassengerSort sort) {
-        PageRequest request = PageRequestBuilder.buildPageRequest(offset, limit, sort.getSortValue());
+    public PageDto<PassengerDto> getPageOfPassengers(
+            Integer offset, Integer limit, PassengerSortField sortField, Sort.Direction sortOrder) {
 
-        return pageMapper.pageToPagedDto(
+        PageRequest request = PageRequestBuilder.buildPageRequest(offset, limit, sortField.getValue(), sortOrder);
+
+        return pageMapper.pageToPageDto(
                 passengerMapper.entityPageToDtoPage(
                         passengerRepository.findAll(request)));
     }

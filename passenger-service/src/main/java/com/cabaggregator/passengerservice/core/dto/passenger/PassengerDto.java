@@ -1,4 +1,4 @@
-package com.cabaggregator.passengerservice.core.dto;
+package com.cabaggregator.passengerservice.core.dto.passenger;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

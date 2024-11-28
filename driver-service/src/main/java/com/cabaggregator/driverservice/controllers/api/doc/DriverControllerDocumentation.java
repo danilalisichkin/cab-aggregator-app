@@ -4,8 +4,8 @@ import com.cabaggregator.driverservice.core.constant.ValidationErrors;
 import com.cabaggregator.driverservice.core.dto.driver.DriverAddingDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverUpdatingDto;
-import com.cabaggregator.driverservice.core.dto.page.PagedDto;
-import com.cabaggregator.driverservice.core.enums.sort.DriverSort;
+import com.cabaggregator.driverservice.core.dto.page.PageDto;
+import com.cabaggregator.driverservice.core.enums.sort.DriverSortField;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,6 +17,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,15 +34,19 @@ public interface DriverControllerDocumentation {
             @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters"),
             @ApiResponse(responseCode = "400", description = "Bad request: missing required fields"),
     })
-    ResponseEntity<PagedDto<DriverDto>> getPageOfDrivers(
+    ResponseEntity<PageDto<DriverDto>> getPageOfDrivers(
             @Parameter(name = "offset", description = "The starting point of the page", required = true)
-            @RequestParam(name = "offset") @PositiveOrZero Integer offset,
+            @RequestParam(defaultValue = "0") @PositiveOrZero Integer offset,
 
             @Parameter(name = "limit", description = "The number of drivers to return", required = true)
-            @RequestParam(name = "limit") @Positive Integer limit,
+            @RequestParam(defaultValue = "10") @Positive
+            @Max(value = 20, message = ValidationErrors.INVALID_NUMBER_MAX_VALUE) Integer limit,
 
-            @Parameter(name = "sort", description = "Sorting criteria for the drivers")
-            @RequestParam(name = "sort") DriverSort sort);
+            @Parameter(name = "sort field", description = "Sorting criteria for the drivers")
+            @RequestParam(defaultValue = "id") DriverSortField sortBy,
+
+            @Parameter(name = "sort order", description = "Sorting criteria for the drivers")
+            @RequestParam(defaultValue = "ASC") Sort.Direction sortOrder);
 
     @Operation(summary = "Get driver", description = "Allows to get existing driver by its ID")
     @ApiResponses(value = {

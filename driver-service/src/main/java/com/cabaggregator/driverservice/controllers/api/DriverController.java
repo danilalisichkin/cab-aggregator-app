@@ -5,8 +5,8 @@ import com.cabaggregator.driverservice.core.constant.ValidationErrors;
 import com.cabaggregator.driverservice.core.dto.driver.DriverAddingDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverUpdatingDto;
-import com.cabaggregator.driverservice.core.dto.page.PagedDto;
-import com.cabaggregator.driverservice.core.enums.sort.DriverSort;
+import com.cabaggregator.driverservice.core.dto.page.PageDto;
+import com.cabaggregator.driverservice.core.enums.sort.DriverSortField;
 import com.cabaggregator.driverservice.service.DriverService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -16,6 +16,7 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -41,15 +42,16 @@ public class DriverController implements DriverControllerDocumentation {
 
     @Override
     @GetMapping
-    public ResponseEntity<PagedDto<DriverDto>> getPageOfDrivers(
-            @RequestParam(name = "offset") @PositiveOrZero Integer offset,
-            @RequestParam(name = "limit") @Positive Integer limit,
-            @RequestParam(name = "sort") DriverSort sort) {
+    public ResponseEntity<PageDto<DriverDto>> getPageOfDrivers(
+            @RequestParam(defaultValue = "0") @PositiveOrZero Integer offset,
+            @RequestParam(defaultValue = "10") @Positive
+            @Max(value = 20, message = ValidationErrors.INVALID_NUMBER_MAX_VALUE) Integer limit,
+            @RequestParam(defaultValue = "id") DriverSortField sortBy,
+            @RequestParam(defaultValue = "ASC") Sort.Direction sortOrder) {
 
         log.info("Sending page of drivers");
 
-        PagedDto<DriverDto> page =
-                driverService.getPageOfDrivers(offset, limit, sort);
+        PageDto<DriverDto> page = driverService.getPageOfDrivers(offset, limit, sortBy, sortOrder);
 
         return ResponseEntity.status(HttpStatus.OK).body(page);
     }

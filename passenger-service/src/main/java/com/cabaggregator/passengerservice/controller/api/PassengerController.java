@@ -2,11 +2,11 @@ package com.cabaggregator.passengerservice.controller.api;
 
 import com.cabaggregator.passengerservice.controller.api.doc.PassengerControllerDocumentation;
 import com.cabaggregator.passengerservice.core.constant.ValidationErrors;
-import com.cabaggregator.passengerservice.core.dto.PagedDto;
-import com.cabaggregator.passengerservice.core.dto.PassengerAddingDto;
-import com.cabaggregator.passengerservice.core.dto.PassengerDto;
-import com.cabaggregator.passengerservice.core.dto.PassengerUpdatingDto;
-import com.cabaggregator.passengerservice.core.enums.sort.PassengerSort;
+import com.cabaggregator.passengerservice.core.dto.page.PageDto;
+import com.cabaggregator.passengerservice.core.dto.passenger.PassengerAddingDto;
+import com.cabaggregator.passengerservice.core.dto.passenger.PassengerDto;
+import com.cabaggregator.passengerservice.core.dto.passenger.PassengerUpdatingDto;
+import com.cabaggregator.passengerservice.core.enums.sort.PassengerSortField;
 import com.cabaggregator.passengerservice.service.PassengerService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -16,6 +16,7 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -41,14 +42,16 @@ public class PassengerController implements PassengerControllerDocumentation {
 
     @Override
     @GetMapping
-    public ResponseEntity<PagedDto<PassengerDto>> getPageOfPassengers(
-            @RequestParam(name = "offset") @PositiveOrZero Integer offset,
-            @RequestParam(name = "limit") @Positive Integer limit,
-            @RequestParam(name = "sort") PassengerSort sort) {
+    public ResponseEntity<PageDto<PassengerDto>> getPageOfPassengers(
+            @RequestParam(defaultValue = "0") @PositiveOrZero Integer offset,
+            @RequestParam(defaultValue = "10") @Positive
+            @Max(value = 20, message = ValidationErrors.INVALID_NUMBER_MAX_VALUE) Integer limit,
+            @RequestParam(defaultValue = "id") PassengerSortField sortBy,
+            @RequestParam(defaultValue = "ASC") Sort.Direction sortOrder) {
 
         log.info("Sending page of passengers");
 
-        PagedDto<PassengerDto> page = passengerService.getPageOfPassengers(offset, limit, sort);
+        PageDto<PassengerDto> page = passengerService.getPageOfPassengers(offset, limit, sortBy, sortOrder);
 
         return ResponseEntity.status(HttpStatus.OK).body(page);
     }

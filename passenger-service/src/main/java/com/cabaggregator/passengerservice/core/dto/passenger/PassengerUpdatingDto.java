@@ -1,4 +1,4 @@
-package com.cabaggregator.passengerservice.core.dto;
+package com.cabaggregator.passengerservice.core.dto.passenger;
 
 import com.cabaggregator.passengerservice.core.constant.ValidationErrors;
 import com.cabaggregator.passengerservice.core.constant.ValidationRegex;
@@ -7,15 +7,11 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
-import java.util.UUID;
-
-@Schema(description = "Entry to add new passenger")
-public record PassengerAddingDto(
-        @NotNull
-        UUID id,
-
+@Schema(description = "Entry to update existing passenger")
+public record PassengerUpdatingDto(
         @NotEmpty
         @Pattern(regexp = ValidationRegex.PHONE_BELARUS_FORMAT,
                 message = ValidationErrors.INVALID_PHONE_FORMAT)
@@ -32,6 +28,10 @@ public record PassengerAddingDto(
 
         @NotEmpty
         @Size(max = 50, message = ValidationErrors.INVALID_STRING_MAX_LENGTH)
-        String lastName
+        String lastName,
+
+        @NotNull
+        @PositiveOrZero
+        Double rating
 ) {
 }

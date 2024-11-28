@@ -2,9 +2,9 @@ package com.cabaggregator.passengerservice.service.impl;
 
 import com.cabaggregator.passengerservice.PassengerTestUtil;
 import com.cabaggregator.passengerservice.core.constant.DefaultValues;
-import com.cabaggregator.passengerservice.core.dto.PassengerAddingDto;
-import com.cabaggregator.passengerservice.core.dto.PassengerDto;
-import com.cabaggregator.passengerservice.core.dto.PassengerUpdatingDto;
+import com.cabaggregator.passengerservice.core.dto.passenger.PassengerAddingDto;
+import com.cabaggregator.passengerservice.core.dto.passenger.PassengerDto;
+import com.cabaggregator.passengerservice.core.dto.passenger.PassengerUpdatingDto;
 import com.cabaggregator.passengerservice.core.mapper.PassengerMapper;
 import com.cabaggregator.passengerservice.entity.Passenger;
 import com.cabaggregator.passengerservice.exception.ResourceNotFoundException;

@@ -1,14 +1,14 @@
 package com.cabaggregator.rideservice.service.impl;
 
 import com.cabaggregator.rideservice.core.constant.ApplicationMessages;
-import com.cabaggregator.rideservice.core.dto.page.PagedDto;
+import com.cabaggregator.rideservice.core.dto.page.PageDto;
 import com.cabaggregator.rideservice.core.dto.promo.PromoCodeDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideDto;
 import com.cabaggregator.rideservice.core.dto.ride.order.RideOrderAddingDto;
 import com.cabaggregator.rideservice.core.dto.ride.order.RideOrderUpdatingDto;
 import com.cabaggregator.rideservice.core.dto.ride.rate.RideRateDto;
 import com.cabaggregator.rideservice.core.enums.UserRole;
-import com.cabaggregator.rideservice.core.enums.sort.RideSort;
+import com.cabaggregator.rideservice.core.enums.sort.RideSortField;
 import com.cabaggregator.rideservice.core.mapper.PageMapper;
 import com.cabaggregator.rideservice.core.mapper.RideMapper;
 import com.cabaggregator.rideservice.entity.Ride;
@@ -25,12 +25,12 @@ import com.cabaggregator.rideservice.service.RideService;
 import com.cabaggregator.rideservice.service.UserCredentialsService;
 import com.cabaggregator.rideservice.util.PageRequestBuilder;
 import com.cabaggregator.rideservice.validator.PromoCodeValidator;
-import com.cabaggregator.rideservice.validator.RideRateValidator;
 import com.cabaggregator.rideservice.validator.RideValidator;
 import com.cabaggregator.rideservice.validator.UserRoleValidator;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,7 +52,6 @@ public class RideServiceImpl implements RideService {
     private final PageMapper pageMapper;
 
     private final RideValidator rideValidator;
-    private final RideRateValidator rideRateValidator;
     private final PromoCodeValidator promoCodeValidator;
     private final UserRoleValidator userRoleValidator;
 
@@ -79,10 +78,12 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public PagedDto<RideDto> getPageOfRides(
-            String accessToken, Integer offset, Integer limit, RideSort sort, RideStatus status) {
+    public PageDto<RideDto> getPageOfRides(
+            String accessToken, Integer offset, Integer limit, RideSortField sortField, Sort.Direction sortOrder,
+            RideStatus status) {
 
-        PageRequest request = PageRequestBuilder.buildPageRequest(offset, limit, sort.getSortValue());
+        PageRequest request = PageRequestBuilder.buildPageRequest(offset, limit, sortField.getValue(), sortOrder);
+
         UserRole userRole = getUserRole(accessToken);
         String userId = userCredentialsService.getUserId(accessToken);
 
@@ -199,15 +200,15 @@ public class RideServiceImpl implements RideService {
                         id));
     }
 
-    private PagedDto<RideDto> getRidesForAdmin(RideStatus status, PageRequest request) {
-        return pageMapper.pageToPagedDto(
+    private PageDto<RideDto> getRidesForAdmin(RideStatus status, PageRequest request) {
+        return pageMapper.pageToPageDto(
                 rideMapper.entityPageToDtoPage(
                         rideRepository.findByStatus(status, request)));
     }
 
-    private PagedDto<RideDto> getRidesForPassenger(RideStatus status, String userId, PageRequest request) {
+    private PageDto<RideDto> getRidesForPassenger(RideStatus status, String userId, PageRequest request) {
         if (status.equals(RideStatus.COMPLETED)) {
-            return pageMapper.pageToPagedDto(
+            return pageMapper.pageToPageDto(
                     rideMapper.entityPageToDtoPage(
                             rideRepository.findByStatusAndPassengerId(status, userId, request)));
         } else {
@@ -217,13 +218,13 @@ public class RideServiceImpl implements RideService {
         }
     }
 
-    private PagedDto<RideDto> getRidesForDriver(RideStatus status, String userId, PageRequest request) {
+    private PageDto<RideDto> getRidesForDriver(RideStatus status, String userId, PageRequest request) {
         if (status.equals(RideStatus.COMPLETED)) {
-            return pageMapper.pageToPagedDto(
+            return pageMapper.pageToPageDto(
                     rideMapper.entityPageToDtoPage(
                             rideRepository.findByStatusAndDriverId(status, userId, request)));
         } else if (status.equals(RideStatus.REQUESTED)) {
-            return pageMapper.pageToPagedDto(
+            return pageMapper.pageToPageDto(
                     rideMapper.entityPageToDtoPage(
                             rideRepository.findByStatus(status, request)));
         } else {

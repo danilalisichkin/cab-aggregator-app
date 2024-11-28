@@ -1,12 +1,12 @@
 package com.cabaggregator.rideservice.controller.api;
 
 import com.cabaggregator.rideservice.core.constant.ValidationErrors;
-import com.cabaggregator.rideservice.core.dto.page.PagedDto;
+import com.cabaggregator.rideservice.core.dto.page.PageDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideDto;
 import com.cabaggregator.rideservice.core.dto.ride.order.RideOrderAddingDto;
 import com.cabaggregator.rideservice.core.dto.ride.order.RideOrderUpdatingDto;
 import com.cabaggregator.rideservice.core.dto.ride.rate.RideRateDto;
-import com.cabaggregator.rideservice.core.enums.sort.RideSort;
+import com.cabaggregator.rideservice.core.enums.sort.RideSortField;
 import com.cabaggregator.rideservice.entity.enums.RideStatus;
 import com.cabaggregator.rideservice.service.RideService;
 import jakarta.validation.Valid;
@@ -15,9 +15,11 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,14 +43,16 @@ public class RideController {
     private final RideService rideService;
 
     @GetMapping
-    public ResponseEntity<PagedDto<RideDto>> getPageOfRides(
+    public ResponseEntity<PageDto<RideDto>> getPageOfRides(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-            @RequestParam(name = "offset") @Positive Integer offset,
-            @RequestParam(name = "limit") @Positive Integer limit,
-            @RequestParam(name = "sort") RideSort sort,
+            @RequestParam(defaultValue = "0") @PositiveOrZero Integer offset,
+            @RequestParam(defaultValue = "10") @Positive
+            @Max(value = 20, message = ValidationErrors.INVALID_NUMBER_MAX_VALUE) Integer limit,
+            @RequestParam(defaultValue = "id") RideSortField sortBy,
+            @RequestParam(defaultValue = "ASC") Sort.Direction sortOrder,
             @RequestParam(name = "status") RideStatus status) {
 
-        PagedDto<RideDto> page = rideService.getPageOfRides(token, offset, limit, sort, status);
+        PageDto<RideDto> page = rideService.getPageOfRides(token, offset, limit, sortBy, sortOrder, status);
 
         return ResponseEntity.status(HttpStatus.OK).body(page);
     }
