@@ -1,0 +1,32 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="v01-create-ride-fares-table" author="danilalisichkin">
+
+        <createTable tableName="ride_fares">
+            <column name="fare_name"
+                    type="VARCHAR(20)">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_ride_fares"/>
+            </column>
+            <column name="base_price_per_kilometer"
+                    type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="base_price_per_minute"
+                    type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint columnNames="fare_name"
+                             constraintName="uc_ride_fares_fare_name"
+                             tableName="ride_fares"/>
+
+    </changeSet>
+</databaseChangeLog>

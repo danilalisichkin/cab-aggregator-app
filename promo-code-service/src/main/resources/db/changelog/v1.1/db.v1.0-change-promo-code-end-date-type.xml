@@ -1,0 +1,21 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="v1.1-change-promo-code-end-date-type" author="danilalisichkin">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="promo_codes"/>
+            <columnExists tableName="promo_codes" columnName="end_date"/>
+        </preConditions>
+
+        <modifyDataType tableName="promo_codes" columnName="end_date" newDataType="DATE"/>
+
+        <rollback>
+            <modifyDataType tableName="promo_codes" columnName="end_date" newDataType="DATETIME"/>
+        </rollback>
+    </changeSet>
+    
+</databaseChangeLog>

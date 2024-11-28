@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: rating-service
+  messages:
+    basename:
+      encoding: "UTF-8"
+      error-causes: "classpath:error_causes"
+      messages: "classpath:messages"
+  data:
+    mongodb:
+      uri: mongodb://${DB_HOST:localhost}:${DB_PORT:27017}/${DB_NAME:rating_database}
+      username: ${DB_USERNAME:mongo}
+      password: ${DB_PASSWORD:root}
+mongock:
+  migration-scan-package: com.cabaggregator.ratingservice.migrations
+  enabled: true
+server:
+  port: ${SERVER_PORT:8084}

@@ -1,6 +1,6 @@
 package com.cabaggregator.rideservice.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,35 +11,19 @@ import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import java.util.Locale;
 
 @Configuration
+@RequiredArgsConstructor
 public class LocaleConfig implements WebMvcConfigurer {
-    private final String errorCausesMessageSourcePath;
-    private final String validationErrorsMessageSourcePath;
-    private final String applicationMessagesSourcePath;
-    private final String messageEncoding;
-
-    public LocaleConfig(
-            @Value("${spring.messages.basename.error-causes}")
-            String errorCausesMessageSourcePath,
-            @Value("${spring.messages.basename.validation-errors}")
-            String validationErrorsMessageSourcePath,
-            @Value("${spring.messages.basename.messages}")
-            String applicationMessagesSourcePath,
-            @Value("${spring.messages.encoding}")
-            String messageEncoding) {
-        this.errorCausesMessageSourcePath = errorCausesMessageSourcePath;
-        this.validationErrorsMessageSourcePath = validationErrorsMessageSourcePath;
-        this.applicationMessagesSourcePath = applicationMessagesSourcePath;
-        this.messageEncoding = messageEncoding;
-    }
+    private final MessageConfig messageConfig;
 
     @Bean
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.addBasenames(
-                errorCausesMessageSourcePath,
-                validationErrorsMessageSourcePath,
-                applicationMessagesSourcePath);
-        messageSource.setDefaultEncoding(messageEncoding);
+                messageConfig.getErrorCauses(),
+                messageConfig.getValidationErrors(),
+                messageConfig.getMessages());
+        messageSource.setDefaultEncoding(
+                messageConfig.getEncoding());
         return messageSource;
     }
 
