@@ -16,6 +16,7 @@
         <module>eureka-server</module>
         <module>promo-code-service</module>
         <module>passenger-service</module>
+        <module>payout-service</module>
         <module>price-calculation-service</module>
         <module>ride-service</module>
     </modules>
