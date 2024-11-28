@@ -1,6 +1,6 @@
 spring:
   application:
-    name: rating-service
+    name: rating-service-test
   messages:
     basename:
       encoding: "UTF-8"
@@ -8,11 +8,11 @@ spring:
       messages: "classpath:messages"
   data:
     mongodb:
-      uri: mongodb://${DB_HOSTPORT:localhost:27017}/${DB_NAME:rating_database}
-      username: ${DB_USERNAME:mongo}
-      password: ${DB_PASSWORD:root}
+      uri: mongodb://localhost:27018/test_rating_database
+      username: mongo
+      password: root
 mongock:
   migration-scan-package: com.cabaggregator.ratingservice.migrations
   enabled: true
 server:
-  port: ${SERVER_PORT:8084}
+  port: 9084
