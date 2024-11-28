@@ -1,8 +1,8 @@
-package com.example.pricecalculationservice.integration.repository;
+package com.cabaggregator.pricecalculationservice.integration.repository;
 
-import com.example.pricecalculationservice.entity.DemandCoefficient;
-import com.example.pricecalculationservice.repository.DemandCoefficientRepository;
-import com.example.pricecalculationservice.util.DemandCoefficientTestUtil;
+import com.cabaggregator.pricecalculationservice.entity.DemandCoefficient;
+import com.cabaggregator.pricecalculationservice.repository.DemandCoefficientRepository;
+import com.cabaggregator.pricecalculationservice.util.DemandCoefficientTestUtil;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

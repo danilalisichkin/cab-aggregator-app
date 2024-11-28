@@ -1,4 +1,4 @@
-package com.example.pricecalculationservice.entity;
+package com.cabaggregator.pricecalculationservice.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,14 +16,14 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "demand_coefficients")
-public class DemandCoefficient {
+@Table(name = "ride_fares")
+public class RideFare {
     @Id
-    private String demand;
+    private String fareName;
 
     @Column(nullable = false)
-    private Integer minOrders;
+    private Long basePricePerKilometer;
 
     @Column(nullable = false)
-    private Double priceCoefficient;
+    private Long basePricePerMinute;
 }

@@ -1,6 +1,6 @@
-package com.example.pricecalculationservice.util;
+package com.cabaggregator.pricecalculationservice.util;
 
-import com.example.pricecalculationservice.entity.DemandCoefficient;
+import com.cabaggregator.pricecalculationservice.entity.DemandCoefficient;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

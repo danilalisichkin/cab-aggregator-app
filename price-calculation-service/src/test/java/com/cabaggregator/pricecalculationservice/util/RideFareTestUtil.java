@@ -1,6 +1,6 @@
-package com.example.pricecalculationservice.util;
+package com.cabaggregator.pricecalculationservice.util;
 
-import com.example.pricecalculationservice.entity.RideFare;
+import com.cabaggregator.pricecalculationservice.entity.RideFare;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

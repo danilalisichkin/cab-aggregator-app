@@ -1,6 +1,6 @@
-package com.example.pricecalculationservice.util;
+package com.cabaggregator.pricecalculationservice.util;
 
-import com.example.pricecalculationservice.entity.WeatherCoefficient;
+import com.cabaggregator.pricecalculationservice.entity.WeatherCoefficient;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

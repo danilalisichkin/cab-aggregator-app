@@ -1,6 +1,6 @@
-package com.example.pricecalculationservice.repository;
+package com.cabaggregator.pricecalculationservice.repository;
 
-import com.example.pricecalculationservice.entity.RideFare;
+import com.cabaggregator.pricecalculationservice.entity.RideFare;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

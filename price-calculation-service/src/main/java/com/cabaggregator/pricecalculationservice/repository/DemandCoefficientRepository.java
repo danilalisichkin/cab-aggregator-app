@@ -1,6 +1,6 @@
-package com.example.pricecalculationservice.repository;
+package com.cabaggregator.pricecalculationservice.repository;
 
-import com.example.pricecalculationservice.entity.DemandCoefficient;
+import com.cabaggregator.pricecalculationservice.entity.DemandCoefficient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
