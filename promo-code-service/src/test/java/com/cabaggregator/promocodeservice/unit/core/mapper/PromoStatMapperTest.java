@@ -23,12 +23,12 @@ class PromoStatMapperTest {
 
     @Test
     void entityToDto_ShouldConvertEntityToDto_WhenEntityIsNotNull() {
-        PromoStat promoStat = PromoStatTestUtil.buildPromoStat();
+        PromoStat promoStat = PromoStatTestUtil.getPromoStatBuilder().build();
         PromoStatDto promoStatDto = PromoStatTestUtil.buildPromoStatDto();
 
-        PromoStatDto result = mapper.entityToDto(promoStat);
+        PromoStatDto actual = mapper.entityToDto(promoStat);
 
-        assertThat(result)
+        assertThat(actual)
                 .isNotNull()
                 .isEqualTo(promoStatDto);
     }
@@ -42,12 +42,12 @@ class PromoStatMapperTest {
     void dtoToEntity_ShouldConvertDtoToEntity_WhenDtoIsNotNull() {
         PromoStatAddingDto promoStatAddingDto = PromoStatTestUtil.buildPromoStatAddingDto();
 
-        PromoStat result = mapper.dtoToEntity(promoStatAddingDto);
+        PromoStat actual = mapper.dtoToEntity(promoStatAddingDto);
 
-        assertThat(result).isNotNull();
-        assertThat(result.getId()).isNull();
-        assertThat(result.getPromoCode()).isNull();
-        assertThat(result.getUserId()).isEqualTo(promoStatAddingDto.userId());
+        assertThat(actual).isNotNull();
+        assertThat(actual.getId()).isNull();
+        assertThat(actual.getPromoCode()).isNull();
+        assertThat(actual.getUserId()).isEqualTo(promoStatAddingDto.userId());
     }
 
     @Test
@@ -57,15 +57,15 @@ class PromoStatMapperTest {
 
     @Test
     void entityListToDtoList_ShouldConvertEntityListToDtoList_WhenEntityListIsNotEmpty() {
-        PromoStat promoStat = PromoStatTestUtil.buildPromoStat();
+        PromoStat promoStat = PromoStatTestUtil.getPromoStatBuilder().build();
         PromoStatDto promoStatDto = PromoStatTestUtil.buildPromoStatDto();
 
         List<PromoStat> entityList = Arrays.asList(promoStat, promoStat);
         List<PromoStatDto> expectedDtoList = Arrays.asList(promoStatDto, promoStatDto);
 
-        List<PromoStatDto> result = mapper.entityListToDtoList(entityList);
+        List<PromoStatDto> actual = mapper.entityListToDtoList(entityList);
 
-        assertThat(result)
+        assertThat(actual)
                 .isNotNull()
                 .isEqualTo(expectedDtoList);
     }
@@ -74,9 +74,9 @@ class PromoStatMapperTest {
     void entityListToDtoList_ShouldReturnEmptyList_WhenEntityListIsEmpty() {
         List<PromoStat> entityList = Collections.emptyList();
 
-        List<PromoStatDto> result = mapper.entityListToDtoList(entityList);
+        List<PromoStatDto> actual = mapper.entityListToDtoList(entityList);
 
-        assertThat(result)
+        assertThat(actual)
                 .isNotNull()
                 .isEmpty();
     }
@@ -88,7 +88,7 @@ class PromoStatMapperTest {
 
     @Test
     void entityPageToDtoPage_ShouldConvertEntityPageToDtoPage_WhenPageIsNotNull() {
-        PromoStat promoStat = PromoStatTestUtil.buildPromoStat();
+        PromoStat promoStat = PromoStatTestUtil.getPromoStatBuilder().build();
         List<PromoStat> entityList = Arrays.asList(promoStat, promoStat);
         Page<PromoStat> entityPage = new PageImpl<>(entityList);
 
@@ -96,9 +96,9 @@ class PromoStatMapperTest {
         List<PromoStatDto> dtoList = Arrays.asList(promoStatDto, promoStatDto);
         Page<PromoStatDto> expectedDtoPage = new PageImpl<>(dtoList);
 
-        Page<PromoStatDto> result = mapper.entityPageToDtoPage(entityPage);
+        Page<PromoStatDto> actual = mapper.entityPageToDtoPage(entityPage);
 
-        assertThat(result)
+        assertThat(actual)
                 .isNotNull()
                 .isEqualTo(expectedDtoPage);
     }

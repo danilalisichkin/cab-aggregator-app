@@ -29,6 +29,6 @@ public class PromoCode {
     @Column(nullable = false)
     private LocalDate endDate;
 
-    @Column(nullable = false)
-    private Long limits;
+    @Column(nullable = false, name = "limits")
+    private Long limit;
 }
