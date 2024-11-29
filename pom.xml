@@ -18,6 +18,7 @@
         <module>promo-code-service</module>
         <module>passenger-service</module>
         <module>price-calculation-service</module>
+        <module>rating-service</module>
         <module>ride-service</module>
     </modules>
 

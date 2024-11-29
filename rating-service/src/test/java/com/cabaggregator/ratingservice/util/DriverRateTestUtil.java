@@ -1,5 +1,8 @@
 package com.cabaggregator.ratingservice.util;
 
+import com.cabaggregator.ratingservice.core.dto.driver.DriverRateAddingDto;
+import com.cabaggregator.ratingservice.core.dto.driver.DriverRateDto;
+import com.cabaggregator.ratingservice.core.dto.driver.DriverRateSettingDto;
 import com.cabaggregator.ratingservice.entity.DriverRate;
 import com.cabaggregator.ratingservice.entity.enums.FeedbackOption;
 import lombok.AccessLevel;
@@ -27,5 +30,28 @@ public final class DriverRateTestUtil {
                 .passengerId(PASSENGER_ID)
                 .rate(RATE)
                 .feedbackOptions(FEEDBACK_OPTIONS);
+    }
+
+    public static DriverRateDto buildDriverRateDto() {
+        return new DriverRateDto(
+                ID,
+                RIDE_ID,
+                DRIVER_ID,
+                PASSENGER_ID,
+                RATE,
+                FEEDBACK_OPTIONS);
+    }
+
+    public static DriverRateSettingDto buildDriverRateSettingDto() {
+        return new DriverRateSettingDto(
+                RATE,
+                FEEDBACK_OPTIONS);
+    }
+
+    public static DriverRateAddingDto buildDriverRateAddingDto() {
+        return new DriverRateAddingDto(
+                RIDE_ID,
+                DRIVER_ID,
+                PASSENGER_ID);
     }
 }

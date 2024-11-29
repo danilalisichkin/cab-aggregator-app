@@ -1,6 +1,5 @@
 package com.cabaggregator.ratingservice.integration.repository;
 
-import com.cabaggregator.ratingservice.config.MongoDBContainerConfig;
 import com.cabaggregator.ratingservice.entity.PassengerRate;
 import com.cabaggregator.ratingservice.repository.PassengerRateRepository;
 import com.cabaggregator.ratingservice.util.PassengerRateTestUtil;
@@ -9,20 +8,18 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("integration")
-@Testcontainers
 @DataMongoTest
-@TestPropertySource(properties = "mongock.enabled=false")
-@ContextConfiguration(classes = MongoDBContainerConfig.class)
-class PassengerRateRepositoryTest {
+@ActiveProfiles("test")
+@TestPropertySource(properties = {"mongock.enabled=false"})
+class PassengerRateRepositoryTest extends AbstractRepositoryIntegrationTest {
     @Autowired
     private PassengerRateRepository passengerRateRepository;
 
