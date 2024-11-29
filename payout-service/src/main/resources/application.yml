@@ -1,6 +1,6 @@
 spring:
   application:
-    name: payment-service
+    name: payout-service
   datasource:
     url: jdbc:postgresql://${DB_HOSTPORT:localhost:5432}/${DB_NAME:payout_database}
     username: ${DB_USERNAME:postgres}

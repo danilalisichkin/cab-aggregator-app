@@ -7,7 +7,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 public abstract class AbstractRepositoryIntegrationTest {
 
     static final PostgreSQLContainer<?> postgresqlContainer = new PostgreSQLContainer<>("postgres:14-alpine")
-            .withDatabaseName("price_calculation_database")
+            .withDatabaseName("payout_database")
             .withUsername("postgres")
             .withPassword("root")
             .withReuse(false);

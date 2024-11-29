@@ -1,6 +1,6 @@
 spring:
   application:
-    name: test-payment-service
+    name: test-payout-service
   datasource:
     url: jdbc:postgresql://localhost:5432/test_payout_database
     username: postgres
