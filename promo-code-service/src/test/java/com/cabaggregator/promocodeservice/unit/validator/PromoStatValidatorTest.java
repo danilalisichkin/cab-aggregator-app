@@ -18,6 +18,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -44,7 +45,7 @@ class PromoStatValidatorTest {
         assertThatThrownBy(() -> promoStatValidator.validatePromoCodeApplication(code, userId))
                 .isInstanceOf(BadRequestException.class);
 
-        verify(promoStatRepository).existsByPromoCodeAndUserId(code, userId);
+        verify(promoStatRepository, times(1)).existsByPromoCodeAndUserId(code, userId);
     }
 
     @Test
@@ -57,6 +58,6 @@ class PromoStatValidatorTest {
         assertThatCode(() -> promoStatValidator.validatePromoCodeApplication(code, userId))
                 .doesNotThrowAnyException();
 
-        verify(promoStatRepository).existsByPromoCodeAndUserId(code, userId);
+        verify(promoStatRepository, times(1)).existsByPromoCodeAndUserId(code, userId);
     }
 }

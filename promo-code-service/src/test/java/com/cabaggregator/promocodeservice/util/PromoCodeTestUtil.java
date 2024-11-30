@@ -20,6 +20,8 @@ public final class PromoCodeTestUtil {
     public static final LocalDate UPDATED_END_DATE = LocalDate.of(2025, 12, 31);
     public static final Long UPDATED_LIMITS = 100L;
 
+    public static final String NOT_EXISTING_CODE = "NOT_EXISTING_CODE";
+
     public static PromoCode.PromoCodeBuilder getPromoCodeBuilder() {
         return PromoCode.builder()
                 .value(VALUE)

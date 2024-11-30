@@ -17,6 +17,7 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -39,7 +40,7 @@ class PromoCodeValidatorTest {
         assertThatThrownBy(() -> promoCodeValidator.validatePromoCodeUniqueness(promoCode))
                 .isInstanceOf(DataUniquenessConflictException.class);
 
-        verify(promoCodeRepository).existsById(promoCode);
+        verify(promoCodeRepository, times(1)).existsById(promoCode);
     }
 
     @Test
@@ -51,7 +52,7 @@ class PromoCodeValidatorTest {
         assertThatCode(() -> promoCodeValidator.validatePromoCodeUniqueness(promoCode))
                 .doesNotThrowAnyException();
 
-        verify(promoCodeRepository).existsById(promoCode);
+        verify(promoCodeRepository, times(1)).existsById(promoCode);
     }
 
     @Test
