@@ -13,6 +13,8 @@ public final class PaymentAccountTestUtil {
     public static final String STRIPE_CUSTOMER_ID = "cus_J2Y3Z4A5B6C7D8E9F0GHIJKL";
     public static final LocalDateTime CREATED_AT = LocalDateTime.now();
 
+    public static final String NOT_EXISTING_STRIPE_CUSTOMER_ID = "not_existing_id";
+
     public static PaymentAccount.PaymentAccountBuilder getPaymentAccountBuilder() {
         return PaymentAccount.builder()
                 .id(ID)

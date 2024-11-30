@@ -21,20 +21,25 @@ public class PaymentAccountRepositoryTest extends AbstractRepositoryIntegrationT
 
     @Test
     void existsByStripeCustomerId_ShouldReturnTrue_WhenCustomerExists() {
-        PaymentAccount paymentAccount = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
+        PaymentAccount paymentAccount =
+                PaymentAccountTestUtil
+                        .getPaymentAccountBuilder()
+                        .build();
 
         paymentAccountRepository.save(paymentAccount);
 
-        boolean actual = paymentAccountRepository.existsByStripeCustomerId(paymentAccount.getStripeCustomerId());
+        boolean actual =
+                paymentAccountRepository.existsByStripeCustomerId(
+                        paymentAccount.getStripeCustomerId());
 
         assertThat(actual).isTrue();
     }
 
     @Test
     void existsByStripeCustomerId_ShouldReturnFalse_WhenCustomerDoesNotExist() {
-        String notExistingStripeCustomerId = "not-existing-id";
-
-        boolean actual = paymentAccountRepository.existsByStripeCustomerId(notExistingStripeCustomerId);
+        boolean actual =
+                paymentAccountRepository.existsByStripeCustomerId(
+                        PaymentAccountTestUtil.NOT_EXISTING_STRIPE_CUSTOMER_ID);
 
         assertThat(actual).isFalse();
     }

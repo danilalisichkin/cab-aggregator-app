@@ -35,12 +35,15 @@ public class PaymentContextRepositoryTest extends AbstractRepositoryIntegrationT
 
     private PaymentAccount savePaymentAccount() {
         return paymentAccountRepository.save(
-                PaymentAccountTestUtil.getPaymentAccountBuilder().build());
+                PaymentAccountTestUtil.getPaymentAccountBuilder()
+                        .build());
     }
 
     private Payment savePayment(PaymentAccount paymentAccount) {
         return paymentRepository.save(
-                PaymentTestUtil.getPaymentBuilder().paymentAccount(paymentAccount).build());
+                PaymentTestUtil.getPaymentBuilder()
+                        .paymentAccount(paymentAccount)
+                        .build());
     }
 
     @Test
@@ -50,11 +53,14 @@ public class PaymentContextRepositoryTest extends AbstractRepositoryIntegrationT
 
         PaymentContext paymentContext =
                 PaymentContextTestUtil.getPaymentContextBuilder()
-                        .id(null).payment(payment).build();
+                        .id(null)
+                        .payment(payment)
+                        .build();
         paymentContextRepository.save(paymentContext);
 
         Optional<PaymentContext> actual =
-                paymentContextRepository.findByPayment(paymentContext.getPayment());
+                paymentContextRepository.findByPayment(
+                        paymentContext.getPayment());
 
         assertThat(actual)
                 .isPresent()
@@ -64,7 +70,9 @@ public class PaymentContextRepositoryTest extends AbstractRepositoryIntegrationT
     @Test
     void findByPayment_ShouldReturnEmptyOptional_WhenPaymentDoesNotExist() {
         Optional<PaymentContext> actual =
-                paymentContextRepository.findByPayment(PaymentTestUtil.getPaymentBuilder().build());
+                paymentContextRepository.findByPayment(
+                        PaymentTestUtil.getPaymentBuilder()
+                                .build());
 
         assertThat(actual).isEmpty();
     }
@@ -76,13 +84,16 @@ public class PaymentContextRepositoryTest extends AbstractRepositoryIntegrationT
 
         PaymentContext paymentContext =
                 PaymentContextTestUtil.getPaymentContextBuilder()
-                        .id(null).payment(payment).build();
+                        .id(null)
+                        .payment(payment)
+                        .build();
 
         paymentContextRepository.save(paymentContext);
 
         List<PaymentContext> actual =
                 paymentContextRepository.findByTypeAndContextId(
-                        paymentContext.getType(), paymentContext.getContextId());
+                        paymentContext.getType(),
+                        paymentContext.getContextId());
 
         assertThat(actual)
                 .isNotEmpty()
@@ -97,11 +108,14 @@ public class PaymentContextRepositoryTest extends AbstractRepositoryIntegrationT
 
         PaymentContext paymentContext =
                 PaymentContextTestUtil.getPaymentContextBuilder()
-                        .id(null).payment(payment).build();
+                        .id(null)
+                        .payment(payment)
+                        .build();
 
         List<PaymentContext> actual =
                 paymentContextRepository.findByTypeAndContextId(
-                        paymentContext.getType(), "nonexistent_context_id");
+                        paymentContext.getType(),
+                        PaymentContextTestUtil.NOT_EXISTING_CONTEXT_ID);
 
         assertThat(actual)
                 .isNotNull()
