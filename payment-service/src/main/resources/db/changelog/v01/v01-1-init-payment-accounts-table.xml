@@ -1,0 +1,31 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="v01-create-payment-accounts-table" author="danilalisichkin">
+        <createTable tableName="payment_accounts">
+            <column name="id"
+                    type="UUID">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_payment_accounts"/>
+            </column>
+            <column name="stripe_customer_id"
+                    type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at"
+                    type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint columnNames="stripe_customer_id"
+                             constraintName="uc_payment_accounts_stripecustomerid"
+                             tableName="payment_accounts"/>
+    </changeSet>
+
+</databaseChangeLog>
