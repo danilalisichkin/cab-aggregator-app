@@ -1,5 +1,6 @@
 package com.cabaggregator.paymentservice.integration.repository;
 
+import com.cabaggregator.paymentservice.config.AbstractIntegrationTest;
 import com.cabaggregator.paymentservice.entity.PaymentAccount;
 import com.cabaggregator.paymentservice.repository.PaymentAccountRepository;
 import com.cabaggregator.paymentservice.util.PaymentAccountTestUtil;
@@ -8,14 +9,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("integration")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class PaymentAccountRepositoryTest extends AbstractRepositoryIntegrationTest {
-
+class PaymentAccountRepositoryTest extends AbstractIntegrationTest {
     @Autowired
     private PaymentAccountRepository paymentAccountRepository;
 
