@@ -68,8 +68,8 @@ public class RestExceptionHandler {
                         messageBuilder.buildLocalizedMessage(ErrorCauses.BAD_REQUEST)));
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class})
-    public ResponseEntity<MultiErrorResponse> handleNoValidException(Exception e) {
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<MultiErrorResponse> handleMethodArgumentNoValidException(MethodArgumentNotValidException e) {
         Map<String, List<String>> errorMap = new HashMap<>();
 
         getValidationErrors(errorMap, e);
@@ -80,6 +80,20 @@ public class RestExceptionHandler {
                         messageBuilder.buildLocalizedMessage(ErrorCauses.VALIDATION),
                         errorMap));
     }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<MultiErrorResponse> handleConstraintViolationException(ConstraintViolationException e) {
+        Map<String, List<String>> errorMap = new HashMap<>();
+
+        getValidationErrors(errorMap, e);
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new MultiErrorResponse(
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.VALIDATION),
+                        errorMap));
+    }
+
 
     @ExceptionHandler(ValidationErrorException.class)
     public ResponseEntity<ErrorResponse> handleValidationErrorException(ValidationErrorException e) {
