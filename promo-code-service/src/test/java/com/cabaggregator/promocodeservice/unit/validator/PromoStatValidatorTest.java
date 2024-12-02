@@ -32,8 +32,8 @@ class PromoStatValidatorTest {
 
     @Test
     void validatePromoCodeApplication_ShouldThrowBadRequestException_WhenPromoCodeAlreadyApplied() {
-        PromoCode promoCode = PromoCodeTestUtil.buildPromoCode();
-        PromoStat promoStat = PromoStatTestUtil.buildPromoStat();
+        PromoCode promoCode = PromoCodeTestUtil.getPromoCodeBuilder().build();
+        PromoStat promoStat = PromoStatTestUtil.getPromoStatBuilder().build();
         promoStat.setPromoCode(promoCode);
 
         PromoCode code = promoStat.getPromoCode();
@@ -49,7 +49,7 @@ class PromoStatValidatorTest {
 
     @Test
     void validatePromoCodeApplication_ShouldNotThrowException_WhenPromoCodeIsNotApplied() {
-        PromoCode code = PromoCodeTestUtil.buildPromoCode();
+        PromoCode code = PromoCodeTestUtil.getPromoCodeBuilder().build();
         UUID userId = PromoStatTestUtil.USER_ID;
 
         when(promoStatRepository.existsByPromoCodeAndUserId(code, userId)).thenReturn(false);

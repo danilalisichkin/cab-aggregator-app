@@ -14,19 +14,20 @@ public final class PromoCodeTestUtil {
     public static final String VALUE = "PROMO2024";
     public static final Integer DISCOUNT_PERCENTAGE = 5;
     public static final LocalDate END_DATE = LocalDate.of(2024, 12, 31);
-    public static final Long LIMITS = 1000L;
+    public static final Long LIMIT = 1000L;
 
     public static final Integer UPDATED_DISCOUNT_PERCENTAGE = 10;
     public static final LocalDate UPDATED_END_DATE = LocalDate.of(2025, 12, 31);
     public static final Long UPDATED_LIMITS = 100L;
 
-    public static PromoCode buildPromoCode() {
+    public static final String NOT_EXISTING_CODE = "NOT_EXISTING_CODE";
+
+    public static PromoCode.PromoCodeBuilder getPromoCodeBuilder() {
         return PromoCode.builder()
                 .value(VALUE)
                 .discountPercentage(DISCOUNT_PERCENTAGE)
                 .endDate(END_DATE)
-                .limits(LIMITS)
-                .build();
+                .limit(LIMIT);
     }
 
     public static PromoCodeDto buildPromoCodeDto() {
@@ -34,7 +35,7 @@ public final class PromoCodeTestUtil {
                 VALUE,
                 DISCOUNT_PERCENTAGE,
                 END_DATE,
-                LIMITS);
+                LIMIT);
     }
 
     public static PromoCodeUpdatingDto buildPromoCodeUpdatingDto() {
@@ -49,7 +50,7 @@ public final class PromoCodeTestUtil {
                 VALUE,
                 DISCOUNT_PERCENTAGE,
                 END_DATE,
-                LIMITS);
+                LIMIT);
     }
 }
 

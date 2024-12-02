@@ -4,6 +4,6 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <include file="db.v1.0-change-promo-code-end-date-type.xml" relativeToChangelogFile="true" />
+    <include file="db.v1.1-change-promo-code-end-date-type.xml" relativeToChangelogFile="true" />
 
 </databaseChangeLog>
