@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import java.util.Collections;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PaginationTestUtil {
@@ -18,6 +19,10 @@ public final class PaginationTestUtil {
 
     public static <T> Page<T> buildPageFromSingleElement(T element) {
         return new PageImpl<>(Collections.singletonList(element));
+    }
+
+    public static <T> Page<T> buildPageFromList(List<T> elements) {
+        return new PageImpl<>(elements);
     }
 
     public static <T> PageDto<T> buildPageDto(Page<T> page) {

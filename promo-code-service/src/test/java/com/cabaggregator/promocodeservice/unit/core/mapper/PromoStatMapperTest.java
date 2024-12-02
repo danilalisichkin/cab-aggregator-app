@@ -4,12 +4,12 @@ import com.cabaggregator.promocodeservice.core.dto.promo.stat.PromoStatAddingDto
 import com.cabaggregator.promocodeservice.core.dto.promo.stat.PromoStatDto;
 import com.cabaggregator.promocodeservice.core.mapper.PromoStatMapper;
 import com.cabaggregator.promocodeservice.entity.PromoStat;
+import com.cabaggregator.promocodeservice.util.PaginationTestUtil;
 import com.cabaggregator.promocodeservice.util.PromoStatTestUtil;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -90,11 +90,11 @@ class PromoStatMapperTest {
     void entityPageToDtoPage_ShouldConvertEntityPageToDtoPage_WhenPageIsNotNull() {
         PromoStat promoStat = PromoStatTestUtil.getPromoStatBuilder().build();
         List<PromoStat> entityList = Arrays.asList(promoStat, promoStat);
-        Page<PromoStat> entityPage = new PageImpl<>(entityList);
+        Page<PromoStat> entityPage = PaginationTestUtil.buildPageFromList(entityList);
 
         PromoStatDto promoStatDto = PromoStatTestUtil.buildPromoStatDto();
         List<PromoStatDto> dtoList = Arrays.asList(promoStatDto, promoStatDto);
-        Page<PromoStatDto> expectedDtoPage = new PageImpl<>(dtoList);
+        Page<PromoStatDto> expectedDtoPage = PaginationTestUtil.buildPageFromList(dtoList);
 
         Page<PromoStatDto> actual = mapper.entityPageToDtoPage(entityPage);
 
