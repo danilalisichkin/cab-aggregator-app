@@ -4,6 +4,7 @@ import com.cabaggregator.ratingservice.core.constant.ErrorCauses;
 import com.cabaggregator.ratingservice.core.dto.error.ErrorResponse;
 import com.cabaggregator.ratingservice.core.dto.error.MultiErrorResponse;
 import com.cabaggregator.ratingservice.util.MessageBuilder;
+import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -68,7 +69,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<MultiErrorResponse> handleNoValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<MultiErrorResponse> handleMethodArgumentNoValidException(MethodArgumentNotValidException e) {
         Map<String, List<String>> errorMap = new HashMap<>();
 
         getValidationErrors(errorMap, e);
@@ -79,6 +80,20 @@ public class RestExceptionHandler {
                         messageBuilder.buildLocalizedMessage(ErrorCauses.VALIDATION),
                         errorMap));
     }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<MultiErrorResponse> handleConstraintViolationException(ConstraintViolationException e) {
+        Map<String, List<String>> errorMap = new HashMap<>();
+
+        getValidationErrors(errorMap, e);
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new MultiErrorResponse(
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.VALIDATION),
+                        errorMap));
+    }
+
 
     @ExceptionHandler(ValidationErrorException.class)
     public ResponseEntity<ErrorResponse> handleValidationErrorException(ValidationErrorException e) {
@@ -118,12 +133,18 @@ public class RestExceptionHandler {
                         messageBuilder.buildLocalizedMessage(ErrorCauses.INTERNAL)));
     }
 
-    private void getValidationErrors(Map<String, List<String>> errorMap, MethodArgumentNotValidException e) {
+    private void getValidationErrors(Map<String, List<String>> errorMap, Exception e) {
         BiConsumer<String, String> addError = (field, message) ->
                 errorMap.computeIfAbsent(field, k -> new ArrayList<>()).add(message);
 
-        e.getBindingResult()
-                .getFieldErrors().forEach(error ->
-                        addError.accept(error.getField(), error.getDefaultMessage()));
+        if (e instanceof MethodArgumentNotValidException validationEx) {
+            validationEx.getBindingResult()
+                    .getFieldErrors().forEach(error ->
+                            addError.accept(error.getField(), error.getDefaultMessage()));
+        } else if (e instanceof ConstraintViolationException constraintEx) {
+            constraintEx.getConstraintViolations()
+                    .forEach(violation ->
+                            addError.accept(violation.getPropertyPath().toString(), violation.getMessage()));
+        }
     }
 }
