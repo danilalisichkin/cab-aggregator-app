@@ -5,7 +5,6 @@ import com.cabaggregator.paymentservice.core.dto.payment.account.PaymentAccountA
 import com.cabaggregator.paymentservice.core.dto.payment.account.PaymentAccountDto;
 import com.cabaggregator.paymentservice.core.dto.payment.method.PaymentCardDto;
 import com.cabaggregator.paymentservice.core.enums.sort.PaymentAccountSortField;
-import com.stripe.model.PaymentIntent;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

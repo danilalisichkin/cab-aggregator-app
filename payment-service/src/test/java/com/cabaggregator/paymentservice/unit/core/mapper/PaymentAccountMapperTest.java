@@ -4,14 +4,12 @@ import com.cabaggregator.paymentservice.core.dto.payment.account.PaymentAccountA
 import com.cabaggregator.paymentservice.core.dto.payment.account.PaymentAccountDto;
 import com.cabaggregator.paymentservice.core.mapper.PaymentAccountMapper;
 import com.cabaggregator.paymentservice.entity.PaymentAccount;
+import com.cabaggregator.paymentservice.util.PaginationTestUtil;
 import com.cabaggregator.paymentservice.util.PaymentAccountTestUtil;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,7 +18,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("unit")
-@ExtendWith(MockitoExtension.class)
 class PaymentAccountMapperTest {
     private final PaymentAccountMapper mapper = Mappers.getMapper(PaymentAccountMapper.class);
 
@@ -93,11 +90,11 @@ class PaymentAccountMapperTest {
     void entityPageToDtoPage_ShouldConvertEntityPageToDtoPage_WhenPageIsNotNull() {
         PaymentAccount paymentAccount = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
         List<PaymentAccount> entityList = Arrays.asList(paymentAccount, paymentAccount);
-        Page<PaymentAccount> entityPage = new PageImpl<>(entityList);
+        Page<PaymentAccount> entityPage = PaginationTestUtil.buildPageFromList(entityList);
 
         PaymentAccountDto paymentAccountDto = PaymentAccountTestUtil.buildPaymentAccountDto();
         List<PaymentAccountDto> dtoList = Arrays.asList(paymentAccountDto, paymentAccountDto);
-        Page<PaymentAccountDto> expectedDtoPage = new PageImpl<>(dtoList);
+        Page<PaymentAccountDto> expectedDtoPage = PaginationTestUtil.buildPageFromList(dtoList);
 
         Page<PaymentAccountDto> actual = mapper.entityPageToDtoPage(entityPage);
 
