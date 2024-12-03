@@ -1,5 +1,6 @@
 package com.cabaggregator.ratingservice.integration.repository;
 
+import com.cabaggregator.ratingservice.config.AbstractIntegrationTest;
 import com.cabaggregator.ratingservice.entity.PassengerRate;
 import com.cabaggregator.ratingservice.repository.PassengerRateRepository;
 import com.cabaggregator.ratingservice.util.PassengerRateTestUtil;
@@ -8,7 +9,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.Optional;
@@ -17,9 +17,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("integration")
 @DataMongoTest
-@ActiveProfiles("test")
 @TestPropertySource(properties = {"mongock.enabled=false"})
-class PassengerRateRepositoryTest extends AbstractRepositoryIntegrationTest {
+class PassengerRateRepositoryTest extends AbstractIntegrationTest {
     @Autowired
     private PassengerRateRepository passengerRateRepository;
 
@@ -30,7 +29,7 @@ class PassengerRateRepositoryTest extends AbstractRepositoryIntegrationTest {
 
     @Test
     void findByPassengerIdAndRideId_ShouldReturnPassengerRate_WhenPassengerRateExists() {
-        final PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
         passengerRateRepository.save(passengerRate);
 
         Optional<PassengerRate> actual = passengerRateRepository.findByPassengerIdAndRideId(
@@ -41,7 +40,7 @@ class PassengerRateRepositoryTest extends AbstractRepositoryIntegrationTest {
 
     @Test
     void findByDriverIdAndRideId_ShouldReturnEmptyOptional_WhenDriverRateDoesNotExist() {
-        final PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
 
         Optional<PassengerRate> actual = passengerRateRepository.findByPassengerIdAndRideId(
                 passengerRate.getPassengerId(), passengerRate.getRideId());
@@ -53,7 +52,7 @@ class PassengerRateRepositoryTest extends AbstractRepositoryIntegrationTest {
 
     @Test
     void existsDriverIdAndRideId_ShouldReturnTrue_WhenDriverRateExists() {
-        final PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
         passengerRateRepository.save(passengerRate);
 
         boolean actual = passengerRateRepository.existsByPassengerIdAndRideId(
@@ -64,7 +63,7 @@ class PassengerRateRepositoryTest extends AbstractRepositoryIntegrationTest {
 
     @Test
     void existsDriverIdAndRideId_ShouldReturnFalse_WhenDriverRateDoesNotExist() {
-        final PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
 
         boolean actual = passengerRateRepository.existsByPassengerIdAndRideId(
                 passengerRate.getPassengerId(), passengerRate.getRideId());
