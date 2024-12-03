@@ -25,6 +25,10 @@ public final class PaginationTestUtil {
         return new PageImpl<>(elements);
     }
 
+    public static <T> Page<T> buildPageFromList(List<T> elements, Integer pageNumber, Integer pageSize) {
+        return new PageImpl<>(elements,  PageRequest.of(pageNumber, pageSize), elements.size());
+    }
+
     public static <T> PageDto<T> buildPageDto(Page<T> page) {
         return new PageDto<>(
                 page.getNumber(),

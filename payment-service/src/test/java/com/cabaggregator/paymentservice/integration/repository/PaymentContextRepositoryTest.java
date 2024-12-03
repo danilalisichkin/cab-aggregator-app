@@ -51,7 +51,6 @@ class PaymentContextRepositoryTest extends AbstractIntegrationTest {
     void findByPayment_ShouldReturnPaymentContext_WhenPaymentExists() {
         PaymentAccount paymentAccount = savePaymentAccount();
         Payment payment = savePayment(paymentAccount);
-
         PaymentContext paymentContext =
                 PaymentContextTestUtil.getPaymentContextBuilder()
                         .id(null)
@@ -82,13 +81,11 @@ class PaymentContextRepositoryTest extends AbstractIntegrationTest {
     void findByTypeAndContextId_ShouldReturnPaymentContext_WhenTypeAndContextIdAreEqualToProvided() {
         PaymentAccount paymentAccount = savePaymentAccount();
         Payment payment = savePayment(paymentAccount);
-
         PaymentContext paymentContext =
                 PaymentContextTestUtil.getPaymentContextBuilder()
                         .id(null)
                         .payment(payment)
                         .build();
-
         paymentContextRepository.save(paymentContext);
 
         List<PaymentContext> actual =
@@ -106,7 +103,6 @@ class PaymentContextRepositoryTest extends AbstractIntegrationTest {
     void findByTypeAndContextId_ShouldReturnEmptyList_WhenContextIdIsNotEqualToProvided() {
         PaymentAccount paymentAccount = savePaymentAccount();
         Payment payment = savePayment(paymentAccount);
-
         PaymentContext paymentContext =
                 PaymentContextTestUtil.getPaymentContextBuilder()
                         .id(null)

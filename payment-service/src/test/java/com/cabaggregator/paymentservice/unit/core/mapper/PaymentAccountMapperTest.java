@@ -59,7 +59,6 @@ class PaymentAccountMapperTest {
     void entityListToDtoList_ShouldConvertEntityListToDtoList_WhenEntityListIsNotEmpty() {
         PaymentAccount paymentAccount = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
         PaymentAccountDto paymentAccountDto = PaymentAccountTestUtil.buildPaymentAccountDto();
-
         List<PaymentAccount> entityList = Arrays.asList(paymentAccount, paymentAccount);
         List<PaymentAccountDto> expectedDtoList = Arrays.asList(paymentAccountDto, paymentAccountDto);
 
@@ -91,7 +90,6 @@ class PaymentAccountMapperTest {
         PaymentAccount paymentAccount = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
         List<PaymentAccount> entityList = Arrays.asList(paymentAccount, paymentAccount);
         Page<PaymentAccount> entityPage = PaginationTestUtil.buildPageFromList(entityList);
-
         PaymentAccountDto paymentAccountDto = PaymentAccountTestUtil.buildPaymentAccountDto();
         List<PaymentAccountDto> dtoList = Arrays.asList(paymentAccountDto, paymentAccountDto);
         Page<PaymentAccountDto> expectedDtoPage = PaginationTestUtil.buildPageFromList(dtoList);

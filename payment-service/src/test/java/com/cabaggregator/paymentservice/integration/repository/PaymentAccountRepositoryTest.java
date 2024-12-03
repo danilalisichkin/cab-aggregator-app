@@ -25,7 +25,6 @@ class PaymentAccountRepositoryTest extends AbstractIntegrationTest {
                 PaymentAccountTestUtil
                         .getPaymentAccountBuilder()
                         .build();
-
         paymentAccountRepository.save(paymentAccount);
 
         boolean actual =

@@ -58,7 +58,6 @@ class PaymentMapperTest {
     void methodListToCardDtoList_shouldConvertMethodListToCardDtoList_WhenListIsNotEmpty() {
         PaymentMethod paymentMethod = PaymentTestUtil.buildPaymentMethod();
         List<PaymentMethod> paymentMethodList = List.of(paymentMethod, paymentMethod);
-
         PaymentCardDto paymentCardDto = PaymentTestUtil.buildPaymentCardDto();
         List<PaymentCardDto> paymentCardDtoList = List.of(paymentCardDto, paymentCardDto);
 
