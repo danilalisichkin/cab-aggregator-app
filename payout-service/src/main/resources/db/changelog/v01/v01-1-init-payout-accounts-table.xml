@@ -14,7 +14,7 @@
                              primaryKeyName="pk_payout_accounts"/>
             </column>
             <column name="stripe_account_id"
-                    type="VARCHAR(255)">
+                    type="VARCHAR(30)">
                 <constraints nullable="false"/>
             </column>
             <column name="balance"
