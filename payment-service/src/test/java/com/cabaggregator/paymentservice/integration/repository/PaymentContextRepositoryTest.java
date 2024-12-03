@@ -1,5 +1,6 @@
 package com.cabaggregator.paymentservice.integration.repository;
 
+import com.cabaggregator.paymentservice.config.AbstractIntegrationTest;
 import com.cabaggregator.paymentservice.entity.Payment;
 import com.cabaggregator.paymentservice.entity.PaymentAccount;
 import com.cabaggregator.paymentservice.entity.PaymentContext;
@@ -23,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Tag("integration")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class PaymentContextRepositoryTest extends AbstractRepositoryIntegrationTest {
+class PaymentContextRepositoryTest extends AbstractIntegrationTest {
     @Autowired
     private PaymentContextRepository paymentContextRepository;
 
@@ -50,7 +51,6 @@ public class PaymentContextRepositoryTest extends AbstractRepositoryIntegrationT
     void findByPayment_ShouldReturnPaymentContext_WhenPaymentExists() {
         PaymentAccount paymentAccount = savePaymentAccount();
         Payment payment = savePayment(paymentAccount);
-
         PaymentContext paymentContext =
                 PaymentContextTestUtil.getPaymentContextBuilder()
                         .id(null)
@@ -81,13 +81,11 @@ public class PaymentContextRepositoryTest extends AbstractRepositoryIntegrationT
     void findByTypeAndContextId_ShouldReturnPaymentContext_WhenTypeAndContextIdAreEqualToProvided() {
         PaymentAccount paymentAccount = savePaymentAccount();
         Payment payment = savePayment(paymentAccount);
-
         PaymentContext paymentContext =
                 PaymentContextTestUtil.getPaymentContextBuilder()
                         .id(null)
                         .payment(payment)
                         .build();
-
         paymentContextRepository.save(paymentContext);
 
         List<PaymentContext> actual =
@@ -105,7 +103,6 @@ public class PaymentContextRepositoryTest extends AbstractRepositoryIntegrationT
     void findByTypeAndContextId_ShouldReturnEmptyList_WhenContextIdIsNotEqualToProvided() {
         PaymentAccount paymentAccount = savePaymentAccount();
         Payment payment = savePayment(paymentAccount);
-
         PaymentContext paymentContext =
                 PaymentContextTestUtil.getPaymentContextBuilder()
                         .id(null)

@@ -1,5 +1,6 @@
 package com.cabaggregator.paymentservice.integration.repository;
 
+import com.cabaggregator.paymentservice.config.AbstractIntegrationTest;
 import com.cabaggregator.paymentservice.entity.PaymentAccount;
 import com.cabaggregator.paymentservice.repository.PaymentAccountRepository;
 import com.cabaggregator.paymentservice.util.PaymentAccountTestUtil;
@@ -14,8 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Tag("integration")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class PaymentAccountRepositoryTest extends AbstractRepositoryIntegrationTest {
-
+class PaymentAccountRepositoryTest extends AbstractIntegrationTest {
     @Autowired
     private PaymentAccountRepository paymentAccountRepository;
 
@@ -25,7 +25,6 @@ public class PaymentAccountRepositoryTest extends AbstractRepositoryIntegrationT
                 PaymentAccountTestUtil
                         .getPaymentAccountBuilder()
                         .build();
-
         paymentAccountRepository.save(paymentAccount);
 
         boolean actual =

@@ -1,20 +1,18 @@
-package com.cabaggregator.paymentservice.integration.repository;
+package com.cabaggregator.paymentservice.config;
 
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-public abstract class AbstractRepositoryIntegrationTest {
+@ActiveProfiles("test")
+public abstract class AbstractIntegrationTest {
 
-    static final PostgreSQLContainer<?> postgresqlContainer = new PostgreSQLContainer<>("postgres:14-alpine")
-            .withDatabaseName("payment_database")
+    protected static final PostgreSQLContainer<?> postgresqlContainer
+            = new PostgreSQLContainer<>("postgres:17-alpine")
+            .withDatabaseName("test_payment_database")
             .withUsername("postgres")
-            .withPassword("root")
-            .withReuse(false);
-
-    static {
-        postgresqlContainer.start();
-    }
+            .withPassword("root");
 
     @DynamicPropertySource
     public static void postgresqlProperties(DynamicPropertyRegistry registry) {
@@ -22,5 +20,8 @@ public abstract class AbstractRepositoryIntegrationTest {
         registry.add("spring.datasource.username", postgresqlContainer::getUsername);
         registry.add("spring.datasource.password", postgresqlContainer::getPassword);
     }
-}
 
+    static {
+        postgresqlContainer.start();
+    }
+}
