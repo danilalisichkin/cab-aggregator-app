@@ -1,0 +1,36 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="v01-create-payments-table" author="danilalisichkin">
+        <createTable tableName="payments">
+            <column name="payment_intent_id"
+                    type="VARCHAR(30)">
+                <constraints primaryKey="true"
+                             primaryKeyName="pk_payments"/>
+            </column>
+            <column name="payment_account_user_id"
+                    type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status"
+                    type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at"
+                    type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="payment_account_user_id"
+                                 baseTableName="payments"
+                                 constraintName="FK_PAYMENTS_ON_PAYMENT_ACCOUNT_USER"
+                                 referencedColumnNames="id"
+                                 referencedTableName="payment_accounts"/>
+    </changeSet>
+
+</databaseChangeLog>

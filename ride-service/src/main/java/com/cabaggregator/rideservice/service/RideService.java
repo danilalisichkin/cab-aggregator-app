@@ -1,18 +1,21 @@
 package com.cabaggregator.rideservice.service;
 
-import com.cabaggregator.rideservice.core.dto.page.PagedDto;
+import com.cabaggregator.rideservice.core.dto.page.PageDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideDto;
 import com.cabaggregator.rideservice.core.dto.ride.order.RideOrderAddingDto;
 import com.cabaggregator.rideservice.core.dto.ride.order.RideOrderUpdatingDto;
 import com.cabaggregator.rideservice.core.dto.ride.rate.RideRateDto;
-import com.cabaggregator.rideservice.core.enums.sort.RideSort;
+import com.cabaggregator.rideservice.core.enums.sort.RideSortField;
 import com.cabaggregator.rideservice.entity.enums.RideStatus;
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Sort;
 
 public interface RideService {
     RideDto getRideById(String accessToken, ObjectId id);
 
-    PagedDto<RideDto> getPageOfRides(String accessToken, Integer offset, Integer limit, RideSort sort, RideStatus status);
+    PageDto<RideDto> getPageOfRides(
+            String accessToken, Integer offset, Integer limit, RideSortField sortField, Sort.Direction sortOrder,
+            RideStatus status);
 
     RideRateDto getRideRate(String accessToken, ObjectId id);
 

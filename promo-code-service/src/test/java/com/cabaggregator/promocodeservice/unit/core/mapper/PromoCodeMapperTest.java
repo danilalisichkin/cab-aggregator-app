@@ -5,12 +5,12 @@ import com.cabaggregator.promocodeservice.core.dto.promo.code.PromoCodeDto;
 import com.cabaggregator.promocodeservice.core.dto.promo.code.PromoCodeUpdatingDto;
 import com.cabaggregator.promocodeservice.core.mapper.PromoCodeMapper;
 import com.cabaggregator.promocodeservice.entity.PromoCode;
+import com.cabaggregator.promocodeservice.util.PaginationTestUtil;
 import com.cabaggregator.promocodeservice.util.PromoCodeTestUtil;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,12 +25,12 @@ class PromoCodeMapperTest {
 
     @Test
     void entityToDto_ShouldConvertEntityToDto_WhenEntityIsNotNull() {
-        PromoCode promoCode = PromoCodeTestUtil.buildPromoCode();
+        PromoCode promoCode = PromoCodeTestUtil.getPromoCodeBuilder().build();
         PromoCodeDto promoCodeDto = PromoCodeTestUtil.buildPromoCodeDto();
 
-        PromoCodeDto result = mapper.entityToDto(promoCode);
+        PromoCodeDto actual = mapper.entityToDto(promoCode);
 
-        assertThat(result)
+        assertThat(actual)
                 .isNotNull()
                 .isEqualTo(promoCodeDto);
     }
@@ -42,16 +42,16 @@ class PromoCodeMapperTest {
 
     @Test
     void updateEntityFromDto_ShouldUpdateEntity_WhenDtoIsNotNull() {
-        PromoCode promoCode = PromoCodeTestUtil.buildPromoCode();
+        PromoCode actual = PromoCodeTestUtil.getPromoCodeBuilder().build();
         PromoCodeUpdatingDto promoCodeUpdatingDto = PromoCodeTestUtil.buildPromoCodeUpdatingDto();
 
-        mapper.updateEntityFromDto(promoCodeUpdatingDto, promoCode);
+        mapper.updateEntityFromDto(promoCodeUpdatingDto, actual);
 
-        assertThat(promoCode).isNotNull();
-        assertThat(promoCode.getValue()).isEqualTo(PromoCodeTestUtil.VALUE);
-        assertThat(promoCode.getDiscountPercentage()).isEqualTo(promoCodeUpdatingDto.discountPercentage());
-        assertThat(promoCode.getEndDate()).isEqualTo(promoCodeUpdatingDto.endDate());
-        assertThat(promoCode.getLimits()).isEqualTo(promoCodeUpdatingDto.limits());
+        assertThat(actual).isNotNull();
+        assertThat(actual.getValue()).isEqualTo(PromoCodeTestUtil.VALUE);
+        assertThat(actual.getDiscountPercentage()).isEqualTo(promoCodeUpdatingDto.discountPercentage());
+        assertThat(actual.getEndDate()).isEqualTo(promoCodeUpdatingDto.endDate());
+        assertThat(actual.getLimit()).isEqualTo(promoCodeUpdatingDto.limit());
     }
 
     @Test
@@ -66,13 +66,13 @@ class PromoCodeMapperTest {
     void dtoToEntity_ShouldConvertDtoToEntity_WhenDtoIsNotNull() {
         PromoCodeAddingDto promoCodeAddingDto = PromoCodeTestUtil.buildPromoCodeAddingDto();
 
-        PromoCode result = mapper.dtoToEntity(promoCodeAddingDto);
+        PromoCode actual = mapper.dtoToEntity(promoCodeAddingDto);
 
-        assertThat(result).isNotNull();
-        assertThat(result.getValue()).isEqualTo(promoCodeAddingDto.value());
-        assertThat(result.getDiscountPercentage()).isEqualTo(promoCodeAddingDto.discountPercentage());
-        assertThat(result.getEndDate()).isEqualTo(promoCodeAddingDto.endDate());
-        assertThat(result.getLimits()).isEqualTo(promoCodeAddingDto.limits());
+        assertThat(actual).isNotNull();
+        assertThat(actual.getValue()).isEqualTo(promoCodeAddingDto.value());
+        assertThat(actual.getDiscountPercentage()).isEqualTo(promoCodeAddingDto.discountPercentage());
+        assertThat(actual.getEndDate()).isEqualTo(promoCodeAddingDto.endDate());
+        assertThat(actual.getLimit()).isEqualTo(promoCodeAddingDto.limit());
     }
 
     @Test
@@ -82,15 +82,15 @@ class PromoCodeMapperTest {
 
     @Test
     void entityListToDtoList_ShouldConvertEntityListToDtoList_WhenEntityListIsNotEmpty() {
-        PromoCode promoCode = PromoCodeTestUtil.buildPromoCode();
+        PromoCode promoCode = PromoCodeTestUtil.getPromoCodeBuilder().build();
         PromoCodeDto promoCodeDto = PromoCodeTestUtil.buildPromoCodeDto();
 
         List<PromoCode> entityList = Arrays.asList(promoCode, promoCode);
         List<PromoCodeDto> expectedDtoList = Arrays.asList(promoCodeDto, promoCodeDto);
 
-        List<PromoCodeDto> result = mapper.entityListToDtoList(entityList);
+        List<PromoCodeDto> actual = mapper.entityListToDtoList(entityList);
 
-        assertThat(result)
+        assertThat(actual)
                 .isNotNull()
                 .isEqualTo(expectedDtoList);
     }
@@ -99,9 +99,9 @@ class PromoCodeMapperTest {
     void entityListToDtoList_ShouldReturnEmptyList_WhenEntityListIsEmpty() {
         List<PromoCode> entityList = Collections.emptyList();
 
-        List<PromoCodeDto> result = mapper.entityListToDtoList(entityList);
+        List<PromoCodeDto> actual = mapper.entityListToDtoList(entityList);
 
-        assertThat(result)
+        assertThat(actual)
                 .isNotNull()
                 .isEmpty();
     }
@@ -113,17 +113,17 @@ class PromoCodeMapperTest {
 
     @Test
     void entityPageToDtoPage_ShouldConvertEntityPageToDtoPage_WhenPageIsNotNull() {
-        PromoCode promoCode = PromoCodeTestUtil.buildPromoCode();
+        PromoCode promoCode = PromoCodeTestUtil.getPromoCodeBuilder().build();
         List<PromoCode> entityList = Arrays.asList(promoCode, promoCode);
-        Page<PromoCode> entityPage = new PageImpl<>(entityList);
+        Page<PromoCode> entityPage = PaginationTestUtil.buildPageFromList(entityList);
 
         PromoCodeDto promoCodeDto = PromoCodeTestUtil.buildPromoCodeDto();
         List<PromoCodeDto> dtoList = Arrays.asList(promoCodeDto, promoCodeDto);
-        Page<PromoCodeDto> expectedDtoPage = new PageImpl<>(dtoList);
+        Page<PromoCodeDto> expectedDtoPage = PaginationTestUtil.buildPageFromList(dtoList);
 
-        Page<PromoCodeDto> result = mapper.entityPageToDtoPage(entityPage);
+        Page<PromoCodeDto> actual = mapper.entityPageToDtoPage(entityPage);
 
-        assertThat(result)
+        assertThat(actual)
                 .isNotNull()
                 .isEqualTo(expectedDtoPage);
     }

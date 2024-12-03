@@ -1,13 +1,15 @@
 package com.cabaggregator.rideservice.service;
 
-import com.cabaggregator.rideservice.core.dto.page.PagedDto;
+import com.cabaggregator.rideservice.core.dto.page.PageDto;
 import com.cabaggregator.rideservice.core.dto.promo.PromoCodeAddingDto;
 import com.cabaggregator.rideservice.core.dto.promo.PromoCodeDto;
 import com.cabaggregator.rideservice.core.dto.promo.PromoCodeUpdatingDto;
-import com.cabaggregator.rideservice.core.enums.sort.PromoCodeSort;
+import com.cabaggregator.rideservice.core.enums.sort.PromoCodeSortField;
+import org.springframework.data.domain.Sort;
 
 public interface PromoCodeService {
-    PagedDto<PromoCodeDto> getPageOfPromoCodes(String accessToken, Integer offset, Integer limit, PromoCodeSort sort);
+    PageDto<PromoCodeDto> getPageOfPromoCodes(
+            String accessToken, Integer offset, Integer limit, PromoCodeSortField sortField, Sort.Direction sortOrder);
 
     PromoCodeDto getPromoCodeByValue(String codeValue);
 

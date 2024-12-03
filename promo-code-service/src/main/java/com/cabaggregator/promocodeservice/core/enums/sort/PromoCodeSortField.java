@@ -9,7 +9,7 @@ public enum PromoCodeSortField {
     VALUE("value"),
     DISCOUNT("discountPercentage"),
     END_DATE("endDate"),
-    LIMITS("limits");
+    LIMIT("limit");
 
     private final String value;
 }

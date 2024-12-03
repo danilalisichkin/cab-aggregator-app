@@ -6,6 +6,6 @@ public record PromoCodeDto(
         String value,
         Integer discountPercentage,
         LocalDate endDate,
-        Long limits
+        Long limit
 ) {
 }

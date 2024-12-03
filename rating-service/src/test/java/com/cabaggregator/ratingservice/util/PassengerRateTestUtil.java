@@ -1,5 +1,8 @@
 package com.cabaggregator.ratingservice.util;
 
+import com.cabaggregator.ratingservice.core.dto.passenger.PassengerRateAddingDto;
+import com.cabaggregator.ratingservice.core.dto.passenger.PassengerRateDto;
+import com.cabaggregator.ratingservice.core.dto.passenger.PassengerRateSettingDto;
 import com.cabaggregator.ratingservice.entity.PassengerRate;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -22,5 +25,26 @@ public final class PassengerRateTestUtil {
                 .driverId(DRIVER_ID)
                 .passengerId(PASSENGER_ID)
                 .rate(RATE);
+    }
+
+    public static PassengerRateDto buildPassengerRateDto() {
+        return new PassengerRateDto(
+                ID,
+                RIDE_ID,
+                PASSENGER_ID,
+                DRIVER_ID,
+                RATE);
+    }
+
+    public static PassengerRateSettingDto buildPassengerRateSettingDto() {
+        return new PassengerRateSettingDto(
+                RATE);
+    }
+
+    public static PassengerRateAddingDto buildPassengerRateAddingDto() {
+        return new PassengerRateAddingDto(
+                RIDE_ID,
+                PASSENGER_ID,
+                DRIVER_ID);
     }
 }

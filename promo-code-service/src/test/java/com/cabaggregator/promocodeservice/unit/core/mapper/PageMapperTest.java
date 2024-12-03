@@ -36,13 +36,13 @@ class PageMapperTest {
 
         Page<Object> page = new PageImpl<>(expectedContent, pageable, expectedTotalItems);
 
-        PageDto<Object> result = mapper.pageToPageDto(page);
+        PageDto<Object> actual = mapper.pageToPageDto(page);
 
-        assertThat(result).isNotNull();
-        assertThat(result.page()).isEqualTo(expectedPage);
-        assertThat(result.pageSize()).isEqualTo(expectedPageSize);
-        assertThat(result.totalPages()).isEqualTo(expectedTotalPages);
-        assertThat(result.content()).isEqualTo(expectedContent);
+        assertThat(actual).isNotNull();
+        assertThat(actual.page()).isEqualTo(expectedPage);
+        assertThat(actual.pageSize()).isEqualTo(expectedPageSize);
+        assertThat(actual.totalPages()).isEqualTo(expectedTotalPages);
+        assertThat(actual.content()).isEqualTo(expectedContent);
     }
 
     @Test
@@ -64,13 +64,13 @@ class PageMapperTest {
 
         Page<Object> page = new PageImpl<>(expectedContent, pageable, requestedTotalItems);
 
-        PageDto<Object> result = mapper.pageToPageDto(page);
+        PageDto<Object> actual = mapper.pageToPageDto(page);
 
-        assertThat(result).isNotNull();
-        assertThat(result.page()).isEqualTo(expectedPage);
-        assertThat(result.pageSize()).isEqualTo(expectedPageSize);
-        assertThat(result.totalPages()).isEqualTo(expectedTotalPages);
-        assertThat(result.content())
+        assertThat(actual).isNotNull();
+        assertThat(actual.page()).isEqualTo(expectedPage);
+        assertThat(actual.pageSize()).isEqualTo(expectedPageSize);
+        assertThat(actual.totalPages()).isEqualTo(expectedTotalPages);
+        assertThat(actual.content())
                 .isNotNull()
                 .hasSize(expectedTotalItems)
                 .isEqualTo(expectedContent);

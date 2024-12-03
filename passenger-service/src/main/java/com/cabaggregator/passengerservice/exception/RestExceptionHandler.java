@@ -59,8 +59,7 @@ public class RestExceptionHandler {
     @ExceptionHandler({
             HttpMessageNotReadableException.class,
             MethodArgumentTypeMismatchException.class,
-            MissingServletRequestParameterException.class,
-    })
+            MissingServletRequestParameterException.class})
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(Exception e) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)

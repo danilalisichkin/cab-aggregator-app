@@ -14,10 +14,12 @@
         <module>auth-service</module>
         <module>driver-service</module>
         <module>eureka-server</module>
-        <module>promo-code-service</module>
         <module>passenger-service</module>
+        <module>payment-service</module>
         <module>payout-service</module>
         <module>price-calculation-service</module>
+        <module>promo-code-service</module>
+        <module>rating-service</module>
         <module>ride-service</module>
     </modules>
 

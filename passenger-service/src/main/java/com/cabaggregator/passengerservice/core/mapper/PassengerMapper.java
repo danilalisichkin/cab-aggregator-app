@@ -1,8 +1,8 @@
 package com.cabaggregator.passengerservice.core.mapper;
 
-import com.cabaggregator.passengerservice.core.dto.PassengerAddingDto;
-import com.cabaggregator.passengerservice.core.dto.PassengerDto;
-import com.cabaggregator.passengerservice.core.dto.PassengerUpdatingDto;
+import com.cabaggregator.passengerservice.core.dto.passenger.PassengerAddingDto;
+import com.cabaggregator.passengerservice.core.dto.passenger.PassengerDto;
+import com.cabaggregator.passengerservice.core.dto.passenger.PassengerUpdatingDto;
 import com.cabaggregator.passengerservice.entity.Passenger;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;

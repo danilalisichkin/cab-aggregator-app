@@ -3,13 +3,15 @@ package com.cabaggregator.driverservice.service;
 import com.cabaggregator.driverservice.core.dto.driver.DriverAddingDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverUpdatingDto;
-import com.cabaggregator.driverservice.core.dto.page.PagedDto;
-import com.cabaggregator.driverservice.core.enums.sort.DriverSort;
+import com.cabaggregator.driverservice.core.dto.page.PageDto;
+import com.cabaggregator.driverservice.core.enums.sort.DriverSortField;
+import org.springframework.data.domain.Sort;
 
 import java.util.UUID;
 
 public interface DriverService {
-    PagedDto<DriverDto> getPageOfDrivers(Integer offset, Integer limit, DriverSort sort);
+    PageDto<DriverDto> getPageOfDrivers(
+            Integer offset, Integer limit, DriverSortField sortField, Sort.Direction sortOrder);
 
     DriverDto getDriverById(UUID id);
 

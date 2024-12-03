@@ -7,8 +7,8 @@ import com.cabaggregator.driverservice.core.dto.car.CarFullDto;
 import com.cabaggregator.driverservice.core.dto.car.CarUpdatingDto;
 import com.cabaggregator.driverservice.core.dto.car.details.CarDetailsDto;
 import com.cabaggregator.driverservice.core.dto.car.details.CarDetailsSettingDto;
-import com.cabaggregator.driverservice.core.dto.page.PagedDto;
-import com.cabaggregator.driverservice.core.enums.sort.CarSort;
+import com.cabaggregator.driverservice.core.dto.page.PageDto;
+import com.cabaggregator.driverservice.core.enums.sort.CarSortField;
 import com.cabaggregator.driverservice.core.mapper.CarDetailsMapper;
 import com.cabaggregator.driverservice.core.mapper.CarMapper;
 import com.cabaggregator.driverservice.core.mapper.PageMapper;
@@ -25,6 +25,7 @@ import com.cabaggregator.driverservice.validator.CarValidator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -43,10 +44,12 @@ public class CarServiceImpl implements CarService {
     private final CarDetailsValidator carDetailsValidator;
 
     @Override
-    public PagedDto<CarDto> getPageOfCars(Integer offset, Integer limit, CarSort sort) {
-        PageRequest request = PageRequestBuilder.buildPageRequest(offset, limit, sort.getSortValue());
+    public PageDto<CarDto> getPageOfCars(
+            Integer offset, Integer limit, CarSortField sortField, Sort.Direction sortOrder) {
 
-        return pageMapper.pageToPagedDto(
+        PageRequest request = PageRequestBuilder.buildPageRequest(offset, limit, sortField.getValue(), sortOrder);
+
+        return pageMapper.pageToPageDto(
                 carMapper.entityPageToDtoPage(
                         carRepository.findAll(request)));
     }

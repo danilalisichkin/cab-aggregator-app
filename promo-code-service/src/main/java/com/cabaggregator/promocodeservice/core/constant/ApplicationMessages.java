@@ -9,5 +9,7 @@ public final class ApplicationMessages {
     public static final String PROMO_CODE_END_DATE_IN_PAST = "error.promo.code.end.date.in.past";
     public static final String PROMO_CODE_NOT_FOUND = "error.promo.code.not.found";
     public static final String PROMO_CODE_EXPIRED = "error.promo.code.expired";
+    public static final String PROMO_CODE_LIMIT_REACHED = "error.promo.code.limit.reached";
     public static final String PROMO_CODE_ALREADY_APPLIED = "error.promo.code.already.applied";
+    public static final String PROMO_STAT_WITH_ID_NOT_FOUND = "error.promo.stat.with.id.not.found";
 }

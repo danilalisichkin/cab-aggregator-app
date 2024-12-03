@@ -93,4 +93,24 @@ class PromoCodeValidatorTest {
 
         verifyNoInteractions(promoCodeRepository);
     }
+
+    @Test
+    void validatePromoCodeApplicationLimit_ShouldThrowBadRequestException_WhenPromoCodeApplicationLimitReached() {
+        Long currentApplicationLimit = 0L;
+
+        assertThatThrownBy(() -> promoCodeValidator.validatePromoCodeApplicationLimit(currentApplicationLimit))
+                .isInstanceOf(BadRequestException.class);
+
+        verifyNoInteractions(promoCodeRepository);
+    }
+
+    @Test
+    void validatePromoCodeApplicationLimit_ShouldNotThrowException_WhenPromoCodeApplicationLimitNotReached() {
+        Long currentApplicationLimit = 100L;
+
+        assertThatCode(() -> promoCodeValidator.validatePromoCodeApplicationLimit(currentApplicationLimit))
+                .doesNotThrowAnyException();
+
+        verifyNoInteractions(promoCodeRepository);
+    }
 }

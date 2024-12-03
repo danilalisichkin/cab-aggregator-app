@@ -36,4 +36,11 @@ public class PromoCodeValidator {
                     ApplicationMessages.PROMO_CODE_EXPIRED);
         }
     }
+
+    public void validatePromoCodeApplicationLimit(Long limit) {
+        if (limit <= 0) {
+            throw new BadRequestException(
+                    ApplicationMessages.PROMO_CODE_LIMIT_REACHED);
+        }
+    }
 }
