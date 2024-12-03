@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.Optional;
@@ -28,6 +30,42 @@ class PassengerRateRepositoryTest extends AbstractIntegrationTest {
     }
 
     @Test
+    void findAllByPassengerId_ShouldReturnPageOfDriverRates_WhenPassengerIdIsEqualToProvided() {
+        int pageNumber = 0, pageSize = 10, expectedContentSize = 1;
+        PassengerRate passengerRate =
+                PassengerRateTestUtil.getPassengerRateBuilder()
+                        .id(null)
+                        .build();
+        passengerRateRepository.save(passengerRate);
+
+        Page<PassengerRate> actual =
+                passengerRateRepository.findAllByPassengerId(
+                        passengerRate.getPassengerId(), PageRequest.of(pageNumber, pageSize));
+
+        assertThat(actual).isNotNull();
+        assertThat(actual.getContent())
+                .isNotEmpty()
+                .hasSize(expectedContentSize)
+                .contains(passengerRate);
+    }
+
+    @Test
+    void findAllByDriverId_ShouldReturnEmptyPage_WhenPassengerIdIsNotEqualToProvided() {
+        int pageNumber = 0, pageSize = 10;
+        PassengerRate passengerRate =
+                PassengerRateTestUtil.getPassengerRateBuilder()
+                        .id(null)
+                        .build();
+
+        Page<PassengerRate> actual =
+                passengerRateRepository.findAllByPassengerId(
+                        passengerRate.getPassengerId(), PageRequest.of(pageNumber, pageSize));
+
+        assertThat(actual).isNotNull();
+        assertThat(actual.getContent()).isEmpty();
+    }
+
+    @Test
     void findByPassengerIdAndRideId_ShouldReturnPassengerRate_WhenPassengerRateExists() {
         PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
         passengerRateRepository.save(passengerRate);
@@ -39,7 +77,7 @@ class PassengerRateRepositoryTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void findByDriverIdAndRideId_ShouldReturnEmptyOptional_WhenDriverRateDoesNotExist() {
+    void findByPassengerIdAndRideId_ShouldReturnEmptyOptional_WhenPassengerRateDoesNotExist() {
         PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
 
         Optional<PassengerRate> actual = passengerRateRepository.findByPassengerIdAndRideId(
@@ -51,7 +89,7 @@ class PassengerRateRepositoryTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void existsDriverIdAndRideId_ShouldReturnTrue_WhenDriverRateExists() {
+    void existsByPassengerIdAndRideId_ShouldReturnTrue_WhenPassengerRateExists() {
         PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
         passengerRateRepository.save(passengerRate);
 
@@ -62,7 +100,7 @@ class PassengerRateRepositoryTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void existsDriverIdAndRideId_ShouldReturnFalse_WhenDriverRateDoesNotExist() {
+    void existsByPassengerIdAndRideId_ShouldReturnFalse_WhenPassengerRateDoesNotExist() {
         PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
 
         boolean actual = passengerRateRepository.existsByPassengerIdAndRideId(

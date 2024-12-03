@@ -1,4 +1,4 @@
-package com.cabaggregator.ratingservice.mapper;
+package com.cabaggregator.ratingservice.unit.core.mapper;
 
 import com.cabaggregator.ratingservice.core.dto.passenger.PassengerRateAddingDto;
 import com.cabaggregator.ratingservice.core.dto.passenger.PassengerRateDto;

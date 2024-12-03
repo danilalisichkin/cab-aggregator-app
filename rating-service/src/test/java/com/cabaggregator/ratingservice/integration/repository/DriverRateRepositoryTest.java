@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.Optional;
@@ -25,6 +27,42 @@ class DriverRateRepositoryTest extends AbstractIntegrationTest {
     @BeforeEach
     public void setUp() {
         driverRateRepository.deleteAll();
+    }
+
+    @Test
+    void findAllByDriverId_ShouldReturnPageOfDriverRates_WhenDriverIdIsEqualToProvided() {
+        int pageNumber = 0, pageSize = 10, expectedContentSize = 1;
+        DriverRate driverRate =
+                DriverRateTestUtil.getDriverRateBuilder()
+                        .id(null)
+                        .build();
+        driverRateRepository.save(driverRate);
+
+        Page<DriverRate> actual =
+                driverRateRepository.findAllByDriverId(
+                        driverRate.getDriverId(), PageRequest.of(pageNumber, pageSize));
+
+        assertThat(actual).isNotNull();
+        assertThat(actual.getContent())
+                .isNotEmpty()
+                .hasSize(expectedContentSize)
+                .contains(driverRate);
+    }
+
+    @Test
+    void findAllByDriverId_ShouldReturnEmptyPage_WhenDriverIdIsNotEqualToProvided() {
+        int pageNumber = 0, pageSize = 10;
+        DriverRate driverRate =
+                DriverRateTestUtil.getDriverRateBuilder()
+                        .id(null)
+                        .build();
+
+        Page<DriverRate> actual =
+                driverRateRepository.findAllByDriverId(
+                        driverRate.getDriverId(), PageRequest.of(pageNumber, pageSize));
+
+        assertThat(actual).isNotNull();
+        assertThat(actual.getContent()).isEmpty();
     }
 
     @Test
@@ -51,7 +89,7 @@ class DriverRateRepositoryTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void existsDriverIdAndRideId_ShouldReturnTrue_WhenDriverRateExists() {
+    void existsByDriverIdAndRideId_ShouldReturnTrue_WhenDriverRateExists() {
         DriverRate driverRate = DriverRateTestUtil.getDriverRateBuilder().build();
         driverRateRepository.save(driverRate);
 
@@ -62,7 +100,7 @@ class DriverRateRepositoryTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void existsDriverIdAndRideId_ShouldReturnFalse_WhenDriverRateDoesNotExist() {
+    void existsByDriverIdAndRideId_ShouldReturnFalse_WhenDriverRateDoesNotExist() {
         DriverRate driverRate = DriverRateTestUtil.getDriverRateBuilder().build();
 
         boolean actual = driverRateRepository.existsByDriverIdAndRideId(

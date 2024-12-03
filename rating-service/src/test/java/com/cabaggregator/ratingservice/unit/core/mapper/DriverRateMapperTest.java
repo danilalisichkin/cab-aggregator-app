@@ -1,4 +1,4 @@
-package com.cabaggregator.ratingservice.mapper;
+package com.cabaggregator.ratingservice.unit.core.mapper;
 
 import com.cabaggregator.ratingservice.core.dto.driver.DriverRateAddingDto;
 import com.cabaggregator.ratingservice.core.dto.driver.DriverRateDto;

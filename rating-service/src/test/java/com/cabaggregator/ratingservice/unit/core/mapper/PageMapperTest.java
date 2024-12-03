@@ -1,4 +1,4 @@
-package com.cabaggregator.ratingservice.mapper;
+package com.cabaggregator.ratingservice.unit.core.mapper;
 
 import com.cabaggregator.ratingservice.core.dto.page.PageDto;
 import com.cabaggregator.ratingservice.core.mapper.PageMapper;
