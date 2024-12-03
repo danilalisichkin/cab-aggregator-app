@@ -1,5 +1,6 @@
 package com.cabaggregator.payoutservice.integration.repository;
 
+import com.cabaggregator.payoutservice.config.AbstractIntegrationTest;
 import com.cabaggregator.payoutservice.entity.PayoutAccount;
 import com.cabaggregator.payoutservice.repository.PayoutAccountRepository;
 import com.cabaggregator.payoutservice.util.PayoutAccountTestUtil;
@@ -14,14 +15,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Tag("integration")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class PayoutAccountRepositoryTest extends AbstractRepositoryIntegrationTest {
+class PayoutAccountRepositoryTest extends AbstractIntegrationTest {
     @Autowired
     private PayoutAccountRepository payoutAccountRepository;
 
     @Test
     void existsByStripeAccountId_ShouldReturnTrue_WhenAccountExists() {
         PayoutAccount payoutAccount = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
-
         payoutAccountRepository.save(payoutAccount);
 
         boolean actual = payoutAccountRepository.existsByStripeAccountId(payoutAccount.getStripeAccountId());
@@ -31,9 +31,8 @@ class PayoutAccountRepositoryTest extends AbstractRepositoryIntegrationTest {
 
     @Test
     void existsByStripeAccountId_ShouldReturnFalse_WhenAccountDoesNotExist() {
-        String stripeAccountIdOfNotExistingId = "not-existing-id";
-
-        boolean actual = payoutAccountRepository.existsByStripeAccountId(stripeAccountIdOfNotExistingId);
+        boolean actual = payoutAccountRepository.existsByStripeAccountId(
+                PayoutAccountTestUtil.NOT_EXISTING_STRIPE_ACCOUNT_ID);
 
         assertThat(actual).isFalse();
     }

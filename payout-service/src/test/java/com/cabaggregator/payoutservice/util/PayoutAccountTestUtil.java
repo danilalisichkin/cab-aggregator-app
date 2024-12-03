@@ -18,6 +18,8 @@ public final class PayoutAccountTestUtil {
     public static final UUID ID2 = UUID.fromString("f47ac10b-58cc-4372-a567-0e02b2c3d479");
     public static final String STRIPE_ACCOUNT_ID2 = "acct_2M4N5O6P7Q8R9S0T1U2VWXYZK";
 
+    public static final String NOT_EXISTING_STRIPE_ACCOUNT_ID = "not_existing_account_id";
+
     public static PayoutAccount.PayoutAccountBuilder getPayoutAccountBuilder() {
         return PayoutAccount.builder()
                 .id(ID)

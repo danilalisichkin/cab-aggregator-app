@@ -1,5 +1,6 @@
 package com.cabaggregator.payoutservice.integration.repository;
 
+import com.cabaggregator.payoutservice.config.AbstractIntegrationTest;
 import com.cabaggregator.payoutservice.entity.BalanceOperation;
 import com.cabaggregator.payoutservice.entity.PayoutAccount;
 import com.cabaggregator.payoutservice.entity.enums.OperationType;
@@ -20,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Tag("integration")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class BalanceOperationRepositoryTest extends AbstractRepositoryIntegrationTest {
+class BalanceOperationRepositoryTest extends AbstractIntegrationTest {
     @Autowired
     private BalanceOperationRepository balanceOperationRepository;
 
@@ -38,40 +39,43 @@ class BalanceOperationRepositoryTest extends AbstractRepositoryIntegrationTest {
     }
 
     private BalanceOperation saveBalanceOperation(PayoutAccount payoutAccount, OperationType type) {
-        BalanceOperation operation = BalanceOperationTestUtil.getBalanceOperationBuilder()
-                .id(null)
-                .payoutAccount(payoutAccount)
-                .type(type)
-                .build();
+        BalanceOperation operation =
+                BalanceOperationTestUtil.getBalanceOperationBuilder()
+                        .id(null)
+                        .payoutAccount(payoutAccount)
+                        .type(type)
+                        .build();
+
         return balanceOperationRepository.save(operation);
     }
 
     @Test
     void findAllByPayoutAccount_ShouldReturnPageOfBalanceOperations_WhenPayoutAccountIsEqualToProvided() {
+        int pageNumber = 0, pageSize = 10, expectedContentSize = 1;
         PayoutAccount payoutAccount1 = createPayoutAccount1();
         BalanceOperation operation = saveBalanceOperation(payoutAccount1, OperationType.WITHDRAWAL);
 
         Page<BalanceOperation> actual =
                 balanceOperationRepository.findAllByPayoutAccount(
-                        payoutAccount1, PageRequest.of(0, 10));
+                        payoutAccount1, PageRequest.of(pageNumber, pageSize));
 
         assertThat(actual).isNotNull();
         assertThat(actual.getContent())
                 .isNotEmpty()
-                .hasSize(1)
+                .hasSize(expectedContentSize)
                 .contains(operation);
     }
 
     @Test
     void findAllByPayoutAccount_ShouldReturnEmptyPage_WhenPayoutAccountIsNotEqualToProvided() {
+        int pageNumber = 0, pageSize = 10;
         PayoutAccount payoutAccount1 = createPayoutAccount1();
         PayoutAccount payoutAccount2 = createPayoutAccount2();
-
         saveBalanceOperation(payoutAccount1, OperationType.DEPOSIT);
 
         Page<BalanceOperation> actual =
                 balanceOperationRepository.findAllByPayoutAccount(
-                        payoutAccount2, PageRequest.of(0, 10));
+                        payoutAccount2, PageRequest.of(pageNumber, pageSize));
 
         assertThat(actual).isNotNull();
         assertThat(actual.getContent()).isEmpty();
@@ -79,12 +83,13 @@ class BalanceOperationRepositoryTest extends AbstractRepositoryIntegrationTest {
 
     @Test
     void findAllByPayoutAccountAndType_ShouldReturnPageOfBalanceOperations_WhenPayoutAccountAndTypeAreEqualToProvided() {
+        int pageNumber = 0, pageSize = 10;
         PayoutAccount payoutAccount1 = createPayoutAccount1();
         BalanceOperation withdrawalOperation = saveBalanceOperation(payoutAccount1, OperationType.WITHDRAWAL);
 
         Page<BalanceOperation> actual =
                 balanceOperationRepository.findAllByPayoutAccountAndType(
-                        payoutAccount1, PageRequest.of(0, 10), OperationType.WITHDRAWAL);
+                        payoutAccount1, PageRequest.of(pageNumber, pageSize), OperationType.WITHDRAWAL);
 
         assertThat(actual).isNotNull();
         assertThat(actual.getContent())
@@ -95,6 +100,7 @@ class BalanceOperationRepositoryTest extends AbstractRepositoryIntegrationTest {
 
     @Test
     void findAllByPayoutAccountAndType_ShouldReturnEmpty_WhenPayoutAccountIsNotEqualToProvided() {
+        int pageNumber = 0, pageSize = 10;
         PayoutAccount payoutAccount1 = createPayoutAccount1();
         PayoutAccount payoutAccount2 = createPayoutAccount2();
 
@@ -102,7 +108,7 @@ class BalanceOperationRepositoryTest extends AbstractRepositoryIntegrationTest {
 
         Page<BalanceOperation> actual =
                 balanceOperationRepository.findAllByPayoutAccountAndType(
-                        payoutAccount2, PageRequest.of(0, 10), OperationType.WITHDRAWAL);
+                        payoutAccount2, PageRequest.of(pageNumber, pageSize), OperationType.WITHDRAWAL);
 
         assertThat(actual).isNotNull();
         assertThat(actual.getContent()).isEmpty();
@@ -110,12 +116,13 @@ class BalanceOperationRepositoryTest extends AbstractRepositoryIntegrationTest {
 
     @Test
     void findAllByPayoutAccountAndType_ShouldReturnEmpty_WhenOperationTypeIsNotEqualToProvided() {
+        int pageNumber = 0, pageSize = 10;
         PayoutAccount payoutAccount1 = createPayoutAccount1();
         saveBalanceOperation(payoutAccount1, OperationType.DEPOSIT);
 
         Page<BalanceOperation> actual =
                 balanceOperationRepository.findAllByPayoutAccountAndType(
-                        payoutAccount1, PageRequest.of(0, 10), OperationType.WITHDRAWAL);
+                        payoutAccount1, PageRequest.of(pageNumber, pageSize), OperationType.WITHDRAWAL);
 
         assertThat(actual).isNotNull();
         assertThat(actual.getContent()).isEmpty();

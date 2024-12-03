@@ -1,13 +1,16 @@
-package com.cabaggregator.payoutservice.integration.repository;
+package com.cabaggregator.payoutservice.config;
 
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-public abstract class AbstractRepositoryIntegrationTest {
+@ActiveProfiles("test")
+public abstract class AbstractIntegrationTest {
 
-    static final PostgreSQLContainer<?> postgresqlContainer = new PostgreSQLContainer<>("postgres:14-alpine")
-            .withDatabaseName("payout_database")
+    static final PostgreSQLContainer<?> postgresqlContainer
+            = new PostgreSQLContainer<>("postgres:17-alpine")
+            .withDatabaseName("test_payout_database")
             .withUsername("postgres")
             .withPassword("root")
             .withReuse(false);
