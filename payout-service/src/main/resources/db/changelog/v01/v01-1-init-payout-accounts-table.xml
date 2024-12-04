@@ -17,10 +17,6 @@
                     type="VARCHAR(30)">
                 <constraints nullable="false"/>
             </column>
-            <column name="balance"
-                    type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
             <column name="created_at"
                     type="DATETIME">
                 <constraints nullable="false"/>
@@ -34,6 +30,11 @@
         <addUniqueConstraint columnNames="stripe_account_id"
                              constraintName="uc_payout_accounts_stripeaccountid"
                              tableName="payout_accounts"/>
+
+        <createIndex indexName="idx_stripe_account_id"
+                     tableName="payout_accounts">
+            <column name="stripe_account_id"/>
+        </createIndex>
     </changeSet>
 
 </databaseChangeLog>

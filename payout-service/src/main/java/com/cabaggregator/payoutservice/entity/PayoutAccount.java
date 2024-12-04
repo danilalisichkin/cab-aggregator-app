@@ -3,9 +3,11 @@ package com.cabaggregator.payoutservice.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,18 +20,18 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "payout_accounts")
+@Table(name = "payout_accounts", indexes = {
+        @Index(name = "idx_stripe_account_id", columnList = "stripe_account_id")
+})
 public class PayoutAccount {
     @Id
     private UUID id;
 
     @Column(nullable = false, unique = true)
     private String stripeAccountId;
-
-    @Column(nullable = false)
-    private Long balance;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
