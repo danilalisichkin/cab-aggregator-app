@@ -1,10 +1,11 @@
-package com.cabaggregator.ratingservice.mapper;
+package com.cabaggregator.ratingservice.unit.core.mapper;
 
 import com.cabaggregator.ratingservice.core.dto.passenger.PassengerRateAddingDto;
 import com.cabaggregator.ratingservice.core.dto.passenger.PassengerRateDto;
 import com.cabaggregator.ratingservice.core.dto.passenger.PassengerRateSettingDto;
 import com.cabaggregator.ratingservice.core.mapper.PassengerRateMapper;
 import com.cabaggregator.ratingservice.entity.PassengerRate;
+import com.cabaggregator.ratingservice.util.PaginationTestUtil;
 import com.cabaggregator.ratingservice.util.PassengerRateTestUtil;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -87,7 +87,6 @@ class PassengerRateMapperTest {
     void entityListToDtoList_ShouldConvertEntityListToDtoList_WhenEntityListIsNotEmpty() {
         PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
         PassengerRateDto passengerRateDto = PassengerRateTestUtil.buildPassengerRateDto();
-
         List<PassengerRate> entityList = Arrays.asList(passengerRate, passengerRate);
         List<PassengerRateDto> expectedDtoList = Arrays.asList(passengerRateDto, passengerRateDto);
 
@@ -118,11 +117,10 @@ class PassengerRateMapperTest {
     void entityPageToDtoPage_ShouldConvertEntityPageToDtoPage_WhenPageIsNotNull() {
         PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
         List<PassengerRate> entityList = Arrays.asList(passengerRate, passengerRate);
-        Page<PassengerRate> entityPage = new PageImpl<>(entityList);
-
+        Page<PassengerRate> entityPage = PaginationTestUtil.buildPageFromList(entityList);
         PassengerRateDto passengerRateDto = PassengerRateTestUtil.buildPassengerRateDto();
         List<PassengerRateDto> dtoList = Arrays.asList(passengerRateDto, passengerRateDto);
-        Page<PassengerRateDto> expectedDtoPage = new PageImpl<>(dtoList);
+        Page<PassengerRateDto> expectedDtoPage = PaginationTestUtil.buildPageFromList(dtoList);
 
         Page<PassengerRateDto> actual = mapper.entityPageToDtoPage(entityPage);
 

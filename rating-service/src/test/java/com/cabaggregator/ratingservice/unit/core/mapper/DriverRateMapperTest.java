@@ -1,4 +1,4 @@
-package com.cabaggregator.ratingservice.mapper;
+package com.cabaggregator.ratingservice.unit.core.mapper;
 
 import com.cabaggregator.ratingservice.core.dto.driver.DriverRateAddingDto;
 import com.cabaggregator.ratingservice.core.dto.driver.DriverRateDto;
@@ -6,13 +6,13 @@ import com.cabaggregator.ratingservice.core.dto.driver.DriverRateSettingDto;
 import com.cabaggregator.ratingservice.core.mapper.DriverRateMapper;
 import com.cabaggregator.ratingservice.entity.DriverRate;
 import com.cabaggregator.ratingservice.util.DriverRateTestUtil;
+import com.cabaggregator.ratingservice.util.PaginationTestUtil;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -45,10 +45,11 @@ class DriverRateMapperTest {
 
     @Test
     void updateEntityFromDto_ShouldUpdateEntity_WhenDtoIsNotNull() {
-        DriverRate actual = DriverRateTestUtil.getDriverRateBuilder().build();
-        actual.setRate(null);
-        actual.setFeedbackOptions(null);
-
+        DriverRate actual =
+                DriverRateTestUtil.getDriverRateBuilder()
+                        .rate(null)
+                        .feedbackOptions(null)
+                        .build();
         DriverRateSettingDto driverRateSettingDto = DriverRateTestUtil.buildDriverRateSettingDto();
 
         mapper.updateEntityFromDto(driverRateSettingDto, actual);
@@ -91,16 +92,15 @@ class DriverRateMapperTest {
     @Test
     void entityListToDtoList_ShouldConvertEntityListToDtoList_WhenEntityListIsNotEmpty() {
         DriverRate driverRate = DriverRateTestUtil.getDriverRateBuilder().build();
-        DriverRateDto driverRateDto = DriverRateTestUtil.buildDriverRateDto();
-
         List<DriverRate> entityList = Arrays.asList(driverRate, driverRate);
-        List<DriverRateDto> expectedDtoList = Arrays.asList(driverRateDto, driverRateDto);
+        DriverRateDto driverRateDto = DriverRateTestUtil.buildDriverRateDto();
+        List<DriverRateDto> dtoList = Arrays.asList(driverRateDto, driverRateDto);
 
         List<DriverRateDto> actual = mapper.entityListToDtoList(entityList);
 
         assertThat(actual)
                 .isNotNull()
-                .isEqualTo(expectedDtoList);
+                .isEqualTo(dtoList);
     }
 
     @Test
@@ -123,11 +123,10 @@ class DriverRateMapperTest {
     void entityPageToDtoPage_ShouldConvertEntityPageToDtoPage_WhenPageIsNotNull() {
         DriverRate driverRate = DriverRateTestUtil.getDriverRateBuilder().build();
         List<DriverRate> entityList = Arrays.asList(driverRate, driverRate);
-        Page<DriverRate> entityPage = new PageImpl<>(entityList);
-
+        Page<DriverRate> entityPage = PaginationTestUtil.buildPageFromList(entityList);
         DriverRateDto driverRateDto = DriverRateTestUtil.buildDriverRateDto();
         List<DriverRateDto> dtoList = Arrays.asList(driverRateDto, driverRateDto);
-        Page<DriverRateDto> expectedDtoPage = new PageImpl<>(dtoList);
+        Page<DriverRateDto> expectedDtoPage = PaginationTestUtil.buildPageFromList(dtoList);
 
         Page<DriverRateDto> actual = mapper.entityPageToDtoPage(entityPage);
 
