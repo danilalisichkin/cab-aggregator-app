@@ -10,5 +10,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class MessageConfig {
     private final String errorCauses;
     private final String messages;
+    private final String validationErrors;
     private final String encoding;
 }
