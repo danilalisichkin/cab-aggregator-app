@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: test-ride-service
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/test_ride_database
+      username: ${DB_USERNAME:mongo}
+      password: ${DB_PASSWORD:root}
+mongock:
+  migration-scan-package: com.cabaggregator.rideservice.migrations
+  enabled: true
+server:
+  port: 9084
