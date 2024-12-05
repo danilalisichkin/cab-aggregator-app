@@ -36,22 +36,10 @@
             </column>
         </createTable>
 
-        <createIndex indexName="idx_created_at"
-                     tableName="balance_operations">
-            <column name="created_at"/>
-        </createIndex>
-
-        <createIndex indexName="idx_payout_account_created_at"
-                     tableName="balance_operations">
-            <column name="payout_account_id"/>
-            <column name="created_at"/>
-        </createIndex>
-
-        <createIndex indexName="idx_payout_account_type_created_at"
+        <createIndex indexName="idx_payout_account_type"
                      tableName="balance_operations">
             <column name="payout_account_id"/>
             <column name="type"/>
-            <column name="created_at"/>
         </createIndex>
 
         <addForeignKeyConstraint baseColumnNames="payout_account_id"
@@ -60,10 +48,6 @@
                                  referencedColumnNames="id"
                                  referencedTableName="payout_accounts"/>
 
-        <createIndex indexName="idx_payout_account"
-                     tableName="balance_operations">
-            <column name="payout_account_id"/>
-        </createIndex>
     </changeSet>
 
 </databaseChangeLog>

@@ -33,11 +33,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 @Immutable
 @Table(name = "balance_operations", indexes = {
-        @Index(name = "idx_payout_account", columnList = "payout_account_user_id"),
-        @Index(name = "idx_created_at", columnList = "created_at"),
-        @Index(name = "idx_payout_account_created_at", columnList = "payout_account_user_id, created_at"),
-        @Index(name = "idx_payout_account_type_created_at", columnList = "payout_account_user_id, type, created_at")
-})
+        @Index(name = "idx_payout_account_type_created_at", columnList = "payout_account_user_id, type")})
 public class BalanceOperation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
