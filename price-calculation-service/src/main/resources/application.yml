@@ -2,7 +2,7 @@ spring:
   application:
     name: price-calculation-service
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:price_calculation_database}
+    url: jdbc:postgresql://${DB_HOSTPORT:localhost:5432}/${DB_NAME:price_calculation_database}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:root}
   jpa:

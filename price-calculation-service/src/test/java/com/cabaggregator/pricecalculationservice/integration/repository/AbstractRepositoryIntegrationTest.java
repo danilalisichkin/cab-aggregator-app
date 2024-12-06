@@ -1,4 +1,4 @@
-package com.example.pricecalculationservice.integration.repository;
+package com.cabaggregator.pricecalculationservice.integration.repository;
 
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -17,7 +17,7 @@ public abstract class AbstractRepositoryIntegrationTest {
     }
 
     @DynamicPropertySource
-    public static void mongoDBProperties(DynamicPropertyRegistry registry) {
+    public static void postgresqlProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", postgresqlContainer::getJdbcUrl);
         registry.add("spring.datasource.username", postgresqlContainer::getUsername);
         registry.add("spring.datasource.password", postgresqlContainer::getPassword);

@@ -1,4 +1,4 @@
-package com.example.pricecalculationservice.entity;
+package com.cabaggregator.pricecalculationservice.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
