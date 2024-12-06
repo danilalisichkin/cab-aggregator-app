@@ -1,12 +1,11 @@
-package com.cabaggregator.passengerservice.validator;
+package com.cabaggregator.passengerservice.unit.validator;
 
-import com.cabaggregator.passengerservice.PassengerTestUtil;
 import com.cabaggregator.passengerservice.entity.Passenger;
 import com.cabaggregator.passengerservice.exception.DataUniquenessConflictException;
 import com.cabaggregator.passengerservice.exception.ResourceNotFoundException;
 import com.cabaggregator.passengerservice.repository.PassengerRepository;
-import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
+import com.cabaggregator.passengerservice.util.PassengerTestUtil;
+import com.cabaggregator.passengerservice.validator.PassengerValidator;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Tag("unit")
-@RequiredArgsConstructor
 @ExtendWith(MockitoExtension.class)
 class PassengerValidatorTest {
     @InjectMocks
@@ -27,13 +25,6 @@ class PassengerValidatorTest {
 
     @Mock
     private PassengerRepository passengerRepository;
-
-    private Passenger passenger;
-
-    @BeforeEach
-    void setUp() {
-        passenger = PassengerTestUtil.buildPassenger();
-    }
 
     @Test
     void checkPhoneUniqueness_ShouldNotThrowDataUniquenessException_WhenPhoneIsUnique() {
@@ -73,6 +64,8 @@ class PassengerValidatorTest {
 
     @Test
     void checkExistenceOfPassengerWithId_ShouldThrowResourceNotFoundException_WhenPassengerNotFound() {
+        Passenger passenger = PassengerTestUtil.getPassengerBuilder().build();
+
         Mockito.when(passengerRepository.existsById(passenger.getId()))
                 .thenReturn(false);
 
@@ -82,6 +75,8 @@ class PassengerValidatorTest {
 
     @Test
     void checkExistenceOfPassengerWithId_ShouldNotThrowResourceNotFoundException_WhenPassengerFound() {
+        Passenger passenger = PassengerTestUtil.getPassengerBuilder().build();
+
         Mockito.when(passengerRepository.existsById(passenger.getId()))
                 .thenReturn(true);
 
