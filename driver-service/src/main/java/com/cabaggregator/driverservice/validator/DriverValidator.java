@@ -1,7 +1,6 @@
 package com.cabaggregator.driverservice.validator;
 
 import com.cabaggregator.driverservice.core.constant.ApplicationMessages;
-import com.cabaggregator.driverservice.exception.BadRequestException;
 import com.cabaggregator.driverservice.exception.DataUniquenessConflictException;
 import com.cabaggregator.driverservice.exception.ResourceNotFoundException;
 import com.cabaggregator.driverservice.repository.DriverRepository;
@@ -41,7 +40,7 @@ public class DriverValidator {
 
     public void validateDriverCarUniqueness(Long carId) {
         if (driverRepository.existsByCarId(carId)) {
-            throw new BadRequestException(
+            throw new DataUniquenessConflictException(
                     ApplicationMessages.CAR_WITH_ID_ALREADY_USED,
                     carId);
         }

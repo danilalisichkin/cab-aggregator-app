@@ -16,7 +16,6 @@ import com.cabaggregator.driverservice.repository.CarRepository;
 import com.cabaggregator.driverservice.repository.DriverRepository;
 import com.cabaggregator.driverservice.service.DriverService;
 import com.cabaggregator.driverservice.util.PageRequestBuilder;
-import com.cabaggregator.driverservice.validator.CarValidator;
 import com.cabaggregator.driverservice.validator.DriverValidator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +35,6 @@ public class DriverServiceImpl implements DriverService {
     private final PageMapper pageMapper;
 
     private final DriverValidator driverValidator;
-    private final CarValidator carValidator;
 
     @Override
     public PageDto<DriverDto> getPageOfDrivers(

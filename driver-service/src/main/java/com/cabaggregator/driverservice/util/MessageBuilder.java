@@ -13,4 +13,8 @@ public class MessageBuilder {
     public String buildLocalizedMessage(String key, Object[] args) {
         return messageSource.getMessage(key, args, LocaleContextHolder.getLocale());
     }
+
+    public String buildLocalizedMessage(String key) {
+        return messageSource.getMessage(key, null, LocaleContextHolder.getLocale());
+    }
 }

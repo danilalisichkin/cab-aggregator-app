@@ -35,7 +35,7 @@ public class RestExceptionHandler {
                 .status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse(
                         e.getLocalizedMessage(),
-                        messageBuilder.buildLocalizedMessage(ErrorCauses.NOT_FOUND, null)));
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.NOT_FOUND)));
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -44,7 +44,7 @@ public class RestExceptionHandler {
                 .status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse(
                         messageBuilder.buildLocalizedMessage(e.getMessageKey(), e.getMessageArgs()),
-                        messageBuilder.buildLocalizedMessage(e.getErrorCauseKey(), null)));
+                        messageBuilder.buildLocalizedMessage(e.getErrorCauseKey())));
     }
 
     @ExceptionHandler(BadRequestException.class)
@@ -53,7 +53,7 @@ public class RestExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(
                         messageBuilder.buildLocalizedMessage(e.getMessageKey(), e.getMessageArgs()),
-                        messageBuilder.buildLocalizedMessage(e.getErrorCauseKey(), null)));
+                        messageBuilder.buildLocalizedMessage(e.getErrorCauseKey())));
     }
 
     @ExceptionHandler({
@@ -64,12 +64,12 @@ public class RestExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(
-                        messageBuilder.buildLocalizedMessage(ErrorCauses.CANT_READ_REQUEST, null),
-                        messageBuilder.buildLocalizedMessage(ErrorCauses.BAD_REQUEST, null)));
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.CANT_READ_REQUEST),
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.BAD_REQUEST)));
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class})
-    public ResponseEntity<MultiErrorResponse> handleNoValidException(Exception e) {
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<MultiErrorResponse> handleMethodArgumentNoValidException(MethodArgumentNotValidException e) {
         Map<String, List<String>> errorMap = new HashMap<>();
 
         getValidationErrors(errorMap, e);
@@ -77,7 +77,20 @@ public class RestExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new MultiErrorResponse(
-                        messageBuilder.buildLocalizedMessage(ErrorCauses.VALIDATION, null),
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.VALIDATION),
+                        errorMap));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<MultiErrorResponse> handleConstraintViolationException(ConstraintViolationException e) {
+        Map<String, List<String>> errorMap = new HashMap<>();
+
+        getValidationErrors(errorMap, e);
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new MultiErrorResponse(
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.VALIDATION),
                         errorMap));
     }
 
@@ -87,16 +100,16 @@ public class RestExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(
                         messageBuilder.buildLocalizedMessage(e.getMessageKey(), e.getMessageArgs()),
-                        messageBuilder.buildLocalizedMessage(e.getErrorCauseKey(), null)));
+                        messageBuilder.buildLocalizedMessage(e.getErrorCauseKey())));
     }
 
     @ExceptionHandler(DataUniquenessConflictException.class)
-    public ResponseEntity<ErrorResponse> handleDataIUniquenessConflictException(ParameterizedException e) {
+    public ResponseEntity<ErrorResponse> handleDataUniquenessConflictException(ParameterizedException e) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(new ErrorResponse(
                         messageBuilder.buildLocalizedMessage(e.getMessageKey(), e.getMessageArgs()),
-                        messageBuilder.buildLocalizedMessage(e.getErrorCauseKey(), null)));
+                        messageBuilder.buildLocalizedMessage(e.getErrorCauseKey())));
     }
 
     @ExceptionHandler(UnauthorizedException.class)
@@ -105,7 +118,7 @@ public class RestExceptionHandler {
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(new ErrorResponse(
                         messageBuilder.buildLocalizedMessage(e.getMessageKey(), e.getMessageArgs()),
-                        messageBuilder.buildLocalizedMessage(e.getErrorCauseKey(), null)));
+                        messageBuilder.buildLocalizedMessage(e.getErrorCauseKey())));
     }
 
     @ExceptionHandler(ForbiddenException.class)
@@ -114,7 +127,7 @@ public class RestExceptionHandler {
                 .status(HttpStatus.FORBIDDEN)
                 .body(new ErrorResponse(
                         messageBuilder.buildLocalizedMessage(e.getMessageKey(), e.getMessageArgs()),
-                        messageBuilder.buildLocalizedMessage(e.getErrorCauseKey(), null)));
+                        messageBuilder.buildLocalizedMessage(e.getErrorCauseKey())));
     }
 
     @ExceptionHandler(Exception.class)
@@ -124,8 +137,8 @@ public class RestExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse(
-                        messageBuilder.buildLocalizedMessage(ErrorCauses.CONTACT_DEVELOPERS, null),
-                        messageBuilder.buildLocalizedMessage(ErrorCauses.INTERNAL, null)));
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.CONTACT_DEVELOPERS),
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.INTERNAL)));
     }
 
     private void getValidationErrors(Map<String, List<String>> errorMap, Exception e) {
