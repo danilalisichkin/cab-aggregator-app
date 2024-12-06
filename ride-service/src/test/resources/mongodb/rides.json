@@ -7,6 +7,7 @@
     "fare": "COMFORT",
     "status": "COMPLETED",
     "paymentMethod": "CARD",
+    "distance": 2400,
     "pickUpAddress": {
       "fullAddress": "123 N Main St, Los Angeles, CA 90012",
       "coordinates": [-118.238512, 34.05756]
@@ -29,6 +30,7 @@
     "fare": "ECONOMY",
     "status": "REQUESTED",
     "paymentMethod": "CASH",
+    "distance": 4000,
     "pickUpAddress": {
       "fullAddress": "500 E Olive Ave, Burbank, CA 91501",
       "coordinates": [-118.309928, 34.181496]
@@ -37,7 +39,7 @@
       "fullAddress": "Universal Studios Hollywood, 100 Universal City Plaza, Universal City, CA 91608",
       "coordinates": [-118.353371, 34.138116]
     },
-    "price": 800,
+    "price": 3000,
     "orderTime": "2024-12-03T14:00:00",
     "startTime": null,
     "endTime": null,

@@ -23,6 +23,7 @@ public final class RideTestUtil {
     public static final RideFare FARE = RideFare.COMFORT;
     public static final RideStatus STATUS = RideStatus.COMPLETED;
     public static final PaymentMethod PAYMENT_METHOD = PaymentMethod.CARD;
+    public static final Long DISTANCE = 2400L;
     public static final Long PRICE = 1200L;
 
     public static final LocalDateTime ORDER_TIME = LocalDateTime.parse("2024-12-01T11:30:00");
@@ -51,6 +52,7 @@ public final class RideTestUtil {
                 .paymentMethod(PAYMENT_METHOD)
                 .pickUpAddress(buildPickUpAddress())
                 .dropOffAddress(buildDropOffAddress())
+                .distance(DISTANCE)
                 .price(PRICE)
                 .orderTime(ORDER_TIME)
                 .startTime(START_TIME)

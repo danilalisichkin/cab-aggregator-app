@@ -49,6 +49,8 @@ public class Ride {
 
     private Address dropOffAddress;
 
+    private Long distance;
+
     private Long price;
 
     private LocalDateTime orderTime;
