@@ -3,7 +3,7 @@ package com.cabaggregator.rideservice.integration.repository;
 import com.cabaggregator.rideservice.config.AbstractIntegrationTest;
 import com.cabaggregator.rideservice.entity.Ride;
 import com.cabaggregator.rideservice.repository.RideRepository;
-import com.cabaggregator.rideservice.util.MongoDataJsonReader;
+import com.cabaggregator.rideservice.util.JsonReader;
 import com.cabaggregator.rideservice.util.RideTestUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -30,7 +30,7 @@ class RideRepositoryTest extends AbstractIntegrationTest {
     void setUp() throws IOException {
         rideRepository.deleteAll();
 
-        List<Ride> data = MongoDataJsonReader.readMongoDataFromJson("/mongodb/rides.json", Ride.class);
+        List<Ride> data = JsonReader.readValues("/mongodb/rides.json", Ride.class);
 
         rideRepository.saveAll(data);
     }

@@ -10,11 +10,11 @@ import java.io.InputStream;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class MongoDataJsonReader {
-    public static <T> List<T> readMongoDataFromJson(String fileName, Class<T> valueType) throws IOException {
+public final class JsonReader {
+    public static <T> List<T> readValues(String fileName, Class<T> valueType) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        InputStream inputStream = MongoDataJsonReader.class.getResourceAsStream(fileName);
+        InputStream inputStream = JsonReader.class.getResourceAsStream(fileName);
         return objectMapper.readValue(
                 inputStream,
                 objectMapper.getTypeFactory().constructCollectionType(List.class, valueType));

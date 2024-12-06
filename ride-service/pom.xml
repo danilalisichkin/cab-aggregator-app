@@ -18,7 +18,6 @@
     <properties>
         <java.version>21</java.version>
         <mongock.version>5.5.0</mongock.version>
-        <flapdoodle.version>4.18.1</flapdoodle.version>
     </properties>
 
     <dependencyManagement>
@@ -68,12 +67,6 @@
         <dependency>
             <groupId>io.mongock</groupId>
             <artifactId>mongock-springboot-junit5</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.flapdoodle.embed</groupId>
-            <artifactId>de.flapdoodle.embed.mongo</artifactId>
-            <version>${flapdoodle.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
