@@ -94,7 +94,6 @@ public class RestExceptionHandler {
                         errorMap));
     }
 
-
     @ExceptionHandler(ValidationErrorException.class)
     public ResponseEntity<ErrorResponse> handleValidationErrorException(ValidationErrorException e) {
         return ResponseEntity
