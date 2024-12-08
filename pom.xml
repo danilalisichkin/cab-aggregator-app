@@ -20,6 +20,7 @@
         <module>price-calculation-service</module>
         <module>promo-code-service</module>
         <module>rating-service</module>
+        <module>ride-service</module>
     </modules>
 
     <properties>
