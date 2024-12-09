@@ -1,0 +1,48 @@
+[
+  {
+    "id": "60c72b2f9b1e8c001c8d5a3f",
+    "passengerId": "1000e57c-114a-433d-6ac2-55048a29eab9",
+    "driverId": "4665e57c-884a-433d-8fd2-55078f29eab9",
+    "promoCode": "PROMO2024",
+    "fare": "COMFORT",
+    "status": "COMPLETED",
+    "paymentMethod": "CARD",
+    "distance": 2400,
+    "pickUpAddress": {
+      "fullAddress": "123 N Main St, Los Angeles, CA 90012",
+      "coordinates": [-118.238512, 34.05756]
+    },
+    "dropOffAddress": {
+      "fullAddress": "Los Angeles County Museum of Art, 5905 Wilshire Blvd, Los Angeles, CA 90036",
+      "coordinates": [-118.358467, 34.063621]
+    },
+    "price": 1200,
+    "orderTime": "2024-12-01T11:30:00",
+    "startTime": "2024-12-01T11:35:00",
+    "endTime": "2024-12-01T11:45:00",
+    "estimatedDuration": "PT12M"
+  },
+  {
+    "id": "60c72b3f9b1e8c001c8d5a40",
+    "passengerId": "2000f67c-224b-533e-7bc3-66058b39fab0",
+    "driverId": "5776f68d-995b-533e-9fe3-66189c49fab1",
+    "promoCode": null,
+    "fare": "ECONOMY",
+    "status": "REQUESTED",
+    "paymentMethod": "CASH",
+    "distance": 4000,
+    "pickUpAddress": {
+      "fullAddress": "500 E Olive Ave, Burbank, CA 91501",
+      "coordinates": [-118.309928, 34.181496]
+    },
+    "dropOffAddress": {
+      "fullAddress": "Universal Studios Hollywood, 100 Universal City Plaza, Universal City, CA 91608",
+      "coordinates": [-118.353371, 34.138116]
+    },
+    "price": 3000,
+    "orderTime": "2024-12-03T14:00:00",
+    "startTime": null,
+    "endTime": null,
+    "estimatedDuration": "PT30M"
+  }
+]

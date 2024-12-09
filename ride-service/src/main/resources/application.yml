@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: ride-service
+  data:
+    mongodb:
+      uri: mongodb://${DB_HOSTPORT:localhost:27017}/${DB_NAME:ride_database}
+      username: ${DB_USERNAME:mongo}
+      password: ${DB_PASSWORD:root}
+mongock:
+  migration-scan-package: com.cabaggregator.rideservice.migrations
+  enabled: true
+server:
+  port: ${SERVER_PORT:8084}
