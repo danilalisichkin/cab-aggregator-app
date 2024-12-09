@@ -48,4 +48,3 @@ public class DatabaseChangelogV1 {
     public void rollback(final MongoTemplate mongoTemplate) {
     }
 }
-

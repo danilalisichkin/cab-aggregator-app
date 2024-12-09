@@ -37,7 +37,9 @@ class RideRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findAllByPassengerId_ShouldReturnPageOfRides_WhenRideWithPassengerIdExists() {
-        int pageNumber = 0, pageSize = 10, expectedContentSize = 1;
+        int pageNumber = 0;
+        int pageSize = 10;
+        int expectedContentSize = 1;
         Ride ride = RideTestUtil.getRideBuilder().build();
 
         Page<Ride> actual = rideRepository.findAllByPassengerId(
@@ -52,7 +54,8 @@ class RideRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findAllByPassengerId_ShouldReturnEmptyPage_WhenRideWithPassengerIdDoesNotExist() {
-        int pageNumber = 0, pageSize = 10;
+        int pageNumber = 0;
+        int pageSize = 10;
 
         Page<Ride> actual = rideRepository.findAllByPassengerId(
                 RideTestUtil.NOT_EXISTING_PASSENGER_ID, PageRequest.of(pageNumber, pageSize));
@@ -63,7 +66,9 @@ class RideRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findAllByDriverId_ShouldReturnPageOfRides_WhenRideWithDriverIdExists() {
-        int pageNumber = 0, pageSize = 10, expectedContentSize = 1;
+        int pageNumber = 0;
+        int pageSize = 10;
+        int expectedContentSize = 1;
         Ride ride = RideTestUtil.getRideBuilder().build();
 
         Page<Ride> actual = rideRepository.findAllByDriverId(
@@ -78,7 +83,8 @@ class RideRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findAllByDriverId_ShouldReturnEmptyPage_WhenRideWithDriverIdDoesNotExist() {
-        int pageNumber = 0, pageSize = 10;
+        int pageNumber = 0;
+        int pageSize = 10;
 
         Page<Ride> actual = rideRepository.findAllByDriverId(
                 RideTestUtil.NOT_EXISTING_DRIVER_ID, PageRequest.of(pageNumber, pageSize));
@@ -89,7 +95,9 @@ class RideRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findAllByPassengerIdAndStatus_ShouldReturnPageOfRides_WhenRideWithPassengerIdAndStatusExists() {
-        int pageNumber = 0, pageSize = 10, expectedContentSize = 1;
+        int pageNumber = 0;
+        int pageSize = 10;
+        int expectedContentSize = 1;
         Ride ride = RideTestUtil.getRideBuilder().build();
 
         Page<Ride> actual = rideRepository.findAllByPassengerIdAndStatus(
@@ -104,7 +112,8 @@ class RideRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findAllByPassengerIdAndStatus_ShouldReturnEmptyPage_WhenRideWithPassengerIdDoesNotExist() {
-        int pageNumber = 0, pageSize = 10;
+        int pageNumber = 0;
+        int pageSize = 10;
 
         Page<Ride> actual = rideRepository.findAllByPassengerIdAndStatus(
                 RideTestUtil.NOT_EXISTING_PASSENGER_ID, RideTestUtil.STATUS, PageRequest.of(pageNumber, pageSize));
@@ -115,7 +124,8 @@ class RideRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findAllByPassengerIdAndStatus_ShouldReturnEmptyPage_WhenRideWithStatusDoesNotExist() {
-        int pageNumber = 0, pageSize = 10;
+        int pageNumber = 0;
+        int pageSize = 10;
 
         Page<Ride> actual = rideRepository.findAllByPassengerIdAndStatus(
                 RideTestUtil.PASSENGER_ID, RideTestUtil.NOT_EXISTING_STATUS, PageRequest.of(pageNumber, pageSize));
@@ -126,7 +136,9 @@ class RideRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findAllByDriverIdAndStatus_ShouldReturnPageOfRides_WhenRideWithDriverIdAndStatusExists() {
-        int pageNumber = 0, pageSize = 10, expectedContentSize = 1;
+        int pageNumber = 0;
+        int pageSize = 10;
+        int expectedContentSize = 1;
         Ride ride = RideTestUtil.getRideBuilder().build();
 
         Page<Ride> actual = rideRepository.findAllByDriverIdAndStatus(
@@ -141,7 +153,8 @@ class RideRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findAllByDriverIdAndStatus_ShouldReturnPageOfRides_WhenRideWithDriverIdDoesNotExist() {
-        int pageNumber = 0, pageSize = 10;
+        int pageNumber = 0;
+        int pageSize = 10;
 
         Page<Ride> actual = rideRepository.findAllByDriverIdAndStatus(
                 RideTestUtil.NOT_EXISTING_DRIVER_ID, RideTestUtil.STATUS, PageRequest.of(pageNumber, pageSize));
@@ -152,7 +165,8 @@ class RideRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findAllByDriverIdAndStatus_ShouldReturnPageOfRides_WhenRideWithStatusDoesNotExist() {
-        int pageNumber = 0, pageSize = 10;
+        int pageNumber = 0;
+        int pageSize = 10;
         Page<Ride> actual = rideRepository.findAllByDriverIdAndStatus(
                 RideTestUtil.DRIVER_ID, RideTestUtil.NOT_EXISTING_STATUS, PageRequest.of(pageNumber, pageSize));
 
@@ -162,7 +176,9 @@ class RideRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findAllByStatus_ShouldReturnPageOfRides_WhenRideWithStatusExists() {
-        int pageNumber = 0, pageSize = 10, expectedContentSize = 1;
+        int pageNumber = 0;
+        int pageSize = 10;
+        int expectedContentSize = 1;
         Ride ride = RideTestUtil.getRideBuilder().build();
 
         Page<Ride> actual = rideRepository.findAllByStatus(
@@ -177,7 +193,8 @@ class RideRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findAllByStatus_ShouldReturnPageOfRides_WhenRideWithStatusDoesNotExist() {
-        int pageNumber = 0, pageSize = 10;
+        int pageNumber = 0;
+        int pageSize = 10;
 
         Page<Ride> actual = rideRepository.findAllByStatus(
                 RideTestUtil.NOT_EXISTING_STATUS, PageRequest.of(pageNumber, pageSize));
