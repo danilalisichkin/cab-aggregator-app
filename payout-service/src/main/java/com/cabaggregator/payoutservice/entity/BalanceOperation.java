@@ -1,6 +1,6 @@
 package com.cabaggregator.payoutservice.entity;
 
-import com.cabaggregator.payoutservice.entity.enums.OperationType;
+import com.cabaggregator.payoutservice.core.enums.OperationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

@@ -1,5 +1,7 @@
 package com.cabaggregator.payoutservice.util;
 
+import com.cabaggregator.payoutservice.core.dto.PayoutAccountAddingDto;
+import com.cabaggregator.payoutservice.core.dto.PayoutAccountDto;
 import com.cabaggregator.payoutservice.entity.PayoutAccount;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -32,5 +34,19 @@ public final class PayoutAccountTestUtil {
                 .id(NOT_EXISTING_ID)
                 .stripeAccountId(NOT_EXISTING_STRIPE_ACCOUNT_ID)
                 .build();
+    }
+
+    public static PayoutAccountDto buildPayoutAccountDto() {
+        return new PayoutAccountDto(
+                ID,
+                STRIPE_ACCOUNT_ID,
+                CREATED_AT,
+                ACTIVE);
+    }
+
+    public static PayoutAccountAddingDto buildPayoutAccountAddingDto() {
+        return new PayoutAccountAddingDto(
+                ID,
+                STRIPE_ACCOUNT_ID);
     }
 }

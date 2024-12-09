@@ -1,7 +1,9 @@
 package com.cabaggregator.payoutservice.util;
 
+import com.cabaggregator.payoutservice.core.dto.BalanceOperationAddingDto;
+import com.cabaggregator.payoutservice.core.dto.BalanceOperationDto;
+import com.cabaggregator.payoutservice.core.enums.OperationType;
 import com.cabaggregator.payoutservice.entity.BalanceOperation;
-import com.cabaggregator.payoutservice.entity.enums.OperationType;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -29,5 +31,21 @@ public final class BalanceOperationTestUtil {
                 .type(TYPE)
                 .transcript(TRANSCRIPT)
                 .createdAt(CREATED_AT);
+    }
+
+    public static BalanceOperationDto buildBalanceOperationDto() {
+        return new BalanceOperationDto(
+                ID,
+                PayoutAccountTestUtil.ID,
+                AMOUNT,
+                TYPE,
+                TRANSCRIPT,
+                CREATED_AT);
+    }
+
+    public static BalanceOperationAddingDto buildBalanceOperationAddingDto() {
+        return new BalanceOperationAddingDto(
+                AMOUNT,
+                TRANSCRIPT);
     }
 }
