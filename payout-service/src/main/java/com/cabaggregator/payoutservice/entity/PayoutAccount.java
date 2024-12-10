@@ -24,8 +24,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "payout_accounts", indexes = {
-        @Index(name = "idx_stripe_account_id", columnList = "stripe_account_id")
-})
+        @Index(name = "idx_stripe_account_id", columnList = "stripe_account_id")})
 public class PayoutAccount {
     @Id
     private UUID id;
