@@ -108,7 +108,7 @@ public class RestExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
                 .body(new ErrorResponse(
-                        e.getLocalizedMessage(),
+                        messageBuilder.buildLocalizedMessage(e.getMessageKey()),
                         messageBuilder.buildLocalizedMessage(ErrorCauses.FORBIDDEN)));
     }
 
@@ -119,6 +119,17 @@ public class RestExceptionHandler {
                 .body(new ErrorResponse(
                         messageBuilder.buildLocalizedMessage(e.getMessageKey(), e.getMessageArgs()),
                         messageBuilder.buildLocalizedMessage(e.getErrorCauseKey())));
+    }
+
+    @ExceptionHandler(InternalErrorException.class)
+    public ResponseEntity<ErrorResponse> handleInternalErrorException(InternalErrorException e) {
+        log.error("internal server error", e);
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse(
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.CONTACT_DEVELOPERS),
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.INTERNAL)));
     }
 
     @ExceptionHandler(Exception.class)
