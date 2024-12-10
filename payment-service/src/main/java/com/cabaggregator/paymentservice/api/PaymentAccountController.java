@@ -33,8 +33,10 @@ public class PaymentAccountController {
 
     @GetMapping
     public ResponseEntity<PageDto<PaymentAccountDto>> getPageOfPaymentAccounts(
-            @RequestParam(defaultValue = "0") @PositiveOrZero Integer offset,
-            @RequestParam(defaultValue = "10") @Positive Integer limit,
+            @RequestParam(defaultValue = "0")
+            @PositiveOrZero(message = ValidationErrors.NUMBER_IS_NOT_POSITIVE_OR_ZERO) Integer offset,
+            @RequestParam(defaultValue = "10")
+            @Positive(message = ValidationErrors.NUMBER_IS_NOT_POSITIVE) Integer limit,
             @RequestParam(defaultValue = "createdAt") PaymentAccountSortField sortBy,
             @RequestParam(defaultValue = "ASC") Sort.Direction sortOrder) {
 

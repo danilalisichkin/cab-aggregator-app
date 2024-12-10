@@ -14,7 +14,7 @@ public record PaymentRequest(
         UUID paymentAccountId,
 
         @NotNull
-        @Positive
+        @Positive(message = ValidationErrors.NUMBER_IS_NOT_POSITIVE)
         Long unitAmount,
 
         @NotEmpty
