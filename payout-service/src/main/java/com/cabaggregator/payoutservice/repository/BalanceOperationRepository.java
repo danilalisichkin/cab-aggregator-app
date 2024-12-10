@@ -1,8 +1,8 @@
 package com.cabaggregator.payoutservice.repository;
 
+import com.cabaggregator.payoutservice.core.enums.OperationType;
 import com.cabaggregator.payoutservice.entity.BalanceOperation;
 import com.cabaggregator.payoutservice.entity.PayoutAccount;
-import com.cabaggregator.payoutservice.entity.enums.OperationType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

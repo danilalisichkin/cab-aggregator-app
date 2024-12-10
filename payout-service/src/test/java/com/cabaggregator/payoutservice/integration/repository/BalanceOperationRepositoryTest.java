@@ -1,9 +1,9 @@
 package com.cabaggregator.payoutservice.integration.repository;
 
 import com.cabaggregator.payoutservice.config.AbstractIntegrationTest;
+import com.cabaggregator.payoutservice.core.enums.OperationType;
 import com.cabaggregator.payoutservice.entity.BalanceOperation;
 import com.cabaggregator.payoutservice.entity.PayoutAccount;
-import com.cabaggregator.payoutservice.entity.enums.OperationType;
 import com.cabaggregator.payoutservice.repository.BalanceOperationRepository;
 import com.cabaggregator.payoutservice.util.BalanceOperationTestUtil;
 import com.cabaggregator.payoutservice.util.PayoutAccountTestUtil;
