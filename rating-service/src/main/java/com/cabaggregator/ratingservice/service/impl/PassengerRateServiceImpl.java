@@ -14,6 +14,7 @@ import com.cabaggregator.ratingservice.repository.PassengerRateRepository;
 import com.cabaggregator.ratingservice.service.PassengerRateService;
 import com.cabaggregator.ratingservice.util.PageRequestBuilder;
 import com.cabaggregator.ratingservice.validator.PassengerRateValidator;
+import com.cabaggregator.ratingservice.validator.UserRoleValidator;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
@@ -36,9 +37,13 @@ public class PassengerRateServiceImpl implements PassengerRateService {
 
     private final PassengerRateValidator passengerRateValidator;
 
+    private final UserRoleValidator userRoleValidator;
+
     @Override
     public PageDto<PassengerRateDto> getPageOfPassengerRates(
             UUID passengerId, Integer offset, Integer limit, PassengerRateSortField sortBy, Sort.Direction sortOrder) {
+
+        userRoleValidator.validateUserIsPassengerOrAdmin(passengerId);
 
         PageRequest pageRequest =
                 PageRequestBuilder.buildPageRequest(offset, limit, sortBy.getValue(), sortOrder);
@@ -51,6 +56,8 @@ public class PassengerRateServiceImpl implements PassengerRateService {
 
     @Override
     public PassengerRateDto getPassengerRate(UUID passengerId, ObjectId rideId) {
+        userRoleValidator.validateUserIsPassengerOrAdmin(passengerId);
+
         return passengerRateMapper.entityToDto(
                 getPassengerRateEntity(passengerId, rideId));
     }
@@ -70,6 +77,7 @@ public class PassengerRateServiceImpl implements PassengerRateService {
     @Transactional
     public PassengerRateDto setPassengerRate(UUID passengerId, ObjectId rideId, PassengerRateSettingDto settingDto) {
         PassengerRate passengerRateToUpdate = getPassengerRateEntity(passengerId, rideId);
+        passengerRateValidator.validateDriverParticipation(passengerRateToUpdate);
         passengerRateValidator.validatePassengerRateSetting(passengerRateToUpdate);
 
         passengerRateMapper.updateEntityFromDto(settingDto, passengerRateToUpdate);

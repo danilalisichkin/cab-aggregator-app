@@ -5,9 +5,11 @@ import com.cabaggregator.ratingservice.core.dto.passenger.PassengerRateAddingDto
 import com.cabaggregator.ratingservice.core.dto.passenger.PassengerRateDto;
 import com.cabaggregator.ratingservice.core.dto.passenger.PassengerRateSettingDto;
 import com.cabaggregator.ratingservice.core.enums.sort.PassengerRateSortField;
+import com.cabaggregator.ratingservice.service.PassengerRateService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
+import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -26,8 +28,11 @@ import java.util.UUID;
 
 @Validated
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/rates/passenger")
 public class PassengerRateController {
+
+    private final PassengerRateService passengerRateService;
 
     @GetMapping("/{passengerId}")
     ResponseEntity<PageDto<PassengerRateDto>> getPageOfPassengerRates(
@@ -37,7 +42,10 @@ public class PassengerRateController {
             @RequestParam(defaultValue = "id") PassengerRateSortField sortBy,
             @RequestParam(defaultValue = "ASC") Sort.Direction sortOrder) {
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        PageDto<PassengerRateDto> rates =
+                passengerRateService.getPageOfPassengerRates(passengerId, offset, limit, sortBy, sortOrder);
+
+        return ResponseEntity.status(HttpStatus.OK).body(rates);
     }
 
     @GetMapping("/{passengerId}/ride/{rideId}")
@@ -45,14 +53,18 @@ public class PassengerRateController {
             @PathVariable UUID passengerId,
             @PathVariable ObjectId rideId) {
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        PassengerRateDto rate = passengerRateService.getPassengerRate(passengerId, rideId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(rate);
     }
 
     @PostMapping
     ResponseEntity<PassengerRateDto> savePassengerRate(
             @RequestBody @Valid PassengerRateAddingDto addingDto) {
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        PassengerRateDto rate = passengerRateService.savePassengerRate(addingDto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(rate);
     }
 
     @PutMapping("/{passengerId}/ride/{rideId}")
@@ -61,6 +73,8 @@ public class PassengerRateController {
             @PathVariable ObjectId rideId,
             @RequestBody @Valid PassengerRateSettingDto settingDto) {
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        PassengerRateDto rate = passengerRateService.setPassengerRate(passengerId, rideId, settingDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(rate);
     }
 }

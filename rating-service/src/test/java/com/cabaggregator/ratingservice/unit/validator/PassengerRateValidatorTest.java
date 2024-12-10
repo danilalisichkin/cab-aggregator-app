@@ -3,7 +3,9 @@ package com.cabaggregator.ratingservice.unit.validator;
 import com.cabaggregator.ratingservice.entity.PassengerRate;
 import com.cabaggregator.ratingservice.exception.BadRequestException;
 import com.cabaggregator.ratingservice.exception.DataUniquenessConflictException;
+import com.cabaggregator.ratingservice.exception.ForbiddenException;
 import com.cabaggregator.ratingservice.repository.PassengerRateRepository;
+import com.cabaggregator.ratingservice.security.util.SecurityUtil;
 import com.cabaggregator.ratingservice.util.PassengerRateTestUtil;
 import com.cabaggregator.ratingservice.validator.PassengerRateValidator;
 import org.junit.jupiter.api.Tag;
@@ -11,10 +13,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -80,5 +84,38 @@ class PassengerRateValidatorTest {
 
         verifyNoInteractions(passengerRateRepository);
     }
-}
 
+    @Test
+    void validateDriverParticipation_ShouldThrowForbiddenException_WhenUserIsNotRideParticipant() {
+        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+
+        try (MockedStatic<SecurityUtil> mockedStatic = mockStatic(SecurityUtil.class)) {
+            mockedStatic.when(SecurityUtil::getUserIdFromSecurityContext)
+                    .thenReturn(PassengerRateTestUtil.OTHER_DRIVER_ID);
+
+            assertThatThrownBy(
+                    () -> passengerRateValidator.validateDriverParticipation(passengerRate))
+                    .isInstanceOf(ForbiddenException.class);
+
+            mockedStatic.verify(SecurityUtil::getUserIdFromSecurityContext);
+            verifyNoInteractions(passengerRateRepository);
+        }
+    }
+
+    @Test
+    void validateDriverParticipation_ShouldNotThrowException_WhenUserIsRideParticipant() {
+        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+
+        try (MockedStatic<SecurityUtil> mockedStatic = mockStatic(SecurityUtil.class)) {
+            mockedStatic.when(SecurityUtil::getUserIdFromSecurityContext)
+                    .thenReturn(passengerRate.getDriverId());
+
+            assertThatCode(
+                    () -> passengerRateValidator.validateDriverParticipation(passengerRate))
+                    .doesNotThrowAnyException();
+
+            mockedStatic.verify(SecurityUtil::getUserIdFromSecurityContext);
+            verifyNoInteractions(passengerRateRepository);
+        }
+    }
+}
