@@ -6,6 +6,7 @@ spring:
       encoding: "UTF-8"
       error-causes: "classpath:error_causes"
       messages: "classpath:messages"
+      validation-errors: "classpath:validation_errors"
   datasource:
     url: jdbc:postgresql://${DB_HOSTPORT:localhost:5432}/${DB_NAME:payment_database}
     username: ${DB_USERNAME:postgres}
