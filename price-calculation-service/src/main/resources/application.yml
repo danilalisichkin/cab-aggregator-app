@@ -19,5 +19,14 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:password}
+      database: ${REDIS_DATABASE:0}
+app:
+  weather:
+    api-key: ${WEATHER_API_KEY:KEY}
 server:
   port: ${SERVER_PORT:8085}

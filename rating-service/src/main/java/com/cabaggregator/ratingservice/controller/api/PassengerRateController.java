@@ -1,4 +1,4 @@
-package com.cabaggregator.ratingservice.api;
+package com.cabaggregator.ratingservice.controller.api;
 
 import com.cabaggregator.ratingservice.core.dto.page.PageDto;
 import com.cabaggregator.ratingservice.core.dto.passenger.PassengerRateAddingDto;

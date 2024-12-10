@@ -112,6 +112,17 @@ public class RestExceptionHandler {
                         messageBuilder.buildLocalizedMessage(e.getErrorCauseKey())));
     }
 
+    @ExceptionHandler(InternalErrorException.class)
+    public ResponseEntity<ErrorResponse> handleInternalErrorException(InternalErrorException e) {
+        log.error("internal server error", e);
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse(
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.CONTACT_DEVELOPERS),
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.INTERNAL)));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleOtherException(Exception e) {
         log.error("internal server error", e);
