@@ -3,6 +3,7 @@ package com.cabaggregator.ratingservice.integration.repository;
 import com.cabaggregator.ratingservice.config.AbstractIntegrationTest;
 import com.cabaggregator.ratingservice.entity.PassengerRate;
 import com.cabaggregator.ratingservice.repository.PassengerRateRepository;
+import com.cabaggregator.ratingservice.util.JsonReader;
 import com.cabaggregator.ratingservice.util.PassengerRateTestUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -11,32 +12,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.context.TestPropertySource;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("integration")
 @DataMongoTest
-@TestPropertySource(properties = {"mongock.enabled=false"})
 class PassengerRateRepositoryTest extends AbstractIntegrationTest {
     @Autowired
     private PassengerRateRepository passengerRateRepository;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() throws IOException {
         passengerRateRepository.deleteAll();
+
+        List<PassengerRate> data = JsonReader.readValues("/mongodb/passenger_rates.json", PassengerRate.class);
+
+        passengerRateRepository.saveAll(data);
     }
 
     @Test
-    void findAllByPassengerId_ShouldReturnPageOfDriverRates_WhenPassengerIdIsEqualToProvided() {
-        int pageNumber = 0, pageSize = 10, expectedContentSize = 1;
-        PassengerRate passengerRate =
-                PassengerRateTestUtil.getPassengerRateBuilder()
-                        .id(null)
-                        .build();
-        passengerRateRepository.save(passengerRate);
+    void findAllByPassengerId_ShouldReturnPageOfDriverRates_WhenPassengerRateWithPassengerIdExists() {
+        int pageNumber = 0;
+        int pageSize = 10;
+        int expectedContentSize = 1;
+        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
 
         Page<PassengerRate> actual =
                 passengerRateRepository.findAllByPassengerId(
@@ -50,16 +53,13 @@ class PassengerRateRepositoryTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void findAllByDriverId_ShouldReturnEmptyPage_WhenPassengerIdIsNotEqualToProvided() {
-        int pageNumber = 0, pageSize = 10;
-        PassengerRate passengerRate =
-                PassengerRateTestUtil.getPassengerRateBuilder()
-                        .id(null)
-                        .build();
+    void findAllByDriverId_ShouldReturnEmptyPage_WhenPassengerRateWithPassengerIdDoesNotExist() {
+        int pageNumber = 0;
+        int pageSize = 10;
 
         Page<PassengerRate> actual =
                 passengerRateRepository.findAllByPassengerId(
-                        passengerRate.getPassengerId(), PageRequest.of(pageNumber, pageSize));
+                        PassengerRateTestUtil.NOT_EXISTING_PASSENGER_ID, PageRequest.of(pageNumber, pageSize));
 
         assertThat(actual).isNotNull();
         assertThat(actual.getContent()).isEmpty();
@@ -68,7 +68,6 @@ class PassengerRateRepositoryTest extends AbstractIntegrationTest {
     @Test
     void findByPassengerIdAndRideId_ShouldReturnPassengerRate_WhenPassengerRateExists() {
         PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
-        passengerRateRepository.save(passengerRate);
 
         Optional<PassengerRate> actual = passengerRateRepository.findByPassengerIdAndRideId(
                 passengerRate.getPassengerId(), passengerRate.getRideId());
@@ -78,10 +77,8 @@ class PassengerRateRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findByPassengerIdAndRideId_ShouldReturnEmptyOptional_WhenPassengerRateDoesNotExist() {
-        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
-
         Optional<PassengerRate> actual = passengerRateRepository.findByPassengerIdAndRideId(
-                passengerRate.getPassengerId(), passengerRate.getRideId());
+                PassengerRateTestUtil.NOT_EXISTING_PASSENGER_ID, PassengerRateTestUtil.NOT_EXISTING_RIDE_ID);
 
         assertThat(actual)
                 .isNotNull()
@@ -91,7 +88,6 @@ class PassengerRateRepositoryTest extends AbstractIntegrationTest {
     @Test
     void existsByPassengerIdAndRideId_ShouldReturnTrue_WhenPassengerRateExists() {
         PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
-        passengerRateRepository.save(passengerRate);
 
         boolean actual = passengerRateRepository.existsByPassengerIdAndRideId(
                 passengerRate.getPassengerId(), passengerRate.getRideId());
@@ -101,10 +97,8 @@ class PassengerRateRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void existsByPassengerIdAndRideId_ShouldReturnFalse_WhenPassengerRateDoesNotExist() {
-        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
-
         boolean actual = passengerRateRepository.existsByPassengerIdAndRideId(
-                passengerRate.getPassengerId(), passengerRate.getRideId());
+                PassengerRateTestUtil.NOT_EXISTING_PASSENGER_ID, PassengerRateTestUtil.NOT_EXISTING_RIDE_ID);
 
         assertThat(actual).isFalse();
     }

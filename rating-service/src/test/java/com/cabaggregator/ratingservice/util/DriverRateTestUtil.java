@@ -22,7 +22,12 @@ public final class DriverRateTestUtil {
     public static final Set<FeedbackOption> FEEDBACK_OPTIONS =
             Set.of(FeedbackOption.COMFORTABLE_RIDE, FeedbackOption.GOOD_MUSIC);
 
-   public static DriverRate.DriverRateBuilder getDriverRateBuilder() {
+    public static final UUID OTHER_PASSENGER_ID = UUID.fromString("f47ac10b-58cc-4372-a567-0e02b2c3d479");
+
+    public static final ObjectId NOT_EXISTING_RIDE_ID = new ObjectId("000000000000000000000000");
+    public static final UUID NOT_EXISTING_DRIVER_ID = UUID.fromString("11111111-1111-1111-1111-111111111111");
+
+    public static DriverRate.DriverRateBuilder getDriverRateBuilder() {
         return DriverRate.builder()
                 .id(ID)
                 .rideId(RIDE_ID)
