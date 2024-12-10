@@ -1,0 +1,18 @@
+[
+  {
+    "id": "5f47a08a5c1c0d1b2d56d7a5",
+    "rideId": "507f1f77bcf86cd799439011",
+    "driverId": "4665e57c-884a-433d-8fd2-55078f29eab9",
+    "passengerId": "1000e57c-114a-433d-6ac2-55048a29eab9",
+    "rate": 5,
+    "feedbackOptions": [1, 6]
+  },
+  {
+    "id": "60c72b2f9b1e8c1c4c3d2f2c",
+    "rideId": "60c72b2f9b1e8c1c4c3d2f1b",
+    "driverId": "b1f4e8b3-3b36-43c5-bc8e-7e7e3d2c1c27",
+    "passengerId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "rate": 4,
+    "feedbackOptions": [0]
+  }
+]
