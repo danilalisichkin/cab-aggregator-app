@@ -10,6 +10,7 @@ import com.cabaggregator.ratingservice.core.mapper.PassengerRateMapper;
 import com.cabaggregator.ratingservice.entity.PassengerRate;
 import com.cabaggregator.ratingservice.exception.BadRequestException;
 import com.cabaggregator.ratingservice.exception.DataUniquenessConflictException;
+import com.cabaggregator.ratingservice.exception.ForbiddenException;
 import com.cabaggregator.ratingservice.exception.ResourceNotFoundException;
 import com.cabaggregator.ratingservice.repository.PassengerRateRepository;
 import com.cabaggregator.ratingservice.service.impl.PassengerRateServiceImpl;
@@ -17,6 +18,7 @@ import com.cabaggregator.ratingservice.util.PageRequestBuilder;
 import com.cabaggregator.ratingservice.util.PaginationTestUtil;
 import com.cabaggregator.ratingservice.util.PassengerRateTestUtil;
 import com.cabaggregator.ratingservice.validator.PassengerRateValidator;
+import com.cabaggregator.ratingservice.validator.UserRoleValidator;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -61,6 +63,9 @@ class PassengerRateServiceImplTest {
     @Mock
     private PassengerRateValidator passengerRateValidator;
 
+    @Mock
+    private UserRoleValidator userRoleValidator;
+
     @Test
     void getPageOfPassengerRates_ShouldReturnPageDto_WhenCalledWithValidParameters() {
         Integer offset = 0, limit = 10;
@@ -77,6 +82,7 @@ class PassengerRateServiceImplTest {
         PageDto<PassengerRateDto> pageDto = PaginationTestUtil.buildPageDto(passengerRateDtoPage);
 
         try (MockedStatic<PageRequestBuilder> mockedStatic = mockStatic(PageRequestBuilder.class)) {
+            doNothing().when(userRoleValidator).validateUserIsPassengerOrAdmin(passengerId);
             mockedStatic.when(() -> PageRequestBuilder.buildPageRequest(offset, limit, sortBy.getValue(), sortOrder))
                     .thenReturn(pageRequest);
             when(passengerRateRepository.findAllByPassengerId(passengerId, pageRequest))
@@ -93,11 +99,31 @@ class PassengerRateServiceImplTest {
                     .isNotNull()
                     .isEqualTo(pageDto);
 
+            verify(userRoleValidator).validateUserIsPassengerOrAdmin(passengerId);
             mockedStatic.verify(() -> PageRequestBuilder.buildPageRequest(offset, limit, sortBy.getValue(), sortOrder));
             verify(passengerRateRepository).findAllByPassengerId(passengerRate.getPassengerId(), pageRequest);
             verify(passengerRateMapper).entityPageToDtoPage(passengerRatePage);
             verify(pageMapper).pageToPageDto(passengerRateDtoPage);
         }
+    }
+
+    @Test
+    void getPageOfPassengerRates_ShouldThrowForbiddenException_WhenUserIsAnotherPassenger() {
+        UUID passengerId = PassengerRateTestUtil.PASSENGER_ID;
+        Integer offset = 0, limit = 10;
+        PassengerRateSortField sortBy = PassengerRateSortField.ID;
+        Sort.Direction sortOrder = Sort.Direction.ASC;
+
+        doThrow(new ForbiddenException("error"))
+                .when(userRoleValidator).validateUserIsPassengerOrAdmin(passengerId);
+
+        assertThatThrownBy(
+                () -> passengerRateService.getPageOfPassengerRates(passengerId, offset, limit, sortBy, sortOrder))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("error");
+
+        verify(userRoleValidator).validateUserIsPassengerOrAdmin(passengerId);
+        verifyNoInteractions(passengerRateRepository, passengerRateMapper, pageMapper);
     }
 
     @Test
@@ -107,6 +133,7 @@ class PassengerRateServiceImplTest {
         ObjectId rideId = passengerRate.getRideId();
         PassengerRateDto passengerRateDto = PassengerRateTestUtil.buildPassengerRateDto();
 
+        doNothing().when(userRoleValidator).validateUserIsPassengerOrAdmin(passengerId);
         when(passengerRateRepository.findByPassengerIdAndRideId(passengerId, rideId))
                 .thenReturn(Optional.of(passengerRate));
         when(passengerRateMapper.entityToDto(passengerRate))
@@ -118,8 +145,27 @@ class PassengerRateServiceImplTest {
                 .isNotNull()
                 .isEqualTo(passengerRateDto);
 
+        verify(userRoleValidator).validateUserIsPassengerOrAdmin(passengerId);
         verify(passengerRateRepository).findByPassengerIdAndRideId(passengerId, rideId);
         verify(passengerRateMapper).entityToDto(passengerRate);
+    }
+
+    @Test
+    void getPassengerRate_ShouldThrowForbiddenException_WhenUserIsAnotherPassenger() {
+        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        UUID passengerId = passengerRate.getPassengerId();
+        ObjectId rideId = passengerRate.getRideId();
+
+        doThrow(new ForbiddenException("error"))
+                .when(userRoleValidator).validateUserIsPassengerOrAdmin(passengerId);
+
+        assertThatThrownBy(
+                () -> passengerRateService.getPassengerRate(passengerId, rideId))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("error");
+
+        verify(userRoleValidator).validateUserIsPassengerOrAdmin(passengerId);
+        verifyNoInteractions(passengerRateRepository, passengerRateMapper);
     }
 
     @Test
@@ -128,6 +174,7 @@ class PassengerRateServiceImplTest {
         UUID passengerId = passengerRate.getPassengerId();
         ObjectId rideId = passengerRate.getRideId();
 
+        doNothing().when(userRoleValidator).validateUserIsPassengerOrAdmin(passengerId);
         when(passengerRateRepository.findByPassengerIdAndRideId(passengerId, rideId))
                 .thenReturn(Optional.empty());
 
@@ -135,6 +182,7 @@ class PassengerRateServiceImplTest {
                 () -> passengerRateService.getPassengerRate(passengerId, rideId))
                 .isInstanceOf(ResourceNotFoundException.class);
 
+        verify(userRoleValidator).validateUserIsPassengerOrAdmin(passengerId);
         verify(passengerRateRepository).findByPassengerIdAndRideId(passengerId, rideId);
         verifyNoInteractions(passengerRateMapper);
     }
@@ -234,6 +282,29 @@ class PassengerRateServiceImplTest {
     }
 
     @Test
+    void setPassengerRate_ShouldThrowForbiddenException_WhenUserIsNotRideParticipant() {
+        PassengerRateSettingDto passengerRateSettingDto = PassengerRateTestUtil.buildPassengerRateSettingDto();
+        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        UUID passengerId = passengerRate.getPassengerId();
+        ObjectId rideId = passengerRate.getRideId();
+
+        when(passengerRateRepository.findByPassengerIdAndRideId(passengerId, rideId))
+                .thenReturn(Optional.of(passengerRate));
+        doThrow(new ForbiddenException("error"))
+                .when(passengerRateValidator).validateDriverParticipation(passengerRate);
+
+        assertThatThrownBy(
+                () -> passengerRateService.setPassengerRate(passengerId, rideId, passengerRateSettingDto))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("error");
+
+        verify(passengerRateRepository).findByPassengerIdAndRideId(passengerId, rideId);
+        verify(passengerRateValidator).validateDriverParticipation(passengerRate);
+        verifyNoMoreInteractions(passengerRateRepository, passengerRateValidator);
+        verifyNoInteractions(passengerRateMapper);
+    }
+
+    @Test
     void setPassengerRate_ShouldThrowBadRequestException_WhenPassengerRateAlreadySet() {
         PassengerRateSettingDto passengerRateSettingDto = PassengerRateTestUtil.buildPassengerRateSettingDto();
         PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
@@ -242,6 +313,7 @@ class PassengerRateServiceImplTest {
 
         when(passengerRateRepository.findByPassengerIdAndRideId(passengerId, rideId))
                 .thenReturn(Optional.of(passengerRate));
+        doNothing().when(passengerRateValidator).validateDriverParticipation(passengerRate);
         doThrow(new BadRequestException("error"))
                 .when(passengerRateValidator).validatePassengerRateSetting(passengerRate);
 
@@ -251,6 +323,7 @@ class PassengerRateServiceImplTest {
                 .hasMessage("error");
 
         verify(passengerRateRepository).findByPassengerIdAndRideId(passengerId, rideId);
+        verify(passengerRateValidator).validateDriverParticipation(passengerRate);
         verify(passengerRateValidator).validatePassengerRateSetting(passengerRate);
         verifyNoMoreInteractions(passengerRateRepository, passengerRateValidator);
         verifyNoInteractions(passengerRateMapper);

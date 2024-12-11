@@ -14,6 +14,7 @@ import com.cabaggregator.ratingservice.repository.DriverRateRepository;
 import com.cabaggregator.ratingservice.service.DriverRateService;
 import com.cabaggregator.ratingservice.util.PageRequestBuilder;
 import com.cabaggregator.ratingservice.validator.DriverRateValidator;
+import com.cabaggregator.ratingservice.validator.UserRoleValidator;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
@@ -36,9 +37,13 @@ public class DriverRateServiceImpl implements DriverRateService {
 
     private final DriverRateValidator driverRateValidator;
 
+    private final UserRoleValidator userRoleValidator;
+
     @Override
     public PageDto<DriverRateDto> getPageOfDriverRates(
             UUID driverId, Integer offset, Integer limit, DriverRateSortField sortBy, Sort.Direction sortOrder) {
+
+        userRoleValidator.validateUserIsDriverOrAdmin(driverId);
 
         PageRequest pageRequest =
                 PageRequestBuilder.buildPageRequest(offset, limit, sortBy.getValue(), sortOrder);
@@ -51,6 +56,8 @@ public class DriverRateServiceImpl implements DriverRateService {
 
     @Override
     public DriverRateDto getDriverRate(UUID driverId, ObjectId rideId) {
+        userRoleValidator.validateUserIsDriverOrAdmin(driverId);
+
         return driverRateMapper.entityToDto(
                 getDriverRateEntity(driverId, rideId));
     }
@@ -70,6 +77,7 @@ public class DriverRateServiceImpl implements DriverRateService {
     @Transactional
     public DriverRateDto setDriverRate(UUID driverId, ObjectId rideId, DriverRateSettingDto settingDto) {
         DriverRate driverRateToUpdate = getDriverRateEntity(driverId, rideId);
+        driverRateValidator.validatePassengerParticipation(driverRateToUpdate);
         driverRateValidator.validateDriverRateSetting(driverRateToUpdate);
 
         driverRateMapper.updateEntityFromDto(settingDto, driverRateToUpdate);
@@ -78,7 +86,7 @@ public class DriverRateServiceImpl implements DriverRateService {
                 driverRateRepository.save(driverRateToUpdate));
     }
 
-    public DriverRate getDriverRateEntity(UUID driverId, ObjectId rideId) {
+    private DriverRate getDriverRateEntity(UUID driverId, ObjectId rideId) {
         return driverRateRepository
                 .findByDriverIdAndRideId(driverId, rideId)
                 .orElseThrow(() -> new ResourceNotFoundException(

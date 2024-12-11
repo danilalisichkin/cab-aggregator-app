@@ -15,4 +15,4 @@ mongock:
   migration-scan-package: com.cabaggregator.ratingservice.migrations
   enabled: true
 server:
-  port: ${SERVER_PORT:8084}
+  port: ${SERVER_PORT:8086}

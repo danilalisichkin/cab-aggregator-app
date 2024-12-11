@@ -15,4 +15,4 @@ mongock:
   migration-scan-package: com.cabaggregator.ratingservice.migrations
   enabled: true
 server:
-  port: 9084
+  port: 9086
