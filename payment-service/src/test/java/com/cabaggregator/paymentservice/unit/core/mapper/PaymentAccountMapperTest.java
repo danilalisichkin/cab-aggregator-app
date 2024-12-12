@@ -45,7 +45,7 @@ class PaymentAccountMapperTest {
         PaymentAccount actual = mapper.dtoToEntity(paymentAccountAddingDto);
 
         assertThat(actual).isNotNull();
-        assertThat(actual.getId()).isEqualTo(paymentAccountAddingDto.userId());
+        assertThat(actual.getId()).isEqualTo(paymentAccountAddingDto.id());
         assertThat(actual.getStripeCustomerId()).isNull();
         assertThat(actual.getCreatedAt()).isNull();
     }
