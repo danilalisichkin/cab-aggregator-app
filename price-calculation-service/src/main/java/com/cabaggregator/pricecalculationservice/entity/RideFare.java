@@ -19,11 +19,11 @@ import lombok.Setter;
 @Table(name = "ride_fares")
 public class RideFare {
     @Id
-    private String fareName;
+    private String name;
 
     @Column(nullable = false)
-    private Long basePricePerKilometer;
+    private Long pricePerKilometer;
 
     @Column(nullable = false)
-    private Long basePricePerMinute;
+    private Long pricePerMinute;
 }

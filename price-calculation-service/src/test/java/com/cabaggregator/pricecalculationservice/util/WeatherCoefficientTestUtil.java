@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class WeatherCoefficientTestUtil {
-    public static final String WEATHER = "RAIN";
-    public static final Double PRICE_COEFFICIENT = 1.3;
+    public static final String WEATHER = "Heavy rain";
+    public static final Double PRICE_COEFFICIENT = 1.20;
 
     public static WeatherCoefficient.WeatherCoefficientBuilder getWeatherCoefficientBuilder() {
         return WeatherCoefficient.builder()

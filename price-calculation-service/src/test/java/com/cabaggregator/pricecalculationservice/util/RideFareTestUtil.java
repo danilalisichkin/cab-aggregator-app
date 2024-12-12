@@ -6,14 +6,14 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class RideFareTestUtil {
-    public static final String FARE_NAME = "COMFORT";
-    public static final Long BASE_PRICE_PER_KILOMETER = 500L;
-    public static final Long BASE_PRICE_PER_MINUTE = 300L;
+    public static final String NAME = "COMFORT";
+    public static final Long PRICE_PER_KILOMETER = 130L;
+    public static final Long PRICE_PER_MINUTE = 100L;
 
     public static RideFare.RideFareBuilder getRideFareBuilder() {
         return RideFare.builder()
-                .fareName(FARE_NAME)
-                .basePricePerKilometer(BASE_PRICE_PER_KILOMETER)
-                .basePricePerMinute(BASE_PRICE_PER_MINUTE);
+                .name(NAME)
+                .pricePerKilometer(PRICE_PER_KILOMETER)
+                .pricePerMinute(PRICE_PER_MINUTE);
     }
 }

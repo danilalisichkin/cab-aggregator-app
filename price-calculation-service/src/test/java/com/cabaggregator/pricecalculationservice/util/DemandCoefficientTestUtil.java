@@ -6,24 +6,36 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DemandCoefficientTestUtil {
-    public static DemandCoefficient.DemandCoefficientBuilder getStandardDemandCoefficientBuilder() {
-        return DemandCoefficient.builder()
-                .demand("STANDARD")
-                .minOrders(10)
-                .priceCoefficient(1.0);
-    }
 
-    public static DemandCoefficient.DemandCoefficientBuilder getLowDemandCoefficientBuilder() {
+    public static DemandCoefficient buildLowDemandCoefficient() {
         return DemandCoefficient.builder()
                 .demand("LOW")
                 .minOrders(0)
-                .priceCoefficient(0.9);
+                .priceCoefficient(0.90)
+                .build();
     }
 
-    public static DemandCoefficient.DemandCoefficientBuilder getHighDemandCoefficientBuilder() {
+    public static DemandCoefficient buildStandardDemandCoefficient() {
+        return DemandCoefficient.builder()
+                .demand("STANDARD")
+                .minOrders(5)
+                .priceCoefficient(1.00)
+                .build();
+    }
+
+    public static DemandCoefficient buildMediumDemandCoefficient() {
+        return DemandCoefficient.builder()
+                .demand("MEDIUM")
+                .minOrders(10)
+                .priceCoefficient(1.15)
+                .build();
+    }
+
+    public static DemandCoefficient buildHighDemandCoefficient() {
         return DemandCoefficient.builder()
                 .demand("HIGH")
-                .minOrders(20)
-                .priceCoefficient(1.1);
+                .minOrders(15)
+                .priceCoefficient(1.30)
+                .build();
     }
 }

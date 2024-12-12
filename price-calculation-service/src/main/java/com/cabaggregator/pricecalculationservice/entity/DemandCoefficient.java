@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @Setter
@@ -26,4 +28,21 @@ public class DemandCoefficient {
 
     @Column(nullable = false)
     private Double priceCoefficient;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        DemandCoefficient that = (DemandCoefficient) obj;
+
+        if (!demand.equals(that.demand)) return false;
+        if (!minOrders.equals(that.minOrders)) return false;
+        return priceCoefficient.equals(that.priceCoefficient);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(demand, minOrders, priceCoefficient);
+    }
 }
