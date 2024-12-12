@@ -6,7 +6,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,7 +16,6 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 @Table(name = "demand_coefficients")
 public class DemandCoefficient {
     @Id
@@ -28,4 +26,24 @@ public class DemandCoefficient {
 
     @Column(nullable = false)
     private Double priceCoefficient;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        DemandCoefficient that = (DemandCoefficient) obj;
+
+        if (!demand.equals(that.demand)) return false;
+        if (!minOrders.equals(that.minOrders)) return false;
+        return priceCoefficient.equals(that.priceCoefficient);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = demand.hashCode();
+        result = 31 * result + minOrders.hashCode();
+        result = 31 * result + priceCoefficient.hashCode();
+        return result;
+    }
 }
