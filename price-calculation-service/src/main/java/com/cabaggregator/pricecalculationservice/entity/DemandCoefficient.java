@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @Setter
@@ -41,9 +43,6 @@ public class DemandCoefficient {
 
     @Override
     public int hashCode() {
-        int result = demand.hashCode();
-        result = 31 * result + minOrders.hashCode();
-        result = 31 * result + priceCoefficient.hashCode();
-        return result;
+        return Objects.hash(demand, minOrders, priceCoefficient);
     }
 }
