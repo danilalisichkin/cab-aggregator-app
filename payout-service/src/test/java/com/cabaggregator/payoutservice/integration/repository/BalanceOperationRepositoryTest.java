@@ -21,12 +21,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Tag("integration")
 @DataJpaTest
 @Sql(scripts = {
-        "classpath:/sql/repository/import_payout_accounts.sql",
-        "classpath:/sql/repository/import_balance_operations.sql"},
+        "classpath:/postgresql/import_payout_accounts.sql",
+        "classpath:/postgresql/import_balance_operations.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @Sql(scripts = {
-        "classpath:/sql/repository/clear_balance_operations.sql",
-        "classpath:/sql/repository/clear_payout_accounts.sql"},
+        "classpath:/postgresql/clear_balance_operations.sql",
+        "classpath:/postgresql/clear_payout_accounts.sql"},
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class BalanceOperationRepositoryTest extends AbstractIntegrationTest {

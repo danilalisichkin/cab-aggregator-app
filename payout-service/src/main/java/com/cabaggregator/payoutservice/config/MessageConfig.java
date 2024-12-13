@@ -9,5 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "spring.messages.basename")
 public class MessageConfig {
     private final String errorCauses;
+    private final String validationErrors;
+    private final String messages;
     private final String encoding;
 }
