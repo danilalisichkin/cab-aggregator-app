@@ -4,6 +4,7 @@ import com.cabaggregator.paymentservice.core.dto.payment.PaymentResponse;
 import com.cabaggregator.paymentservice.core.dto.payment.method.PaymentCardDto;
 import com.cabaggregator.paymentservice.core.mapper.PaymentMapper;
 import com.cabaggregator.paymentservice.util.PaymentTestUtil;
+import com.cabaggregator.paymentservice.util.StripeTestUtil;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.PaymentMethod;
 import org.junit.jupiter.api.Tag;
@@ -21,7 +22,7 @@ class PaymentMapperTest {
 
     @Test
     void intentToResponse_shouldConvertIntentToResponse_WhenIntentIsNotNull() {
-        PaymentIntent paymentIntent = PaymentTestUtil.buildPaymentIntent();
+        PaymentIntent paymentIntent = StripeTestUtil.buildPaymentIntent();
         PaymentResponse paymentResponse = mapper.intentToResponse(paymentIntent);
 
         PaymentResponse actual = mapper.intentToResponse(paymentIntent);
@@ -38,7 +39,7 @@ class PaymentMapperTest {
 
     @Test
     void methodToCardDto_shouldConvertMethodToCardDto_WhenMethodIsNotNull() {
-        PaymentMethod paymentMethod = PaymentTestUtil.buildPaymentMethod();
+        PaymentMethod paymentMethod = StripeTestUtil.buildPaymentMethod();
         PaymentCardDto paymentCardDto = PaymentTestUtil.buildPaymentCardDto();
 
         PaymentCardDto actual = mapper.methodToCardDto(paymentMethod);
@@ -56,7 +57,7 @@ class PaymentMapperTest {
 
     @Test
     void methodListToCardDtoList_shouldConvertMethodListToCardDtoList_WhenListIsNotEmpty() {
-        PaymentMethod paymentMethod = PaymentTestUtil.buildPaymentMethod();
+        PaymentMethod paymentMethod = StripeTestUtil.buildPaymentMethod();
         List<PaymentMethod> paymentMethodList = List.of(paymentMethod, paymentMethod);
         PaymentCardDto paymentCardDto = PaymentTestUtil.buildPaymentCardDto();
         List<PaymentCardDto> paymentCardDtoList = List.of(paymentCardDto, paymentCardDto);
