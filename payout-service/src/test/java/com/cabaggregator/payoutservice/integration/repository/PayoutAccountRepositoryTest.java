@@ -2,7 +2,7 @@ package com.cabaggregator.payoutservice.integration.repository;
 
 import com.cabaggregator.payoutservice.config.AbstractIntegrationTest;
 import com.cabaggregator.payoutservice.repository.PayoutAccountRepository;
-import com.cabaggregator.payoutservice.util.PayoutAccountTestUtil;
+import com.cabaggregator.payoutservice.util.StripeTestUtil;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ class PayoutAccountRepositoryTest extends AbstractIntegrationTest {
     @Test
     void existsByStripeAccountId_ShouldReturnTrue_WhenAccountExists() {
         boolean actual = payoutAccountRepository.existsByStripeAccountId(
-                PayoutAccountTestUtil.STRIPE_ACCOUNT_ID);
+                StripeTestUtil.STRIPE_ACCOUNT_ID);
 
         assertThat(actual).isTrue();
     }
@@ -36,7 +36,7 @@ class PayoutAccountRepositoryTest extends AbstractIntegrationTest {
     @Test
     void existsByStripeAccountId_ShouldReturnFalse_WhenAccountDoesNotExist() {
         boolean actual = payoutAccountRepository.existsByStripeAccountId(
-                PayoutAccountTestUtil.NOT_EXISTING_STRIPE_ACCOUNT_ID);
+                StripeTestUtil.NOT_EXISTING_STRIPE_ACCOUNT_ID);
 
         assertThat(actual).isFalse();
     }

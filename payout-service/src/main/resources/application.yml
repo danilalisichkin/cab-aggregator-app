@@ -19,5 +19,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
+stripe:
+  secret-key: ${STRIPE_SECRET_KEY}
 server:
   port: ${SERVER_PORT:8086}
