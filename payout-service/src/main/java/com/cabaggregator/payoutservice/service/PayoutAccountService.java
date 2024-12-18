@@ -23,6 +23,8 @@ public interface PayoutAccountService {
 
     PayoutAccountDto updatePayoutAccount(UUID id, String stripeAccountId);
 
+    Long getPayoutAccountBalance(UUID id);
+
     void setPayoutAccountActivity(UUID id, boolean active);
 
     PageDto<BalanceOperationDto> getPageOfBalanceOperations(

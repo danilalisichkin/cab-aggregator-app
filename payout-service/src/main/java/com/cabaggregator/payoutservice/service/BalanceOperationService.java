@@ -18,4 +18,6 @@ public interface BalanceOperationService {
     BalanceOperationDto processDeposit(PayoutAccount payoutAccount, BalanceOperationAddingDto operationAddingDto);
 
     BalanceOperationDto processWithdraw(PayoutAccount payoutAccount, BalanceOperationAddingDto operationAddingDto);
+
+    Long getAccountBalance(PayoutAccount payoutAccount);
 }

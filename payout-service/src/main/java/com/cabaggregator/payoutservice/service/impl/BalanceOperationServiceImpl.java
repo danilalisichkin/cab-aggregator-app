@@ -91,6 +91,12 @@ public class BalanceOperationServiceImpl implements BalanceOperationService {
         return balanceOperationMapper.entityToDto(savedOperation);
     }
 
+    @Override
+    @Transactional
+    public Long getAccountBalance(PayoutAccount payoutAccount) {
+        return balanceOperationRepository.getBalance(payoutAccount);
+    }
+
     private BalanceOperation saveBalanceOperation(
             PayoutAccount payoutAccount, BalanceOperationAddingDto operationAddingDto, OperationType operationType) {
 

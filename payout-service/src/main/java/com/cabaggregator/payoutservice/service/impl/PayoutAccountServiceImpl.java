@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -106,7 +107,15 @@ public class PayoutAccountServiceImpl implements PayoutAccountService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ, readOnly = true)
+    public Long getPayoutAccountBalance(UUID id) {
+        PayoutAccount payoutAccount = getPayoutAccountEntity(id);
+
+        return balanceOperationService.getAccountBalance(payoutAccount);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public PageDto<BalanceOperationDto> getPageOfBalanceOperations(
             UUID id, Integer offset, Integer limit, BalanceOperationSortField sortBy,
             Sort.Direction sortOrder, OperationType operationType, LocalDateTime startTime, LocalDateTime endTime) {
@@ -132,7 +141,7 @@ public class PayoutAccountServiceImpl implements PayoutAccountService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public BalanceOperationDto withdrawFromAccount(UUID id, BalanceOperationAddingDto operationAddingDto) {
         PayoutAccount payoutAccount = getPayoutAccountEntity(id);
 

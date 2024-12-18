@@ -337,6 +337,41 @@ class PayoutAccountServiceImplTest {
     }
 
     @Test
+    void getPayoutAccountBalance_ShouldReturnCurrentBalance_WhenPayoutAccountExists() {
+        PayoutAccount account = PayoutAccountTestUtil.getNotExistingPayoutAccount();
+        Long currentBalance = PayoutAccountTestUtil.COMPUTED_BALANCE;
+
+        when(payoutAccountRepository.findById(account.getId()))
+                .thenReturn(Optional.of(account));
+        when(balanceOperationService.getAccountBalance(account))
+                .thenReturn(currentBalance);
+
+        Long actual = payoutAccountService.getPayoutAccountBalance(account.getId());
+
+        assertThat(actual)
+                .isNotNull()
+                .isEqualTo(currentBalance);
+
+        verify(payoutAccountRepository).findById(account.getId());
+        verify(balanceOperationService).getAccountBalance(account);
+    }
+
+    @Test
+    void getPayoutAccountBalance_ShouldThrowResourceNotFoundException_WhenPayoutAccountDoesNotExist() {
+        PayoutAccount account = PayoutAccountTestUtil.getNotExistingPayoutAccount();
+
+        when(payoutAccountRepository.findById(account.getId()))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(
+                () -> payoutAccountService.getPayoutAccountBalance(account.getId()))
+                .isInstanceOf(ResourceNotFoundException.class);
+
+        verify(payoutAccountRepository).findById(account.getId());
+        verifyNoInteractions(balanceOperationService);
+    }
+
+    @Test
     void getPageOfBalanceOperations_ShouldReturnPageOfBalanceOperations_WhenCalledWithValidParameters() {
         Integer offset = 0;
         Integer limit = 10;

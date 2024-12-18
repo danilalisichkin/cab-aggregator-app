@@ -233,4 +233,21 @@ class BalanceOperationServiceImplTest {
         verifyNoMoreInteractions(balanceOperationRepository, balanceOperationValidator);
         verifyNoInteractions(balanceOperationMapper);
     }
+
+    @Test
+    void getAccountBalance_ShouldReturnComputedBalance_WhenCalledWithValidParameters() {
+        PayoutAccount payoutAccount = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
+        Long balance = PayoutAccountTestUtil.COMPUTED_BALANCE;
+
+        when(balanceOperationRepository.getBalance(payoutAccount))
+                .thenReturn(balance);
+
+        Long actual = balanceOperationService.getAccountBalance(payoutAccount);
+
+        assertThat(actual)
+                .isNotNull()
+                .isEqualTo(balance);
+
+        verify(balanceOperationRepository).getBalance(payoutAccount);
+    }
 }
