@@ -1,4 +1,4 @@
-INSERT INTO payments (payout_intent_id, payment_account_user_id, status, created_at)
+INSERT INTO payments (payment_intent_id, payment_account_user_id, status, created_at)
 VALUES
     ('pi_1JXXXXXXYYYYYY', '4665e57c-884a-433d-8fd2-55078f29eab9', 'SUCCEEDED',
      '2024-12-04T12:00:00'),
