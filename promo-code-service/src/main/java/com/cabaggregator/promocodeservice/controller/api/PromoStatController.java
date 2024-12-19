@@ -1,9 +1,11 @@
 package com.cabaggregator.promocodeservice.controller.api;
 
+import com.cabaggregator.promocodeservice.controller.doc.PromoStatControllerDoc;
 import com.cabaggregator.promocodeservice.core.dto.page.PageDto;
 import com.cabaggregator.promocodeservice.core.dto.promo.stat.PromoStatAddingDto;
 import com.cabaggregator.promocodeservice.core.dto.promo.stat.PromoStatDto;
 import com.cabaggregator.promocodeservice.core.enums.sort.PromoStatSortField;
+import com.cabaggregator.promocodeservice.service.PromoStatService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
@@ -25,7 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/promo-stats")
-public class PromoStatController {
+public class PromoStatController implements PromoStatControllerDoc {
+
+    private final PromoStatService promoStatService;
 
     @GetMapping
     public ResponseEntity<PageDto<PromoStatDto>> getPageOfPromoStats(
@@ -34,19 +38,24 @@ public class PromoStatController {
             @RequestParam(defaultValue = "id") PromoStatSortField sortBy,
             @RequestParam(defaultValue = "ASC") Sort.Direction sortOrder) {
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        PageDto<PromoStatDto> promoStats = promoStatService.getPageOfPromoStats(offset, limit, sortBy, sortOrder);
+
+        return ResponseEntity.status(HttpStatus.OK).body(promoStats);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PromoStatDto> getPromoStat(@PathVariable Long id) {
+        PromoStatDto promoStat = promoStatService.getPromoStat(id);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK).body(promoStat);
     }
 
     @PostMapping
     public ResponseEntity<PromoStatDto> createPromoStat(
             @RequestBody @Valid PromoStatAddingDto addingDto) {
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        PromoStatDto promoStat = promoStatService.savePromoStat(addingDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(promoStat);
     }
 }
