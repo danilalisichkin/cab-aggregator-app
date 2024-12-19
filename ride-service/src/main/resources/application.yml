@@ -1,6 +1,10 @@
 spring:
   application:
     name: ride-service
+  messages:
+    basename:
+      encoding: "UTF-8"
+      error-causes: "classpath:error_causes"
   data:
     mongodb:
       uri: mongodb://${DB_HOSTPORT:localhost:27017}/${DB_NAME:ride_database}
