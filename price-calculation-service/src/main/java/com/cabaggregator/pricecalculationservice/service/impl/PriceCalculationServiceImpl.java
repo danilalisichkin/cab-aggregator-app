@@ -25,20 +25,26 @@ public class PriceCalculationServiceImpl implements PriceCalculationService {
 
     private final WeatherCoefficientService weatherCoefficientService;
 
+    /**
+     * Calculates price of ride using price by fare, demand coefficient and current weather state.
+     **/
     @Override
     public PriceResponse calculatePrice(PriceCalculationRequest request) {
         String gridCell = getGridCell(request);
 
         PriceResponse response = new PriceResponse();
 
-        calculatePriceByFair(response, request);
-        calculatePriceByDemand(response, request, gridCell);
-        calculatePriceByWeather(response, gridCell);
+        calculateBasePrice(response, request);
+        applyDemandAdjustment(response, request, gridCell);
+        applyWeatherAdjustment(response, gridCell);
 
         return response;
     }
 
-    private void calculatePriceByFair(PriceResponse response, PriceCalculationRequest request) {
+    /**
+     * Calculates base price by ride fare.
+     **/
+    private void calculateBasePrice(PriceResponse response, PriceCalculationRequest request) {
         RideFare rideFare = rideFareService.getRideFare(request.fare());
 
         long priceByDuration = request.duration() * rideFare.getPricePerMinute() / 60;
@@ -49,9 +55,12 @@ public class PriceCalculationServiceImpl implements PriceCalculationService {
         response.setPrice(maxPrice);
     }
 
-    private void calculatePriceByDemand(PriceResponse response, PriceCalculationRequest request, String gridCell) {
+    /**
+     * Multiplies price by current demand coefficient.
+     **/
+    private void applyDemandAdjustment(PriceResponse response, PriceCalculationRequest request, String gridCell) {
         DemandCoefficient demandCoefficient =
-                demandCoefficientService.getCurrentDemandCoefficient(request.rideId(), gridCell);
+                demandCoefficientService.getCurrentDemandCoefficient(gridCell, request.rideId());
 
         long priceIncreasedByDemand = (long) (response.getPrice() * demandCoefficient.getPriceCoefficient());
 
@@ -59,7 +68,10 @@ public class PriceCalculationServiceImpl implements PriceCalculationService {
         response.setDemand(demandCoefficient.getDemand());
     }
 
-    private void calculatePriceByWeather(PriceResponse response, String gridCell) {
+    /**
+     * Multiplies price by price coefficient of current weather state.
+     **/
+    private void applyWeatherAdjustment(PriceResponse response, String gridCell) {
         WeatherCoefficient weatherCoefficient =
                 weatherCoefficientService.getCurrentWeatherCoefficient(gridCell);
 
@@ -69,6 +81,10 @@ public class PriceCalculationServiceImpl implements PriceCalculationService {
         response.setWeather(weatherCoefficient.getWeather());
     }
 
+    /**
+     * Retrieves grid cell by request coordinates.
+     * Given coordinates are reversed because of mismatch format in OpenRouteAPI and WeatherAPI (external).
+     **/
     private String getGridCell(PriceCalculationRequest request) {
         return geoGridService.calculateGridCell(
                 request.pickUpCoordinates().get(1),

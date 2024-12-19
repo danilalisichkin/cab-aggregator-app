@@ -14,6 +14,10 @@ public class RideFareServiceImpl implements RideFareService {
 
     private final RideFareRepository rideFareRepository;
 
+    /**
+     * Retrieves ride fare price policy.
+     * Result is cached.
+     **/
     @Override
     @Cacheable(value = "fareCache", key = "#fare", unless = "#result == null")
     public RideFare getRideFare(String fare) {

@@ -10,6 +10,10 @@ import static com.cabaggregator.pricecalculationservice.config.GeoGridParams.CEL
 @Service
 public class GeoGridServiceImpl implements GeoGridService {
 
+    /**
+     * Calculates generalized geographic position from coordinates.
+     * Used to combine multiple rides ordered from addresses close to each other.
+     **/
     @Override
     public String calculateGridCell(double latitude, double longitude) {
         double roundedLat = Math.floor(latitude / CELL_SIZE) * CELL_SIZE;

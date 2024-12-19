@@ -20,6 +20,11 @@ public class WeatherCoefficientServiceImpl implements WeatherCoefficientService 
 
     private final WeatherApiClient weatherApiClient;
 
+    /**
+     * Retrieves price coefficient based on current weather state.
+     * Uses WeatherAPI (https://www.weatherapi.com/).
+     * Result is cached.
+     **/
     @Override
     @Cacheable(value = "weatherCache", key = "#gridCell", unless = "#result == null")
     public WeatherCoefficient getCurrentWeatherCoefficient(String gridCell) {

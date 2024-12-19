@@ -28,5 +28,9 @@ spring:
 app:
   weather:
     api-key: ${WEATHER_API_KEY:KEY}
+  cache:
+    ttl:
+      fare-cache: ${FARE_CACHE_TTL:1440}
+      weather-cache: ${WEATHER_CACHE_TTL:180}
 server:
   port: ${SERVER_PORT:8085}

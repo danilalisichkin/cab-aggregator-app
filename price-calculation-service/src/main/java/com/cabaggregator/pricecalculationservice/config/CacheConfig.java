@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +20,10 @@ import java.time.Duration;
 
 @Configuration
 @EnableCaching
+@RequiredArgsConstructor
 public class CacheConfig {
+
+    private final CacheTtlConfig cacheTtlConfig;
 
     @Bean
     public RedisCacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
@@ -34,28 +38,20 @@ public class CacheConfig {
         RedisSerializer<Object> serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
 
         RedisCacheConfiguration defaultCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofMinutes(5))
                 .serializeKeysWith(
                         RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(
                         RedisSerializationContext.SerializationPair.fromSerializer(serializer));
 
         RedisCacheConfiguration fareCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofDays(1))
-                .serializeKeysWith(
-                        RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(
-                        RedisSerializationContext.SerializationPair.fromSerializer(serializer));
-
-        RedisCacheConfiguration demandCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofMinutes(10))
+                .entryTtl(Duration.ofMinutes(cacheTtlConfig.getFareCache()))
                 .serializeKeysWith(
                         RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(
                         RedisSerializationContext.SerializationPair.fromSerializer(serializer));
 
         RedisCacheConfiguration weatherCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofHours(3))
+                .entryTtl(Duration.ofMinutes(cacheTtlConfig.getWeatherCache()))
                 .serializeKeysWith(
                         RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(
@@ -63,7 +59,6 @@ public class CacheConfig {
 
         return RedisCacheManager.builder(redisConnectionFactory)
                 .withCacheConfiguration("fareCache", fareCacheConfig)
-                .withCacheConfiguration("demandCache", demandCacheConfig)
                 .withCacheConfiguration("weatherCache", weatherCacheConfig)
                 .cacheDefaults(defaultCacheConfig)
                 .transactionAware()
