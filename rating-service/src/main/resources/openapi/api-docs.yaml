@@ -1,0 +1,586 @@
+openapi: 3.0.1
+info:
+  title: Rating Service API documentation
+  description: API responsible for interaction driver and passenger rates
+  contact:
+    name: Danila Lisichkin
+    email: lisichkindanila@gmail.com
+  version: 1.0.0
+servers:
+  - url: http://localhost:8086
+    description: Generated server url
+tags:
+  - name: Passenger Rate API Controller
+    description: "Provides get, create, update operations above passenger rates"
+  - name: Driver Rate API Controller
+    description: "Provides get, create, update operations above driver rates"
+paths:
+  /api/v1/rates/passenger/{passengerId}/ride/{rideId}:
+    get:
+      tags:
+        - Passenger Rate API Controller
+      summary: Get
+      description: Allows to get existing passenger rate of specified ride
+      operationId: getPassengerRate
+      parameters:
+        - name: passengerId
+          in: path
+          description: Passenger identifier
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: rideId
+          in: path
+          description: Ride identifier
+          required: true
+          schema:
+            $ref: "#/components/schemas/ObjectId"
+      responses:
+        "400":
+          description: "Bad request: invalid parameters or missing required fields"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PassengerRateDto"
+        "403":
+          description: "Forbidden: passenger tried to get rate of another passenger"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PassengerRateDto"
+        "200":
+          description: Successful response
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PassengerRateDto"
+        "404":
+          description: "Not found: passenger rate from provided ride does not exist"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PassengerRateDto"
+      security:
+        - token: []
+    put:
+      tags:
+        - Passenger Rate API Controller
+      summary: Set rate
+      description: Allows driver to rate passenger after the ride is completed
+      operationId: setPassengerRate
+      parameters:
+        - name: passengerId
+          in: path
+          description: Passenger identifier
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: rideId
+          in: path
+          description: Ride identifier
+          required: true
+          schema:
+            $ref: "#/components/schemas/ObjectId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PassengerRateSettingDto"
+        required: true
+      responses:
+        "400":
+          description: "Bad request: invalid parameters or missing required fields;\
+            \ passenger rate is already set"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PassengerRateDto"
+        "404":
+          description: "Not found: passenger rate does not exist"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PassengerRateDto"
+        "204":
+          description: Successful response
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PassengerRateDto"
+      security:
+        - token: []
+  /api/v1/rates/driver/{driverId}/ride/{rideId}:
+    get:
+      tags:
+        - Driver Rate API Controller
+      summary: Get
+      description: Allows to get existing driver rate of specified ride
+      operationId: getDriverRate
+      parameters:
+        - name: driverId
+          in: path
+          description: Driver identifier
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: rideId
+          in: path
+          description: Ride identifier
+          required: true
+          schema:
+            $ref: "#/components/schemas/ObjectId"
+      responses:
+        "400":
+          description: "Bad request: invalid parameters or missing required fields"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DriverRateDto"
+        "200":
+          description: Successful response
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DriverRateDto"
+        "404":
+          description: "Not found: driver rate from provided ride does not exist"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DriverRateDto"
+        "403":
+          description: "Forbidden: driver tried to get rate of another driver"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DriverRateDto"
+      security:
+        - token: []
+    put:
+      tags:
+        - Driver Rate API Controller
+      summary: Set rate
+      description: Allows passenger to rate driver after the ride is completed
+      operationId: setDriverRate
+      parameters:
+        - name: driverId
+          in: path
+          description: Driver identifier
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: rideId
+          in: path
+          description: Ride identifier
+          required: true
+          schema:
+            $ref: "#/components/schemas/ObjectId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DriverRateSettingDto"
+        required: true
+      responses:
+        "204":
+          description: Successful response
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DriverRateDto"
+        "400":
+          description: "Bad request: invalid parameters or missing required fields;\
+            \ driver rate is already set"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DriverRateDto"
+        "404":
+          description: "Not found: driver rate does not exist"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DriverRateDto"
+      security:
+        - token: []
+  /api/v1/rates/passenger:
+    post:
+      tags:
+        - Passenger Rate API Controller
+      summary: Create
+      description: Allows to add/save new passenger rate
+      operationId: savePassengerRate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PassengerRateAddingDto"
+        required: true
+      responses:
+        "400":
+          description: "Bad request: invalid parameters or missing required fields"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PassengerRateDto"
+        "204":
+          description: Successful response
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PassengerRateDto"
+        "409":
+          description: "Conflict: passenger rate with provided data already exists"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PassengerRateDto"
+      security:
+        - token: []
+  /api/v1/rates/driver:
+    post:
+      tags:
+        - Driver Rate API Controller
+      summary: Create
+      description: Allows to add/save new driver rate
+      operationId: saveDriverRate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DriverRateAddingDto"
+        required: true
+      responses:
+        "400":
+          description: "Bad request: invalid parameters or missing required fields"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DriverRateDto"
+        "204":
+          description: Successful response
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DriverRateDto"
+        "409":
+          description: "Conflict: passenger rate with provided data already exists"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DriverRateDto"
+      security:
+        - token: []
+  /api/v1/rates/passenger/{passengerId}:
+    get:
+      tags:
+        - Passenger Rate API Controller
+      summary: Get page
+      description: Allows to get page of existing passenger rates
+      operationId: getPageOfPassengerRates
+      parameters:
+        - name: passengerId
+          in: path
+          description: Passenger identifier
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: offset
+          in: query
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            default: 0
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+        - name: sortBy
+          in: query
+          required: false
+          schema:
+            type: string
+            default: id
+            enum:
+              - ID
+              - RIDE_ID
+              - PASSENGER_ID
+              - DRIVER_ID
+              - RATE
+        - name: sortOrder
+          in: query
+          required: false
+          schema:
+            type: string
+            default: ASC
+            enum:
+              - ASC
+              - DESC
+      responses:
+        "400":
+          description: "Bad request: invalid parameters or missing required fields"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageDtoPassengerRateDto"
+        "403":
+          description: "Forbidden: passenger tried to get rates of another passenger"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageDtoPassengerRateDto"
+        "200":
+          description: Successful response
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageDtoPassengerRateDto"
+      security:
+        - token: []
+  /api/v1/rates/driver/{driverId}:
+    get:
+      tags:
+        - Driver Rate API Controller
+      summary: Get page
+      description: Allows to get page of existing driver rates
+      operationId: getPageOfDriverRates
+      parameters:
+        - name: driverId
+          in: path
+          description: Driver identifier
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: offset
+          in: query
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            default: 0
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+        - name: sortBy
+          in: query
+          required: false
+          schema:
+            type: string
+            default: id
+            enum:
+              - ID
+              - RIDE_ID
+              - DRIVER_ID
+              - PASSENGER_ID
+              - RATE
+        - name: sortOrder
+          in: query
+          required: false
+          schema:
+            type: string
+            default: ASC
+            enum:
+              - ASC
+              - DESC
+      responses:
+        "400":
+          description: "Bad request: invalid parameters or missing required fields"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageDtoDriverRateDto"
+        "200":
+          description: Successful response
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageDtoDriverRateDto"
+        "403":
+          description: "Forbidden: driver tried to get rates of another driver"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageDtoDriverRateDto"
+      security:
+        - token: []
+components:
+  schemas:
+    ObjectId:
+      type: object
+      properties:
+        timestamp:
+          type: integer
+          format: int32
+        date:
+          type: string
+          format: date-time
+    PassengerRateSettingDto:
+      required:
+        - rate
+      type: object
+      properties:
+        rate:
+          maximum: 5
+          minimum: 1
+          type: integer
+          format: int32
+      description: Data that is required to set passenger rate
+    PassengerRateDto:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/ObjectId"
+        rideId:
+          $ref: "#/components/schemas/ObjectId"
+        passengerId:
+          type: string
+          format: uuid
+        driverId:
+          type: string
+          format: uuid
+        rate:
+          type: integer
+          format: int32
+      description: Server response passenger rate data
+    DriverRateSettingDto:
+      required:
+        - feedbackOptions
+        - rate
+      type: object
+      properties:
+        rate:
+          maximum: 5
+          minimum: 1
+          type: integer
+          format: int32
+        feedbackOptions:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            enum:
+              - CLEAN_SALOON
+              - COMFORTABLE_RIDE
+              - FRIENDLY_DRIVER
+              - PUNCTUALITY
+              - SAFE_RIDE
+              - SMOOTH_DRIVE
+              - GOOD_MUSIC
+      description: Data that is required to set driver rate
+    DriverRateDto:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/ObjectId"
+        rideId:
+          $ref: "#/components/schemas/ObjectId"
+        driverId:
+          type: string
+          format: uuid
+        passengerId:
+          type: string
+          format: uuid
+        rate:
+          type: integer
+          format: int32
+        feedbackOptions:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            enum:
+              - CLEAN_SALOON
+              - COMFORTABLE_RIDE
+              - FRIENDLY_DRIVER
+              - PUNCTUALITY
+              - SAFE_RIDE
+              - SMOOTH_DRIVE
+              - GOOD_MUSIC
+      description: Server response driver rate data
+    PassengerRateAddingDto:
+      required:
+        - driverId
+        - passengerId
+        - rideId
+      type: object
+      properties:
+        rideId:
+          $ref: "#/components/schemas/ObjectId"
+        passengerId:
+          type: string
+          format: uuid
+        driverId:
+          type: string
+          format: uuid
+      description: Data that is required to create new passenger rate
+    DriverRateAddingDto:
+      required:
+        - driverId
+        - passengerId
+        - rideId
+      type: object
+      properties:
+        rideId:
+          $ref: "#/components/schemas/ObjectId"
+        driverId:
+          type: string
+          format: uuid
+        passengerId:
+          type: string
+          format: uuid
+      description: Data that is required to create new driver rate
+    PageDtoPassengerRateDto:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/PassengerRateDto"
+      description: Server response representing a paginated list of items
+    PageDtoDriverRateDto:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/DriverRateDto"
+      description: Server response representing a paginated list of items
+  securitySchemes:
+    token:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
