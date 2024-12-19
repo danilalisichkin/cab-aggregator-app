@@ -19,7 +19,8 @@ class PageMapperTest {
 
     @Test
     void pageToPagedDto_ShouldReturnPagedDto_WhenPageIsNotEmpty() {
-        Integer pageNumber = 0, pageSize = 10;
+        Integer pageNumber = 0;
+        Integer pageSize = 10;
         List<Object> expectedContent = Arrays.asList("item1", "item2");
         Page<Object> page = PaginationTestUtil.buildPageFromList(expectedContent, pageNumber, pageSize);
 
@@ -34,7 +35,8 @@ class PageMapperTest {
 
     @Test
     void pageToPagedDto_ShouldReturnPagedDtoWithNoContent_WhenPageIsEmpty() {
-        Integer pageNumber = 0, pageSize = 10;
+        Integer pageNumber = 0;
+        Integer pageSize = 10;
         List<Object> expectedContent = Collections.emptyList();
         Page<Object> page = PaginationTestUtil.buildPageFromList(expectedContent, pageNumber, pageSize);
 
