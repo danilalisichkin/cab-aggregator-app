@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DemandCoefficientTestUtil {
+    public static final int CURRENT_ORDERS = 7;
+    public static final String CURRENT_DEMAND = "STANDARD";
 
     public static DemandCoefficient buildLowDemandCoefficient() {
         return DemandCoefficient.builder()
