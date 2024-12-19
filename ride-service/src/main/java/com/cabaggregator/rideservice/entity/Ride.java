@@ -2,6 +2,7 @@ package com.cabaggregator.rideservice.entity;
 
 import com.cabaggregator.rideservice.core.dto.Address;
 import com.cabaggregator.rideservice.core.enums.PaymentMethod;
+import com.cabaggregator.rideservice.core.enums.PaymentStatus;
 import com.cabaggregator.rideservice.core.enums.RideFare;
 import com.cabaggregator.rideservice.core.enums.RideStatus;
 import com.cabaggregator.rideservice.util.DurationConverter;
@@ -42,6 +43,8 @@ public class Ride {
     private RideStatus status;
 
     private PaymentMethod paymentMethod;
+
+    private PaymentStatus paymentStatus;
 
     private Address pickUpAddress;
 
