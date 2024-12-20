@@ -7,7 +7,6 @@ import com.cabaggregator.promocodeservice.core.dto.promo.code.PromoCodeDto;
 import com.cabaggregator.promocodeservice.core.dto.promo.code.PromoCodeUpdatingDto;
 import com.cabaggregator.promocodeservice.core.enums.sort.PromoCodeSortField;
 import com.cabaggregator.promocodeservice.service.PromoCodeService;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -57,17 +56,17 @@ public class PromoCodeController implements PromoCodeControllerDoc {
 
     @PostMapping
     public ResponseEntity<PromoCodeDto> createPromoCode(
-            @RequestBody @Valid PromoCodeAddingDto addingDto) {
+            @RequestBody PromoCodeAddingDto addingDto) {
 
         PromoCodeDto promoCode = promoCodeService.savePromoCode(addingDto);
 
-        return ResponseEntity.status(HttpStatus.OK).body(promoCode);
+        return ResponseEntity.status(HttpStatus.CREATED).body(promoCode);
     }
 
     @PutMapping("/{code}")
     public ResponseEntity<PromoCodeDto> updatePromoCode(
             @PathVariable @Size(min = 2, max = 20) String code,
-            @RequestBody @Valid PromoCodeUpdatingDto updatingDto) {
+            @RequestBody PromoCodeUpdatingDto updatingDto) {
 
         PromoCodeDto promoCode = promoCodeService.updatePromoCode(code, updatingDto);
 

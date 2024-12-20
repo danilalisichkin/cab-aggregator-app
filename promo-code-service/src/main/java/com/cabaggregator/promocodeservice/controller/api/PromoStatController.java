@@ -6,7 +6,6 @@ import com.cabaggregator.promocodeservice.core.dto.promo.stat.PromoStatAddingDto
 import com.cabaggregator.promocodeservice.core.dto.promo.stat.PromoStatDto;
 import com.cabaggregator.promocodeservice.core.enums.sort.PromoStatSortField;
 import com.cabaggregator.promocodeservice.service.PromoStatService;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -52,10 +51,10 @@ public class PromoStatController implements PromoStatControllerDoc {
 
     @PostMapping
     public ResponseEntity<PromoStatDto> createPromoStat(
-            @RequestBody @Valid PromoStatAddingDto addingDto) {
+            @RequestBody PromoStatAddingDto addingDto) {
 
         PromoStatDto promoStat = promoStatService.savePromoStat(addingDto);
 
-        return ResponseEntity.status(HttpStatus.OK).body(promoStat);
+        return ResponseEntity.status(HttpStatus.CREATED).body(promoStat);
     }
 }

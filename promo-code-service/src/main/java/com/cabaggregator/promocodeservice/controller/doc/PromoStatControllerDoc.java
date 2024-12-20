@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -52,7 +51,7 @@ public interface PromoStatControllerDoc {
             summary = "Create",
             description = "Allows to add/save new promo code stat")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Successful response"),
+            @ApiResponse(responseCode = "201", description = "Successful response"),
             @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters or missing required fields"),
             @ApiResponse(responseCode = "409", description = "Conflict: promo code stat with provided data already exists")
     })
@@ -61,5 +60,5 @@ public interface PromoStatControllerDoc {
                     name = "Required data",
                     description = "Data that is required to create new promo code stat",
                     required = true)
-            @RequestBody @Valid PromoStatAddingDto addingDto);
+            @RequestBody PromoStatAddingDto addingDto);
 }
