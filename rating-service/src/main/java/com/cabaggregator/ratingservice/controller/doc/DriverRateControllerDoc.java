@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.bson.types.ObjectId;
@@ -66,7 +65,7 @@ public interface DriverRateControllerDoc {
             summary = "Create",
             description = "Allows to add/save new driver rate")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Successful response"),
+            @ApiResponse(responseCode = "201", description = "Successful response"),
             @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters or missing required fields"),
             @ApiResponse(responseCode = "409", description = "Conflict: passenger rate with provided data already exists")
     })
@@ -74,13 +73,13 @@ public interface DriverRateControllerDoc {
             @Parameter(
                     name = "Required data",
                     description = "Data that is required to create new driver rate")
-            @RequestBody @Valid DriverRateAddingDto addingDto);
+            @RequestBody DriverRateAddingDto addingDto);
 
     @Operation(
             summary = "Set rate",
             description = "Allows passenger to rate driver after the ride is completed")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Successful response"),
+            @ApiResponse(responseCode = "200", description = "Successful response"),
             @ApiResponse(responseCode = "400", description =
                     "Bad request: invalid parameters or missing required fields; driver rate is already set"),
             @ApiResponse(responseCode = "404", description = "Not found: driver rate does not exist")
@@ -95,5 +94,5 @@ public interface DriverRateControllerDoc {
             @Parameter(
                     name = "Required data",
                     description = "Data that is required to set driver rate")
-            @RequestBody @Valid DriverRateSettingDto settingDto);
+            @RequestBody DriverRateSettingDto settingDto);
 }
