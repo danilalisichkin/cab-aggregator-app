@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum PaymentAccountSortField {
-    USER_ID("userId"),
+    ID("id"),
     STRIPE_CUSTOMER_ID("stripeCustomerId"),
     CREATED_AT("createdAt");
 
