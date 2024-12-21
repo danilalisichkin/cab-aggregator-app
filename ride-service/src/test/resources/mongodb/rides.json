@@ -7,6 +7,7 @@
     "fare": "COMFORT",
     "status": "COMPLETED",
     "paymentMethod": "CARD",
+    "paymentStatus": "PAID",
     "distance": 2400,
     "pickUpAddress": {
       "fullAddress": "123 N Main St, Los Angeles, CA 90012",
@@ -29,6 +30,7 @@
     "promoCode": null,
     "fare": "ECONOMY",
     "status": "REQUESTED",
+    "paymentStatus": "PENDING",
     "paymentMethod": "CASH",
     "distance": 4000,
     "pickUpAddress": {
