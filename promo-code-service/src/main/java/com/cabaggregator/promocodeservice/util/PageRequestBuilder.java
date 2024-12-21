@@ -10,6 +10,6 @@ public final class PageRequestBuilder {
     public static PageRequest buildPageRequest(
             Integer offset, Integer limit, String sortField, Sort.Direction sortOrder) {
 
-        return PageRequest.of(offset - 1, limit, Sort.by(sortOrder, sortField));
+        return PageRequest.of(offset, limit, Sort.by(sortOrder, sortField));
     }
 }
