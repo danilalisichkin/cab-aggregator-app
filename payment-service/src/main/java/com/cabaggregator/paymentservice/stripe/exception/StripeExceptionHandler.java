@@ -6,12 +6,11 @@ import com.cabaggregator.paymentservice.exception.InternalErrorException;
 import com.stripe.exception.CardException;
 import com.stripe.exception.InvalidRequestException;
 import com.stripe.exception.StripeException;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class StripeExceptionHandler {
-    public static void handle(StripeException exception) {
+@Component
+public class StripeExceptionHandler {
+    public void handle(StripeException exception) {
         if (exception instanceof CardException) {
             throw new BadRequestException(ApplicationMessages.CARD_PAYMENT_ERROR);
         } else if (exception instanceof InvalidRequestException) {

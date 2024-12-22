@@ -1,7 +1,8 @@
 package com.cabaggregator.paymentservice.service.impl;
 
+import com.cabaggregator.paymentservice.core.constant.StringTemplates;
 import com.cabaggregator.paymentservice.service.StripeService;
-import com.cabaggregator.paymentservice.stripe.constant.Currency;
+import com.cabaggregator.paymentservice.stripe.enums.Currency;
 import com.cabaggregator.paymentservice.stripe.exception.StripeExceptionHandler;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
@@ -20,19 +21,22 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class StripeServiceImpl implements StripeService {
+
+    private final StripeExceptionHandler stripeExceptionHandler;
+
     @Override
     public Customer createCustomer(String email, String phone, String firstName, String lastName) {
         CustomerCreateParams requestParams = CustomerCreateParams.builder()
                 .setEmail(email)
                 .setPhone(phone)
-                .setName(String.format("%s %s", firstName, lastName))
+                .setName(String.format(StringTemplates.FULL_NAME, firstName, lastName))
                 .build();
 
         Customer customer = new Customer();
         try {
             customer = Customer.create(requestParams);
         } catch (StripeException e) {
-            StripeExceptionHandler.handle(e);
+            stripeExceptionHandler.handle(e);
         }
 
         return customer;
@@ -44,7 +48,7 @@ public class StripeServiceImpl implements StripeService {
         try {
             customer = Customer.retrieve(customerId);
         } catch (StripeException e) {
-            StripeExceptionHandler.handle(e);
+            stripeExceptionHandler.handle(e);
         }
 
         return customer;
@@ -56,7 +60,7 @@ public class StripeServiceImpl implements StripeService {
 
         PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
                 .setAmount(unitAmount)
-                .setCurrency(Currency.USD)
+                .setCurrency(Currency.USD.getValue())
                 .setCustomer(customer.getId())
                 .setDescription(description)
                 .setPaymentMethod(paymentMethodId)
@@ -67,7 +71,7 @@ public class StripeServiceImpl implements StripeService {
         try {
             paymentIntent = PaymentIntent.create(params);
         } catch (StripeException e) {
-            StripeExceptionHandler.handle(e);
+            stripeExceptionHandler.handle(e);
         }
 
         return paymentIntent;
@@ -85,7 +89,7 @@ public class StripeServiceImpl implements StripeService {
 
             customer.update(params);
         } catch (StripeException e) {
-            StripeExceptionHandler.handle(e);
+            stripeExceptionHandler.handle(e);
         }
     }
 
@@ -108,7 +112,7 @@ public class StripeServiceImpl implements StripeService {
         try {
             attachedMethods = customer.listPaymentMethods(params);
         } catch (StripeException e) {
-            StripeExceptionHandler.handle(e);
+            stripeExceptionHandler.handle(e);
         }
 
         return attachedMethods.getData();
@@ -120,7 +124,7 @@ public class StripeServiceImpl implements StripeService {
         try {
             paymentMethod = PaymentMethod.retrieve(paymentMethodId);
         } catch (StripeException e) {
-            StripeExceptionHandler.handle(e);
+            stripeExceptionHandler.handle(e);
         }
 
         return paymentMethod;

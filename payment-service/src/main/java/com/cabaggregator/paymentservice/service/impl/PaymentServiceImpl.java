@@ -2,6 +2,7 @@ package com.cabaggregator.paymentservice.service.impl;
 
 import com.cabaggregator.paymentservice.client.RideServiceApiClient;
 import com.cabaggregator.paymentservice.core.constant.ApplicationMessages;
+import com.cabaggregator.paymentservice.core.constant.StringTemplates;
 import com.cabaggregator.paymentservice.core.dto.payment.PaymentRequest;
 import com.cabaggregator.paymentservice.core.dto.payment.PaymentResponse;
 import com.cabaggregator.paymentservice.core.mapper.PaymentMapper;
@@ -72,7 +73,7 @@ public class PaymentServiceImpl implements PaymentService {
         PaymentAccount paymentAccount = getPaymentAccountEntity(paymentRequest.paymentAccountId());
         Customer stripeCustomer = getStripeCustomerFromPaymentAccount(paymentAccount);
 
-        String paymentDescription = String.format("Ride №%s", paymentRequest.contextId());
+        String paymentDescription = String.format(StringTemplates.RIDE_PAYMENT_DESCRIPTION, paymentRequest.contextId());
         PaymentIntent sendedPaymentIntent = sendPaymentIntent(stripeCustomer, paymentRequest, paymentDescription);
 
         Payment savedPayment = savePayment(paymentAccount, sendedPaymentIntent);

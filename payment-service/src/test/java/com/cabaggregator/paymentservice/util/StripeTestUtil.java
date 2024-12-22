@@ -1,7 +1,7 @@
 package com.cabaggregator.paymentservice.util;
 
 import com.cabaggregator.paymentservice.entity.enums.PaymentStatus;
-import com.cabaggregator.paymentservice.stripe.constant.PaymentMethodTypes;
+import com.cabaggregator.paymentservice.stripe.enums.PaymentMethodTypes;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.PaymentMethod;
 import lombok.AccessLevel;

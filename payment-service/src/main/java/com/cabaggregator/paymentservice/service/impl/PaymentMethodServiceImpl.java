@@ -8,7 +8,7 @@ import com.cabaggregator.paymentservice.exception.BadRequestException;
 import com.cabaggregator.paymentservice.exception.ResourceNotFoundException;
 import com.cabaggregator.paymentservice.service.PaymentMethodService;
 import com.cabaggregator.paymentservice.service.StripeService;
-import com.cabaggregator.paymentservice.stripe.constant.PaymentMethodTypes;
+import com.cabaggregator.paymentservice.stripe.enums.PaymentMethodType;
 import com.stripe.model.Customer;
 import com.stripe.model.PaymentMethod;
 import com.stripe.param.CustomerListPaymentMethodsParams;
@@ -46,7 +46,7 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
         if (paymentMethod == null) {
             throw new ResourceNotFoundException(ApplicationMessages.DEFAULT_PAYMENT_METHOD_NOT_FOUND);
         }
-        if (isNotPaymentMethodCard(paymentMethod)) {
+        if (isNotCardPaymentMethod(paymentMethod)) {
             throw new ResourceNotFoundException(ApplicationMessages.DEFAULT_PAYMENT_METHOD_NOT_CARD);
         }
 
@@ -60,7 +60,7 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
 
         PaymentMethod paymentMethod = stripeService.getPaymentMethod(paymentMethodId);
 
-        if (isNotPaymentMethodCard(paymentMethod)) {
+        if (isNotCardPaymentMethod(paymentMethod)) {
             throw new BadRequestException(ApplicationMessages.PROVIDED_PAYMENT_METHOD_NOT_CARD);
         }
 
@@ -71,7 +71,7 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
         return stripeService.retrieveCustomer(paymentAccount.getStripeCustomerId());
     }
 
-    private boolean isNotPaymentMethodCard(PaymentMethod paymentMethod) {
-        return !PaymentMethodTypes.CARD.equals(paymentMethod.getType());
+    private boolean isNotCardPaymentMethod(PaymentMethod paymentMethod) {
+        return !PaymentMethodType.CARD.getValue().equals(paymentMethod.getType());
     }
 }
