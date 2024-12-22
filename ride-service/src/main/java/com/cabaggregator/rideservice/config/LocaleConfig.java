@@ -19,7 +19,8 @@ public class LocaleConfig implements WebMvcConfigurer {
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.addBasenames(
-                messageConfig.getErrorCauses());
+                messageConfig.getErrorCauses(),
+                messageConfig.getValidationErrors());
         messageSource.setDefaultEncoding(
                 messageConfig.getEncoding());
         return messageSource;
