@@ -1,5 +1,6 @@
 package com.cabaggregator.ratingservice.controller.api;
 
+import com.cabaggregator.ratingservice.controller.doc.DriverRateControllerDoc;
 import com.cabaggregator.ratingservice.core.dto.driver.DriverRateAddingDto;
 import com.cabaggregator.ratingservice.core.dto.driver.DriverRateDto;
 import com.cabaggregator.ratingservice.core.dto.driver.DriverRateSettingDto;
@@ -30,12 +31,12 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/rates/driver")
-public class DriverRateController {
+public class DriverRateController implements DriverRateControllerDoc {
 
     private final DriverRateService driverRateService;
 
     @GetMapping("/{driverId}")
-    ResponseEntity<PageDto<DriverRateDto>> getPageOfDriverRates(
+    public ResponseEntity<PageDto<DriverRateDto>> getPageOfDriverRates(
             @PathVariable UUID driverId,
             @RequestParam(defaultValue = "0") @PositiveOrZero Integer offset,
             @RequestParam(defaultValue = "10") @Positive Integer limit,
@@ -49,7 +50,7 @@ public class DriverRateController {
     }
 
     @GetMapping("/{driverId}/ride/{rideId}")
-    ResponseEntity<DriverRateDto> getDriverRate(
+    public ResponseEntity<DriverRateDto> getDriverRate(
             @PathVariable UUID driverId,
             @PathVariable ObjectId rideId) {
 
@@ -59,7 +60,7 @@ public class DriverRateController {
     }
 
     @PostMapping
-    ResponseEntity<DriverRateDto> saveDriverRate(
+    public ResponseEntity<DriverRateDto> saveDriverRate(
             @RequestBody @Valid DriverRateAddingDto addingDto) {
 
         DriverRateDto rate = driverRateService.saveDriverRate(addingDto);
@@ -68,7 +69,7 @@ public class DriverRateController {
     }
 
     @PutMapping("/{driverId}/ride/{rideId}")
-    ResponseEntity<DriverRateDto> setDriverRate(
+    public ResponseEntity<DriverRateDto> setDriverRate(
             @PathVariable UUID driverId,
             @PathVariable ObjectId rideId,
             @RequestBody @Valid DriverRateSettingDto settingDto) {

@@ -27,6 +27,13 @@ public class WebSecurityConfig {
                                 "/api/v1/rates/passenger",
                                 "/api/v1/rates/driver"
                         ).permitAll()
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-resources/**",
+                                "/v3/api-docs/**",
+                                "/v3/api-docs.yaml",
+                                "/webjars/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .build();

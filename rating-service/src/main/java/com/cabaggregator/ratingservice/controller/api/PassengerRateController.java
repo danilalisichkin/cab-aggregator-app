@@ -1,5 +1,6 @@
 package com.cabaggregator.ratingservice.controller.api;
 
+import com.cabaggregator.ratingservice.controller.doc.PassengerRateControllerDoc;
 import com.cabaggregator.ratingservice.core.dto.page.PageDto;
 import com.cabaggregator.ratingservice.core.dto.passenger.PassengerRateAddingDto;
 import com.cabaggregator.ratingservice.core.dto.passenger.PassengerRateDto;
@@ -30,12 +31,12 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/rates/passenger")
-public class PassengerRateController {
+public class PassengerRateController implements PassengerRateControllerDoc {
 
     private final PassengerRateService passengerRateService;
 
     @GetMapping("/{passengerId}")
-    ResponseEntity<PageDto<PassengerRateDto>> getPageOfPassengerRates(
+    public ResponseEntity<PageDto<PassengerRateDto>> getPageOfPassengerRates(
             @PathVariable UUID passengerId,
             @RequestParam(defaultValue = "0") @PositiveOrZero Integer offset,
             @RequestParam(defaultValue = "10") @Positive Integer limit,
@@ -49,7 +50,7 @@ public class PassengerRateController {
     }
 
     @GetMapping("/{passengerId}/ride/{rideId}")
-    ResponseEntity<PassengerRateDto> getPassengerRate(
+    public ResponseEntity<PassengerRateDto> getPassengerRate(
             @PathVariable UUID passengerId,
             @PathVariable ObjectId rideId) {
 
@@ -59,7 +60,7 @@ public class PassengerRateController {
     }
 
     @PostMapping
-    ResponseEntity<PassengerRateDto> savePassengerRate(
+    public ResponseEntity<PassengerRateDto> savePassengerRate(
             @RequestBody @Valid PassengerRateAddingDto addingDto) {
 
         PassengerRateDto rate = passengerRateService.savePassengerRate(addingDto);
@@ -68,7 +69,7 @@ public class PassengerRateController {
     }
 
     @PutMapping("/{passengerId}/ride/{rideId}")
-    ResponseEntity<PassengerRateDto> setPassengerRate(
+    public ResponseEntity<PassengerRateDto> setPassengerRate(
             @PathVariable UUID passengerId,
             @PathVariable ObjectId rideId,
             @RequestBody @Valid PassengerRateSettingDto settingDto) {
