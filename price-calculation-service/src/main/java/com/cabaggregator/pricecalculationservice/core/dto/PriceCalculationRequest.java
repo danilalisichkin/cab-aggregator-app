@@ -1,6 +1,7 @@
 package com.cabaggregator.pricecalculationservice.core.dto;
 
 import com.cabaggregator.pricecalculationservice.core.constant.ValidationErrors;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -9,6 +10,7 @@ import org.bson.types.ObjectId;
 
 import java.util.List;
 
+@Schema(description = "Entry to with required data to calculate ride price")
 public record PriceCalculationRequest(
         @NotNull
         ObjectId rideId,

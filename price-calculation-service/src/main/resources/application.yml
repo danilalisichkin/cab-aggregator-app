@@ -40,4 +40,4 @@ app:
         ride: ${REDIS_RIDE_KEY_PREFIX:ride:}
       ttl: ${REDIS_DEMAND_KEY_TTL:10}
 server:
-  port: ${SERVER_PORT:8085}
+  port: ${SERVER_PORT:8087}

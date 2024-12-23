@@ -1,0 +1,92 @@
+openapi: 3.0.1
+info:
+  title: Price Calculation Service API documentation
+  description: API responsible for calculation of ride price
+  contact:
+    name: Danila Lisichkin
+    email: lisichkindanila@gmail.com
+  version: 1.0.0
+servers:
+- url: http://localhost:8087
+  description: Generated server url
+tags:
+- name: Price Calculation API Controller
+  description: Calculates price of requested ride
+paths:
+  /api/v1/pricing:
+    get:
+      tags:
+      - Price Calculation API Controller
+      summary: Calculate price
+      description: Allows to calculate price of ride
+      operationId: calculatePrice
+      parameters:
+      - name: Required data
+        in: query
+        description: Data that is required to calculate price
+        required: true
+        schema:
+          $ref: "#/components/schemas/PriceCalculationRequest"
+      responses:
+        "400":
+          description: "Bad request: invalid parameters or missing required fields"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PriceResponse"
+        "200":
+          description: Successful response
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PriceResponse"
+components:
+  schemas:
+    ObjectId:
+      type: object
+      properties:
+        timestamp:
+          type: integer
+          format: int32
+        date:
+          type: string
+          format: date-time
+    PriceCalculationRequest:
+      required:
+      - distance
+      - duration
+      - fare
+      - pickUpCoordinates
+      - rideId
+      type: object
+      properties:
+        rideId:
+          $ref: "#/components/schemas/ObjectId"
+        pickUpCoordinates:
+          maxItems: 2
+          minItems: 1
+          type: array
+          items:
+            type: number
+            format: double
+        distance:
+          type: integer
+          format: int64
+        duration:
+          type: integer
+          format: int64
+        fare:
+          type: string
+      description: Entry to with required data to calculate ride price
+    PriceResponse:
+      type: object
+      properties:
+        price:
+          type: integer
+          format: int64
+        demand:
+          type: string
+        weather:
+          type: string
+      description: Server response with calculated ride price and additional info
+        about increase coefficients
