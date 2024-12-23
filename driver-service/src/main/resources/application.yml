@@ -20,5 +20,24 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
+  kafka:
+    consumer:
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+      group-id: driver-creation-group
+      properties:
+        spring.json:
+          value.default.type: java.util.Map
+          trusted.packages: '*'
+          use.type.headers: false
+        spring.deserializer:
+          key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+          value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+app:
+  kafka:
+    topics:
+      driver:
+        name: ${KAFKA_TOPIC_DRIVER_NAME:driver-topic}
 server:
-  port: ${SERVER_PORT:8081}
+  port: ${SERVER_PORT:8083}

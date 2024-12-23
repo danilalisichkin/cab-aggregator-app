@@ -1,6 +1,6 @@
 package com.cabaggregator.authservice.controller.api;
 
-import com.cabaggregator.authservice.controller.api.doc.UserControllerDocumentation;
+import com.cabaggregator.authservice.controller.doc.UserControllerDocumentation;
 import com.cabaggregator.authservice.core.enums.KeycloakRole;
 import com.cabaggregator.authservice.sevice.UserService;
 import jakarta.validation.constraints.NotNull;
@@ -30,7 +30,6 @@ public class UserController implements UserControllerDocumentation {
 
     @GetMapping("/{id}/roles")
     public ResponseEntity<List<RoleRepresentation>> getUserRoles(@PathVariable UUID id) {
-
         List<RoleRepresentation> roles = userService.getUserRoles(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(roles);
@@ -38,7 +37,6 @@ public class UserController implements UserControllerDocumentation {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserRepresentation> getUser(@PathVariable UUID id) {
-
         UserRepresentation user = userService.getUserById(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(user);
@@ -46,7 +44,6 @@ public class UserController implements UserControllerDocumentation {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
-
         userService.deleteUser(id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

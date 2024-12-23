@@ -1,4 +1,4 @@
-package com.cabaggregator.driverservice.controllers.api.doc;
+package com.cabaggregator.driverservice.controllers.doc;
 
 import com.cabaggregator.driverservice.core.constant.ValidationErrors;
 import com.cabaggregator.driverservice.core.dto.car.CarAddingDto;

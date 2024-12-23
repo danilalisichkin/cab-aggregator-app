@@ -1,6 +1,6 @@
 package com.cabaggregator.driverservice.controllers.api;
 
-import com.cabaggregator.driverservice.controllers.api.doc.DriverControllerDocumentation;
+import com.cabaggregator.driverservice.controllers.doc.DriverControllerDocumentation;
 import com.cabaggregator.driverservice.core.constant.ValidationErrors;
 import com.cabaggregator.driverservice.core.dto.driver.DriverAddingDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverDto;
@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -90,7 +91,20 @@ public class DriverController implements DriverControllerDocumentation {
     }
 
     @Override
-    @PutMapping("/{id}/rating")
+    @PatchMapping("/{id}/car")
+    public ResponseEntity<DriverDto> updateDriverCar(
+            @PathVariable UUID id,
+            @RequestBody @NotNull Long carId) {
+
+        log.info("Updating car of driver with id={}", id);
+
+        DriverDto driver = driverService.updateDriverCarId(id, carId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(driver);
+    }
+
+    @Override
+    @PatchMapping("/{id}/rating")
     public ResponseEntity<DriverDto> updateDriverRating(
             @PathVariable UUID id,
             @RequestBody @NotNull

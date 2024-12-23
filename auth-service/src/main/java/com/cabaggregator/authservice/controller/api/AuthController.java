@@ -1,6 +1,6 @@
 package com.cabaggregator.authservice.controller.api;
 
-import com.cabaggregator.authservice.controller.api.doc.AuthControllerDocumentation;
+import com.cabaggregator.authservice.controller.doc.AuthControllerDocumentation;
 import com.cabaggregator.authservice.core.dto.KeycloakAccessTokenDto;
 import com.cabaggregator.authservice.core.dto.UserLoginDto;
 import com.cabaggregator.authservice.core.dto.UserRegisterDto;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
 public class AuthController implements AuthControllerDocumentation {
-    public final AuthenticationService authenticationService;
+    private final AuthenticationService authenticationService;
 
     @PostMapping("/sign-in")
     public ResponseEntity<KeycloakAccessTokenDto> signIn(@RequestBody @Valid UserLoginDto loginDto) {

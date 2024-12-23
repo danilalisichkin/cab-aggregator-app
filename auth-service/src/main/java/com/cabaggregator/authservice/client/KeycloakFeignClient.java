@@ -1,4 +1,4 @@
-package com.cabaggregator.authservice.controller.api.client;
+package com.cabaggregator.authservice.client;
 
 import org.keycloak.representations.AccessTokenResponse;
 import org.springframework.cloud.openfeign.FeignClient;
