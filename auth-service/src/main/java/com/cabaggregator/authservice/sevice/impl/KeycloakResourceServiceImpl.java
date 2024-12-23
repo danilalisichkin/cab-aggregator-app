@@ -52,7 +52,7 @@ public class KeycloakResourceServiceImpl implements KeycloakResourceService {
 
         List<UserRepresentation> users = usersResource.search(username);
         UserRepresentation createdUser = users.getFirst();
-        //sendVerificationEmail(createdUser.getId());
+        sendVerificationEmail(createdUser.getId());
 
         return createdUser;
     }
