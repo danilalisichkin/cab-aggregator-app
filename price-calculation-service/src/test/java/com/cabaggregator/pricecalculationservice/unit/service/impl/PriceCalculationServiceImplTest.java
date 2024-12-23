@@ -62,7 +62,7 @@ class PriceCalculationServiceImplTest {
                 .thenReturn(gridCell);
         when(rideFareService.getRideFare(request.fare()))
                 .thenReturn(rideFare);
-        when(demandCoefficientService.getCurrentDemandCoefficient(request.rideId(), gridCell))
+        when(demandCoefficientService.getCurrentDemandCoefficient(gridCell, request.rideId()))
                 .thenReturn(demandCoefficient);
         when(weatherCoefficientService.getCurrentWeatherCoefficient(gridCell))
                 .thenReturn(weatherCoefficient);
@@ -75,7 +75,7 @@ class PriceCalculationServiceImplTest {
 
         verify(geoGridService).calculateGridCell(coordinates.get(1), coordinates.get(0));
         verify(rideFareService).getRideFare(request.fare());
-        verify(demandCoefficientService).getCurrentDemandCoefficient(request.rideId(), gridCell);
+        verify(demandCoefficientService).getCurrentDemandCoefficient(gridCell, request.rideId());
         verify(weatherCoefficientService).getCurrentWeatherCoefficient(gridCell);
     }
 }
