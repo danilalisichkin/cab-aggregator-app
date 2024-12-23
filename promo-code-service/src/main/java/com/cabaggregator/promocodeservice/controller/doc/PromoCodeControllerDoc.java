@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -62,7 +63,7 @@ public interface PromoCodeControllerDoc {
                     name = "Required data",
                     description = "Data that is required to create new promo code",
                     required = true)
-            @RequestBody PromoCodeAddingDto addingDto);
+            @RequestBody @Valid PromoCodeAddingDto addingDto);
 
     @Operation(
             summary = "Update",
@@ -80,5 +81,5 @@ public interface PromoCodeControllerDoc {
                     name = "Required data",
                     description = "Promo code data that will be changed",
                     required = true)
-            @RequestBody PromoCodeUpdatingDto updatingDto);
+            @RequestBody @Valid PromoCodeUpdatingDto updatingDto);
 }

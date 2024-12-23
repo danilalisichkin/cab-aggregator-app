@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -60,5 +61,5 @@ public interface PromoStatControllerDoc {
                     name = "Required data",
                     description = "Data that is required to create new promo code stat",
                     required = true)
-            @RequestBody PromoStatAddingDto addingDto);
+            @RequestBody @Valid PromoStatAddingDto addingDto);
 }
