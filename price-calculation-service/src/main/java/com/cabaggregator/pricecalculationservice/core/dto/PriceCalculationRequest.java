@@ -4,8 +4,19 @@ import com.cabaggregator.pricecalculationservice.core.constant.ValidationErrors;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
+import org.bson.types.ObjectId;
+
+import java.util.List;
 
 public record PriceCalculationRequest(
+        @NotNull
+        ObjectId rideId,
+
+        @NotNull
+        @Size(min = 1, max = 2, message = ValidationErrors.INVALID_COLLECTION_SIZE)
+        List<Double> pickUpCoordinates,
+
         @NotNull
         @Positive(message = ValidationErrors.NUMBER_IS_NOT_POSITIVE)
         Long distance,
