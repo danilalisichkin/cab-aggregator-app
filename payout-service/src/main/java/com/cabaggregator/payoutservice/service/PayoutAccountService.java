@@ -25,7 +25,7 @@ public interface PayoutAccountService {
 
     Long getPayoutAccountBalance(UUID id);
 
-    void setPayoutAccountActivity(UUID id, boolean active);
+    void setPayoutAccountActivity(UUID id, boolean newActive);
 
     PageDto<BalanceOperationDto> getPageOfBalanceOperations(
             UUID id, Integer offset, Integer limit, BalanceOperationSortField sortBy,

@@ -4,7 +4,7 @@ import com.cabaggregator.payoutservice.core.constant.ApplicationMessages;
 import com.cabaggregator.payoutservice.exception.InternalErrorException;
 import com.cabaggregator.payoutservice.exception.ResourceNotFoundException;
 import com.cabaggregator.payoutservice.service.StripeService;
-import com.cabaggregator.payoutservice.stripe.constant.Currency;
+import com.cabaggregator.payoutservice.stripe.enums.Currency;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Account;
 import com.stripe.model.Payout;
@@ -33,7 +33,7 @@ public class StripeServiceImpl implements StripeService {
             PayoutCreateParams createParams =
                     PayoutCreateParams.builder()
                             .setAmount(amount)
-                            .setCurrency(Currency.USD)
+                            .setCurrency(Currency.USD.getValue())
                             .build();
 
             Payout.create(createParams);

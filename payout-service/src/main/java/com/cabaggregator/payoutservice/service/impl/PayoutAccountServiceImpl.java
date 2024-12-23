@@ -97,11 +97,11 @@ public class PayoutAccountServiceImpl implements PayoutAccountService {
 
     @Override
     @Transactional
-    public void setPayoutAccountActivity(UUID id, boolean active) {
+    public void setPayoutAccountActivity(UUID id, boolean newActive) {
         PayoutAccount payoutAccount = getPayoutAccountEntity(id);
 
-        if (payoutAccount.getActive() != active) {
-            payoutAccount.setActive(active);
+        if (payoutAccount.getActive() != newActive) {
+            payoutAccount.setActive(newActive);
             payoutAccountRepository.save(payoutAccount);
         }
     }
