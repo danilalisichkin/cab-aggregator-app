@@ -1,10 +1,12 @@
 package com.cabaggregator.promocodeservice.controller.api;
 
+import com.cabaggregator.promocodeservice.controller.doc.PromoCodeControllerDoc;
 import com.cabaggregator.promocodeservice.core.dto.page.PageDto;
 import com.cabaggregator.promocodeservice.core.dto.promo.code.PromoCodeAddingDto;
 import com.cabaggregator.promocodeservice.core.dto.promo.code.PromoCodeDto;
 import com.cabaggregator.promocodeservice.core.dto.promo.code.PromoCodeUpdatingDto;
 import com.cabaggregator.promocodeservice.core.enums.sort.PromoCodeSortField;
+import com.cabaggregator.promocodeservice.service.PromoCodeService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
@@ -28,7 +30,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/promo-codes")
-public class PromoCodeController {
+public class PromoCodeController implements PromoCodeControllerDoc {
+
+    private final PromoCodeService promoCodeService;
 
     @GetMapping
     public ResponseEntity<PageDto<PromoCodeDto>> getPageOfPromoCodes(
@@ -37,21 +41,27 @@ public class PromoCodeController {
             @RequestParam(defaultValue = "value") PromoCodeSortField sortBy,
             @RequestParam(defaultValue = "ASC") Sort.Direction sortOrder) {
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        PageDto<PromoCodeDto> promoCodes = promoCodeService.getPageOfPromoCodes(offset, limit, sortBy, sortOrder);
+
+        return ResponseEntity.status(HttpStatus.OK).body(promoCodes);
     }
 
     @GetMapping("/{code}")
     public ResponseEntity<PromoCodeDto> getPromoCode(
             @PathVariable @Size(min = 2, max = 20) String code) {
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        PromoCodeDto promoCode = promoCodeService.getPromoCode(code);
+
+        return ResponseEntity.status(HttpStatus.OK).body(promoCode);
     }
 
     @PostMapping
     public ResponseEntity<PromoCodeDto> createPromoCode(
             @RequestBody @Valid PromoCodeAddingDto addingDto) {
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        PromoCodeDto promoCode = promoCodeService.savePromoCode(addingDto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(promoCode);
     }
 
     @PutMapping("/{code}")
@@ -59,6 +69,8 @@ public class PromoCodeController {
             @PathVariable @Size(min = 2, max = 20) String code,
             @RequestBody @Valid PromoCodeUpdatingDto updatingDto) {
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        PromoCodeDto promoCode = promoCodeService.updatePromoCode(code, updatingDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(promoCode);
     }
 }
