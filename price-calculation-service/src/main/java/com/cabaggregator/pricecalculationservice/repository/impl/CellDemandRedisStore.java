@@ -1,5 +1,6 @@
 package com.cabaggregator.pricecalculationservice.repository.impl;
 
+import com.cabaggregator.pricecalculationservice.config.redis.RedisKeyConfig;
 import com.cabaggregator.pricecalculationservice.repository.CellDemandStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.ValueOperations;
@@ -14,7 +15,7 @@ public class CellDemandRedisStore implements CellDemandStore {
 
     private final ValueOperations<String, Object> valueOperations;
 
-    private static final String CELL_DEMAND_KEY_PREFIX = "cell_demand:";
+    private final RedisKeyConfig redisKeyConfig;
 
     /**
      * Retrieves the current demand for the specified grid cell.
@@ -32,7 +33,7 @@ public class CellDemandRedisStore implements CellDemandStore {
     @Override
     public void set(String gridCell, int demand) {
         String key = generateKey(gridCell);
-        valueOperations.set(key, demand, Duration.ofMinutes(10));
+        valueOperations.set(key, demand, Duration.ofMinutes(redisKeyConfig.getTtl()));
     }
 
     /**
@@ -45,6 +46,6 @@ public class CellDemandRedisStore implements CellDemandStore {
     }
 
     private String generateKey(String gridCell) {
-        return CELL_DEMAND_KEY_PREFIX + gridCell;
+        return redisKeyConfig.getPrefix().getCellDemand() + gridCell;
     }
 }

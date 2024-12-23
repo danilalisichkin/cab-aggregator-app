@@ -1,4 +1,4 @@
-package com.cabaggregator.pricecalculationservice.config;
+package com.cabaggregator.pricecalculationservice.config.cache;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

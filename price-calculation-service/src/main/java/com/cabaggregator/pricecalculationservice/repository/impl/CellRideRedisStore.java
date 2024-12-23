@@ -1,5 +1,6 @@
 package com.cabaggregator.pricecalculationservice.repository.impl;
 
+import com.cabaggregator.pricecalculationservice.config.redis.RedisKeyConfig;
 import com.cabaggregator.pricecalculationservice.repository.CellRideStore;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
@@ -14,8 +15,7 @@ public class CellRideRedisStore implements CellRideStore {
 
     private final ValueOperations<String, Object> valueOperations;
 
-    private static final String RIDE_KEY_PREFIX = "ride:";
-    private static final String CELL_KEY_PREFIX = "cell:";
+    private final RedisKeyConfig redisKeyConfig;
 
     /**
      * Checks if the ride has already been counted for the given grid cell.
@@ -35,11 +35,11 @@ public class CellRideRedisStore implements CellRideStore {
     @Override
     public void set(String gridCell, ObjectId rideId) {
         String key = generateKey(gridCell, rideId);
-        valueOperations.set(key, rideId.toString(), Duration.ofMinutes(10));
+        valueOperations.set(key, rideId.toString(), Duration.ofMinutes(redisKeyConfig.getTtl()));
     }
 
     private String generateKey(String gridCell, Object rideId) {
-        return CELL_KEY_PREFIX + gridCell + ":" + RIDE_KEY_PREFIX + rideId;
+        return redisKeyConfig.getPrefix().getCell() + gridCell + ":" + redisKeyConfig.getPrefix().getRide() + rideId;
     }
 }
 

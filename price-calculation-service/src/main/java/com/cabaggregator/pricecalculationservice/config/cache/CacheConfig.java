@@ -1,4 +1,4 @@
-package com.cabaggregator.pricecalculationservice.config;
+package com.cabaggregator.pricecalculationservice.config.cache;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonGenerator;

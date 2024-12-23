@@ -27,10 +27,17 @@ spring:
       database: ${REDIS_DATABASE:0}
 app:
   weather:
-    api-key: ${WEATHER_API_KEY:KEY}
+    api-key: ${WEATHER_API_KEY:670e34067af14249a3f104421241012}
   cache:
     ttl:
       fare-cache: ${FARE_CACHE_TTL:1440}
       weather-cache: ${WEATHER_CACHE_TTL:180}
+  redis:
+    key:
+      prefix:
+        cell-demand: ${REDIS_CELL_DEMAND_KEY_PREFIX:cell_demand:}
+        cell: ${REDIS_CEL_KEY_PREFIX:cell:}
+        ride: ${REDIS_RIDE_KEY_PREFIX:ride:}
+      ttl: ${REDIS_DEMAND_KEY_TTL:10}
 server:
   port: ${SERVER_PORT:8085}
