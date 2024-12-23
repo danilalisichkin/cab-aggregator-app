@@ -2,19 +2,17 @@ package com.cabaggregator.paymentservice.integration.repository;
 
 import com.cabaggregator.paymentservice.config.AbstractIntegrationTest;
 import com.cabaggregator.paymentservice.entity.Payment;
-import com.cabaggregator.paymentservice.entity.PaymentAccount;
 import com.cabaggregator.paymentservice.entity.PaymentContext;
-import com.cabaggregator.paymentservice.repository.PaymentAccountRepository;
 import com.cabaggregator.paymentservice.repository.PaymentContextRepository;
-import com.cabaggregator.paymentservice.repository.PaymentRepository;
-import com.cabaggregator.paymentservice.util.PaymentAccountTestUtil;
 import com.cabaggregator.paymentservice.util.PaymentContextTestUtil;
 import com.cabaggregator.paymentservice.util.PaymentTestUtil;
+import com.cabaggregator.paymentservice.util.StripeTestUtil;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,70 +21,48 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("integration")
 @DataJpaTest
+@Sql(scripts = {
+        "classpath:/postgresql/import_payment_accounts.sql",
+        "classpath:/postgresql/import_payments.sql",
+        "classpath:/postgresql/import_payment_contexts.sql"},
+        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class PaymentContextRepositoryTest extends AbstractIntegrationTest {
     @Autowired
     private PaymentContextRepository paymentContextRepository;
 
-    @Autowired
-    private PaymentAccountRepository paymentAccountRepository;
-
-    @Autowired
-    private PaymentRepository paymentRepository;
-
-    private PaymentAccount savePaymentAccount() {
-        return paymentAccountRepository.save(
-                PaymentAccountTestUtil.getPaymentAccountBuilder()
-                        .build());
-    }
-
-    private Payment savePayment(PaymentAccount paymentAccount) {
-        return paymentRepository.save(
-                PaymentTestUtil.getPaymentBuilder()
-                        .paymentAccount(paymentAccount)
-                        .build());
-    }
-
     @Test
     void findByPayment_ShouldReturnPaymentContext_WhenPaymentExists() {
-        PaymentAccount paymentAccount = savePaymentAccount();
-        Payment payment = savePayment(paymentAccount);
         PaymentContext paymentContext =
                 PaymentContextTestUtil.getPaymentContextBuilder()
-                        .id(null)
-                        .payment(payment)
                         .build();
-        paymentContextRepository.save(paymentContext);
 
         Optional<PaymentContext> actual =
                 paymentContextRepository.findByPayment(
                         paymentContext.getPayment());
 
-        assertThat(actual)
-                .isPresent()
-                .contains(paymentContext);
+        assertThat(actual).isPresent();
+        assertThat(actual.get().getId()).isEqualTo(paymentContext.getId());
     }
 
     @Test
     void findByPayment_ShouldReturnEmptyOptional_WhenPaymentDoesNotExist() {
-        Optional<PaymentContext> actual =
-                paymentContextRepository.findByPayment(
-                        PaymentTestUtil.getPaymentBuilder()
-                                .build());
+        Payment notExistingPayment =
+                PaymentTestUtil.getPaymentBuilder()
+                        .paymentIntentId(StripeTestUtil.NOT_EXISTING_INTENT_ID)
+                        .build();
+
+        Optional<PaymentContext> actual = paymentContextRepository.findByPayment(notExistingPayment);
 
         assertThat(actual).isEmpty();
     }
 
     @Test
     void findByTypeAndContextId_ShouldReturnPaymentContext_WhenTypeAndContextIdAreEqualToProvided() {
-        PaymentAccount paymentAccount = savePaymentAccount();
-        Payment payment = savePayment(paymentAccount);
+        int expectedListSize = 1;
         PaymentContext paymentContext =
                 PaymentContextTestUtil.getPaymentContextBuilder()
-                        .id(null)
-                        .payment(payment)
                         .build();
-        paymentContextRepository.save(paymentContext);
 
         List<PaymentContext> actual =
                 paymentContextRepository.findByTypeAndContextId(
@@ -95,23 +71,15 @@ class PaymentContextRepositoryTest extends AbstractIntegrationTest {
 
         assertThat(actual)
                 .isNotEmpty()
-                .hasSize(1)
-                .contains(paymentContext);
+                .hasSize(expectedListSize);
+        assertThat(actual.getFirst().getId()).isEqualTo(paymentContext.getId());
     }
 
     @Test
     void findByTypeAndContextId_ShouldReturnEmptyList_WhenContextIdIsNotEqualToProvided() {
-        PaymentAccount paymentAccount = savePaymentAccount();
-        Payment payment = savePayment(paymentAccount);
-        PaymentContext paymentContext =
-                PaymentContextTestUtil.getPaymentContextBuilder()
-                        .id(null)
-                        .payment(payment)
-                        .build();
-
         List<PaymentContext> actual =
                 paymentContextRepository.findByTypeAndContextId(
-                        paymentContext.getType(),
+                        PaymentContextTestUtil.TYPE,
                         PaymentContextTestUtil.NOT_EXISTING_CONTEXT_ID);
 
         assertThat(actual)

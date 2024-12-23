@@ -1,7 +1,11 @@
 package com.cabaggregator.rideservice.util;
 
+import com.cabaggregator.rideservice.core.RideAddingDto;
+import com.cabaggregator.rideservice.core.RideDto;
+import com.cabaggregator.rideservice.core.RideUpdatingDto;
 import com.cabaggregator.rideservice.core.dto.Address;
 import com.cabaggregator.rideservice.core.enums.PaymentMethod;
+import com.cabaggregator.rideservice.core.enums.PaymentStatus;
 import com.cabaggregator.rideservice.core.enums.RideFare;
 import com.cabaggregator.rideservice.core.enums.RideStatus;
 import com.cabaggregator.rideservice.entity.Ride;
@@ -23,6 +27,7 @@ public final class RideTestUtil {
     public static final RideFare FARE = RideFare.COMFORT;
     public static final RideStatus STATUS = RideStatus.COMPLETED;
     public static final PaymentMethod PAYMENT_METHOD = PaymentMethod.CARD;
+    public static final PaymentStatus PAYMENT_STATUS = PaymentStatus.PAID;
     public static final Long DISTANCE = 2400L;
     public static final Long PRICE = 1200L;
 
@@ -41,6 +46,10 @@ public final class RideTestUtil {
     public static final UUID NOT_EXISTING_DRIVER_ID = UUID.fromString("11111111-1111-1111-1111-111111111111");
     public static final RideStatus NOT_EXISTING_STATUS = RideStatus.ARRIVING;
 
+    public static final PaymentMethod UPDATED_PAYMENT_METHOD = PaymentMethod.CASH;
+    public static final String UPDATED_PICK_UP_FULL_ADDRESS = "Broadway St, Los Angeles, CA 90012";
+    public static final List<Double> UPDATED_PICK_UP_COORDINATES = List.of(-118.24605588892796, 34.05469971000838);
+
     public static Ride.RideBuilder getRideBuilder() {
         return Ride.builder()
                 .id(ID)
@@ -50,6 +59,7 @@ public final class RideTestUtil {
                 .fare(FARE)
                 .status(STATUS)
                 .paymentMethod(PAYMENT_METHOD)
+                .paymentStatus(PAYMENT_STATUS)
                 .pickUpAddress(buildPickUpAddress())
                 .dropOffAddress(buildDropOffAddress())
                 .distance(DISTANCE)
@@ -60,15 +70,55 @@ public final class RideTestUtil {
                 .estimatedDuration(ESTIMATED_DURATION);
     }
 
-    private static Address buildPickUpAddress() {
+    public static Address buildPickUpAddress() {
         return new Address(
                 PICK_UP_FULL_ADDRESS,
                 PICK_UP_COORDINATES);
     }
 
-    private static Address buildDropOffAddress() {
+    public static Address buildDropOffAddress() {
         return new Address(
                 DROP_OFF_FULL_ADDRESS,
                 DROP_OFF_COORDINATES);
+    }
+
+    public static Address buildUpdatedPickUpAddress() {
+        return new Address(
+                UPDATED_PICK_UP_FULL_ADDRESS,
+                UPDATED_PICK_UP_COORDINATES);
+    }
+
+    public static RideDto buildRideDto() {
+        return new RideDto(
+                ID,
+                PASSENGER_ID,
+                DRIVER_ID,
+                PROMO_CODE,
+                FARE,
+                STATUS,
+                PAYMENT_METHOD,
+                PAYMENT_STATUS,
+                buildPickUpAddress(),
+                buildDropOffAddress(),
+                PRICE,
+                ORDER_TIME,
+                START_TIME,
+                END_TIME,
+                ESTIMATED_DURATION);
+    }
+
+    public static RideUpdatingDto buildRideUpdatingDto() {
+        return new RideUpdatingDto(
+                UPDATED_PAYMENT_METHOD,
+                buildUpdatedPickUpAddress(),
+                buildDropOffAddress());
+    }
+
+    public static RideAddingDto buildRideAddingDto() {
+        return new RideAddingDto(
+                FARE,
+                PAYMENT_METHOD,
+                buildPickUpAddress(),
+                buildDropOffAddress());
     }
 }
