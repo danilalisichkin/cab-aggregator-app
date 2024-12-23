@@ -1,5 +1,6 @@
 package com.cabaggregator.pricecalculationservice.controller.api;
 
+import com.cabaggregator.pricecalculationservice.controller.doc.PriceCalculationControllerDoc;
 import com.cabaggregator.pricecalculationservice.core.dto.PriceCalculationRequest;
 import com.cabaggregator.pricecalculationservice.core.dto.PriceResponse;
 import com.cabaggregator.pricecalculationservice.service.PriceCalculationService;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/pricing")
-public class PriceCalculationController {
+public class PriceCalculationController implements PriceCalculationControllerDoc {
     private final PriceCalculationService priceCalculationService;
 
     @GetMapping
