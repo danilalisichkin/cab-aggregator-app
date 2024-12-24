@@ -10,13 +10,14 @@ import org.springframework.context.annotation.Configuration;
 @SecurityScheme(
         name = "token",
         type = SecuritySchemeType.HTTP,
-        scheme = "bearer"
+        scheme = "bearer",
+        bearerFormat = "JWT"
 )
 @OpenAPIDefinition(
         info = @Info(
                 title = "Auth Service API documentation",
-                description = "API responsible for interaction with users, their roles." +
-                        "Provides authentication, authorization operations." + "Integrated with Keycloak server",
+                description = "API responsible for interaction with users, their roles. " +
+                        "Provides authentication, authorization operations. " + "Integrated with Keycloak server.",
                 version = "1.0.0",
                 contact = @Contact(
                         name = "Danila Lisichkin",
@@ -25,5 +26,5 @@ import org.springframework.context.annotation.Configuration;
         )
 )
 @Configuration
-public class SwaggerConfig {
+public class OpenApiConfig {
 }

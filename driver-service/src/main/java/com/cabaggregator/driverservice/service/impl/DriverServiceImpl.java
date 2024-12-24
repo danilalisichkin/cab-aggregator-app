@@ -59,11 +59,9 @@ public class DriverServiceImpl implements DriverService {
         driverValidator.validateIdUniqueness(driverDto.id());
         driverValidator.validatePhoneUniqueness(driverDto.phoneNumber());
         driverValidator.validateEmailUniqueness(driverDto.email());
-        driverValidator.validateDriverCarUniqueness(driverDto.carId());
 
         Driver driver = driverMapper.dtoToEntity(driverDto);
         driver.setRating(DefaultValues.DRIVER_RATING);
-        driver.setCar(getCarEntityById(driverDto.carId()));
 
         return driverMapper.entityToDto(
                 driverRepository.save(driver));
@@ -92,6 +90,18 @@ public class DriverServiceImpl implements DriverService {
         Driver driverToUpdate = getDriverEntityById(id);
 
         driverToUpdate.setRating(rating);
+
+        return driverMapper.entityToDto(
+                driverRepository.save(driverToUpdate));
+    }
+
+    @Override
+    @Transactional
+    public DriverDto updateDriverCarId(UUID id, Long carId) {
+        Driver driverToUpdate = getDriverEntityById(id);
+        driverValidator.validateDriverCarUniqueness(carId);
+
+        driverToUpdate.setCar(getCarEntityById(carId));
 
         return driverMapper.entityToDto(
                 driverRepository.save(driverToUpdate));

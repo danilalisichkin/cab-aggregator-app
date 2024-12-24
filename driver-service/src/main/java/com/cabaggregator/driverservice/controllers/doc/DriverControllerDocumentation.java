@@ -1,4 +1,4 @@
-package com.cabaggregator.driverservice.controllers.api.doc;
+package com.cabaggregator.driverservice.controllers.doc;
 
 import com.cabaggregator.driverservice.core.constant.ValidationErrors;
 import com.cabaggregator.driverservice.core.dto.driver.DriverAddingDto;
@@ -86,6 +86,22 @@ public interface DriverControllerDocumentation {
             @PathVariable UUID id,
 
             @RequestBody @Valid DriverUpdatingDto driverDto);
+
+    @Operation(summary = "Update car ID", description = "Allows to update the car ID an existing driver")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful response"),
+            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters or missing required fields"),
+            @ApiResponse(responseCode = "404", description = "Driver not found: driver with ID or car with ID does not exist")
+    })
+    ResponseEntity<DriverDto> updateDriverCar(
+            @Parameter(
+                    description = "ID of the driver whose car is to be updated")
+            @PathVariable UUID id,
+            @Parameter(
+                    name = "Car ID",
+                    description = "ID of the registered car is to be connected with driver",
+                    required = true)
+            @RequestBody @NotNull Long carId);
 
     @Operation(summary = "Update rating", description = "Allows to update the rating of an existing driver by its ID")
     @ApiResponses(value = {

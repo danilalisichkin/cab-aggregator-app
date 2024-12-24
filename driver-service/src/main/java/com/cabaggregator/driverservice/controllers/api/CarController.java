@@ -1,6 +1,6 @@
 package com.cabaggregator.driverservice.controllers.api;
 
-import com.cabaggregator.driverservice.controllers.api.doc.CarControllerDocumentation;
+import com.cabaggregator.driverservice.controllers.doc.CarControllerDocumentation;
 import com.cabaggregator.driverservice.core.constant.ValidationErrors;
 import com.cabaggregator.driverservice.core.dto.car.CarAddingDto;
 import com.cabaggregator.driverservice.core.dto.car.CarDto;

@@ -63,7 +63,6 @@ public final class DriverTestUtil {
                 PHONE_NUMBER,
                 EMAIL,
                 FIRST_NAME,
-                LAST_NAME,
-                CAR_ID);
+                LAST_NAME);
     }
 }

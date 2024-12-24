@@ -21,5 +21,7 @@ public interface DriverService {
 
     DriverDto updateDriverRating(UUID id, Double rating);
 
+    DriverDto updateDriverCarId(UUID id, Long carId);
+
     void deleteDriverById(UUID id);
 }

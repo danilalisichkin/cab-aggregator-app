@@ -32,9 +32,6 @@ public record DriverAddingDto(
 
         @NotEmpty
         @Size(max = 50, message = ValidationErrors.INVALID_STRING_MAX_LENGTH)
-        String lastName,
-
-        @NotNull
-        Long carId
+        String lastName
 ) {
 }

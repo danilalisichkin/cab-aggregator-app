@@ -1,6 +1,6 @@
 package com.cabaggregator.authservice.sevice.impl;
 
-import com.cabaggregator.authservice.controller.api.client.KeycloakFeignClient;
+import com.cabaggregator.authservice.client.KeycloakFeignClient;
 import com.cabaggregator.authservice.core.constant.ApplicationMessages;
 import com.cabaggregator.authservice.exception.BadRequestException;
 import com.cabaggregator.authservice.exception.ResourceNotFoundException;
