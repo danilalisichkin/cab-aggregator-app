@@ -4,6 +4,7 @@ import com.cabaggregator.payoutservice.config.AbstractIntegrationTest;
 import com.cabaggregator.payoutservice.core.enums.OperationType;
 import com.cabaggregator.payoutservice.entity.BalanceOperation;
 import com.cabaggregator.payoutservice.entity.PayoutAccount;
+import com.cabaggregator.payoutservice.entity.specification.BalanceOperationSpecification;
 import com.cabaggregator.payoutservice.repository.BalanceOperationRepository;
 import com.cabaggregator.payoutservice.util.BalanceOperationTestUtil;
 import com.cabaggregator.payoutservice.util.PayoutAccountTestUtil;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,6 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class BalanceOperationRepositoryTest extends AbstractIntegrationTest {
+
     @Autowired
     private BalanceOperationRepository balanceOperationRepository;
 
@@ -54,20 +57,23 @@ class BalanceOperationRepositoryTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void findAllByPayoutAccountAndCreatedAtBetween_ShouldReturnPageOfBalanceOperations_WhenFieldsMatchToProvided() {
-        int pageNumber = 0, pageSize = 10, expectedContentSize = 1;
+    void findAllByPayoutAccountAndCreatedAtBetween_ShouldReturnPageOfOperations_WhenFieldsMatchToProvided() {
+        int pageNumber = 0;
+        int pageSize = 10;
+        int expectedContentSize = 1;
         PayoutAccount payoutAccount = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
         BalanceOperation balanceOperation =
                 BalanceOperationTestUtil.getBalanceOperationBuilder()
                         .payoutAccount(payoutAccount)
                         .build();
 
+        Specification<BalanceOperation> spec = Specification
+                .where(BalanceOperationSpecification.hasPayoutAccount(payoutAccount))
+                .and(BalanceOperationSpecification.hasCreatedAtBefore(BalanceOperationTestUtil.TIME_AFTER_CREATION))
+                .and(BalanceOperationSpecification.hasCreatedAtAfter(BalanceOperationTestUtil.TIME_BEFORE_CREATION));
+
         Page<BalanceOperation> actual =
-                balanceOperationRepository.findAllByPayoutAccountAndCreatedAtBetween(
-                        payoutAccount,
-                        PageRequest.of(pageNumber, pageSize),
-                        BalanceOperationTestUtil.TIME_BEFORE_CREATION,
-                        BalanceOperationTestUtil.TIME_AFTER_CREATION);
+                balanceOperationRepository.findAll(spec, PageRequest.of(pageNumber, pageSize));
 
         assertThat(actual).isNotNull();
         assertThat(actual.getContent())
@@ -78,15 +84,17 @@ class BalanceOperationRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findAllByPayoutAccountAndCreatedAtBetween_ShouldReturnEmptyPage_WhenAccountIsNotEqualToProvided() {
-        int pageNumber = 0, pageSize = 10;
+        int pageNumber = 0;
+        int pageSize = 10;
         PayoutAccount notExistingPayoutAccount = PayoutAccountTestUtil.getNotExistingPayoutAccount();
 
+        Specification<BalanceOperation> spec = Specification
+                .where(BalanceOperationSpecification.hasPayoutAccount(notExistingPayoutAccount))
+                .and(BalanceOperationSpecification.hasCreatedAtBefore(BalanceOperationTestUtil.TIME_BEFORE_CREATION))
+                .and(BalanceOperationSpecification.hasCreatedAtAfter(BalanceOperationTestUtil.TIME_AFTER_CREATION));
+
         Page<BalanceOperation> actual =
-                balanceOperationRepository.findAllByPayoutAccountAndCreatedAtBetween(
-                        notExistingPayoutAccount,
-                        PageRequest.of(pageNumber, pageSize),
-                        BalanceOperationTestUtil.TIME_BEFORE_CREATION,
-                        BalanceOperationTestUtil.TIME_AFTER_CREATION);
+                balanceOperationRepository.findAll(spec, PageRequest.of(pageNumber, pageSize));
 
         assertThat(actual).isNotNull();
         assertThat(actual.getContent()).isEmpty();
@@ -94,36 +102,45 @@ class BalanceOperationRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findAllByPayoutAccountAndCreatedAtBetween_ShouldReturnEmptyPage_WhenCreatedAtIsNotBetweenProvided() {
-        int pageNumber = 0, pageSize = 10;
-        PayoutAccount notExistingPayoutAccount = PayoutAccountTestUtil.getNotExistingPayoutAccount();
+        int pageNumber = 0;
+        int pageSize = 10;
+        PayoutAccount payoutAccount =
+                PayoutAccountTestUtil.getPayoutAccountBuilder()
+                        .build();
+        Specification<BalanceOperation> spec = Specification
+                .where(BalanceOperationSpecification.hasPayoutAccount(payoutAccount))
+                .and(BalanceOperationSpecification.hasCreatedAtBefore(
+                        BalanceOperationTestUtil.TIME_INTERVAL_BEFORE_CREATION_START))
+                .and(BalanceOperationSpecification.hasCreatedAtAfter(
+                        BalanceOperationTestUtil.TIME_INTERVAL_BEFORE_CREATION_END));
 
         Page<BalanceOperation> actual =
-                balanceOperationRepository.findAllByPayoutAccountAndCreatedAtBetween(
-                        notExistingPayoutAccount,
-                        PageRequest.of(pageNumber, pageSize),
-                        BalanceOperationTestUtil.TIME_INTERVAL_BEFORE_CREATION_START,
-                        BalanceOperationTestUtil.TIME_INTERVAL_BEFORE_CREATION_END);
+                balanceOperationRepository.findAll(spec, PageRequest.of(pageNumber, pageSize));
 
         assertThat(actual).isNotNull();
         assertThat(actual.getContent()).isEmpty();
     }
 
     @Test
-    void findAllByPayoutAccountAndTypeAndCreatedAtBetween_ShouldReturnPageOfBalanceOperations_WhenFieldsMatchToProvided() {
-        int pageNumber = 0, pageSize = 10, expectedContentSize = 1;
-        PayoutAccount payoutAccount = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
+    void findAllByPayoutAccountAndTypeAndCreatedAtBetween_ShouldReturnPageOfOperations_WhenFieldsMatchToProvided() {
+        int pageNumber = 0;
+        int pageSize = 10;
+        int expectedContentSize = 1;
+        PayoutAccount payoutAccount =
+                PayoutAccountTestUtil.getPayoutAccountBuilder()
+                        .build();
         BalanceOperation balanceOperation =
                 BalanceOperationTestUtil.getBalanceOperationBuilder()
                         .payoutAccount(payoutAccount)
                         .build();
+        Specification<BalanceOperation> spec = Specification
+                .where(BalanceOperationSpecification.hasPayoutAccount(payoutAccount))
+                .and(BalanceOperationSpecification.hasOperationType(BalanceOperationTestUtil.TYPE))
+                .and(BalanceOperationSpecification.hasCreatedAtBefore(BalanceOperationTestUtil.TIME_AFTER_CREATION))
+                .and(BalanceOperationSpecification.hasCreatedAtAfter(BalanceOperationTestUtil.TIME_BEFORE_CREATION));
 
         Page<BalanceOperation> actual =
-                balanceOperationRepository.findAllByPayoutAccountAndTypeAndCreatedAtBetween(
-                        payoutAccount,
-                        PageRequest.of(pageNumber, pageSize),
-                        BalanceOperationTestUtil.TYPE,
-                        BalanceOperationTestUtil.TIME_BEFORE_CREATION,
-                        BalanceOperationTestUtil.TIME_AFTER_CREATION);
+                balanceOperationRepository.findAll(spec, PageRequest.of(pageNumber, pageSize));
 
         assertThat(actual).isNotNull();
         assertThat(actual.getContent())
@@ -134,16 +151,19 @@ class BalanceOperationRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findAllByPayoutAccountAndTypeAndCreatedAtBetween_ShouldReturnEmptyPage_WhenAccountIsNotEqualToProvided() {
-        int pageNumber = 0, pageSize = 10;
-        PayoutAccount notExistingAccount = PayoutAccountTestUtil.getNotExistingPayoutAccount();
+        int pageNumber = 0;
+        int pageSize = 10;
+        PayoutAccount payoutAccount =
+                PayoutAccountTestUtil.getPayoutAccountBuilder()
+                        .build();
+        Specification<BalanceOperation> spec = Specification
+                .where(BalanceOperationSpecification.hasPayoutAccount(payoutAccount))
+                .and(BalanceOperationSpecification.hasOperationType(BalanceOperationTestUtil.TYPE))
+                .and(BalanceOperationSpecification.hasCreatedAtBefore(BalanceOperationTestUtil.TIME_BEFORE_CREATION))
+                .and(BalanceOperationSpecification.hasCreatedAtAfter(BalanceOperationTestUtil.TIME_AFTER_CREATION));
 
         Page<BalanceOperation> actual =
-                balanceOperationRepository.findAllByPayoutAccountAndTypeAndCreatedAtBetween(
-                        notExistingAccount,
-                        PageRequest.of(pageNumber, pageSize),
-                        BalanceOperationTestUtil.TYPE,
-                        BalanceOperationTestUtil.TIME_BEFORE_CREATION,
-                        BalanceOperationTestUtil.TIME_AFTER_CREATION);
+                balanceOperationRepository.findAll(spec, PageRequest.of(pageNumber, pageSize));
 
         assertThat(actual).isNotNull();
         assertThat(actual.getContent()).isEmpty();
@@ -151,16 +171,19 @@ class BalanceOperationRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findAllByPayoutAccountAndTypeAndCreatedAtBetween_ShouldReturnEmptyPage_WhenTypeIsNotEqualToProvided() {
-        int pageNumber = 0, pageSize = 10;
-        PayoutAccount payoutAccount = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
+        int pageNumber = 0;
+        int pageSize = 10;
+        PayoutAccount payoutAccount =
+                PayoutAccountTestUtil.getPayoutAccountBuilder()
+                        .build();
+        Specification<BalanceOperation> spec = Specification
+                .where(BalanceOperationSpecification.hasPayoutAccount(payoutAccount))
+                .and(BalanceOperationSpecification.hasOperationType(OperationType.WITHDRAWAL))
+                .and(BalanceOperationSpecification.hasCreatedAtBefore(BalanceOperationTestUtil.TIME_BEFORE_CREATION))
+                .and(BalanceOperationSpecification.hasCreatedAtAfter(BalanceOperationTestUtil.TIME_AFTER_CREATION));
 
         Page<BalanceOperation> actual =
-                balanceOperationRepository.findAllByPayoutAccountAndTypeAndCreatedAtBetween(
-                        payoutAccount,
-                        PageRequest.of(pageNumber, pageSize),
-                        OperationType.WITHDRAWAL,
-                        BalanceOperationTestUtil.TIME_BEFORE_CREATION,
-                        BalanceOperationTestUtil.TIME_AFTER_CREATION);
+                balanceOperationRepository.findAll(spec, PageRequest.of(pageNumber, pageSize));
 
         assertThat(actual).isNotNull();
         assertThat(actual.getContent()).isEmpty();
@@ -168,16 +191,21 @@ class BalanceOperationRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findAllByPayoutAccountAndTypeAndCreatedAtBetween_ShouldReturnEmptyPage_WhenCreatedAtIsNotBetweenProvided() {
-        int pageNumber = 0, pageSize = 10;
-        PayoutAccount payoutAccount = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
+        int pageNumber = 0;
+        int pageSize = 10;
+        PayoutAccount payoutAccount =
+                PayoutAccountTestUtil.getPayoutAccountBuilder()
+                        .build();
+        Specification<BalanceOperation> spec = Specification
+                .where(BalanceOperationSpecification.hasPayoutAccount(payoutAccount))
+                .and(BalanceOperationSpecification.hasOperationType(BalanceOperationTestUtil.TYPE))
+                .and(BalanceOperationSpecification.hasCreatedAtBefore(
+                        BalanceOperationTestUtil.TIME_INTERVAL_BEFORE_CREATION_START))
+                .and(BalanceOperationSpecification.hasCreatedAtAfter(
+                        BalanceOperationTestUtil.TIME_INTERVAL_BEFORE_CREATION_END));
 
         Page<BalanceOperation> actual =
-                balanceOperationRepository.findAllByPayoutAccountAndTypeAndCreatedAtBetween(
-                        payoutAccount,
-                        PageRequest.of(pageNumber, pageSize),
-                        BalanceOperationTestUtil.TYPE,
-                        BalanceOperationTestUtil.TIME_INTERVAL_BEFORE_CREATION_START,
-                        BalanceOperationTestUtil.TIME_INTERVAL_BEFORE_CREATION_END);
+                balanceOperationRepository.findAll(spec, PageRequest.of(pageNumber, pageSize));
 
         assertThat(actual).isNotNull();
         assertThat(actual.getContent()).isEmpty();

@@ -45,9 +45,9 @@ public final class BalanceOperationTestUtil {
                 CREATED_AT);
     }
 
-    public static BalanceOperationAddingDto buildBalanceOperationAddingDto() {
+    public static BalanceOperationAddingDto buildBalanceOperationAddingDto(Long amount) {
         return new BalanceOperationAddingDto(
-                DEPOSIT_AMOUNT,
+                amount,
                 TRANSCRIPT);
     }
 }
