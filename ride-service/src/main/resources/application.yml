@@ -5,6 +5,7 @@ spring:
     basename:
       encoding: "UTF-8"
       error-causes: "classpath:error_causes"
+      validation-errors: "classpath:validation_errors"
   data:
     mongodb:
       uri: mongodb://${DB_HOSTPORT:localhost:27017}/${DB_NAME:ride_database}

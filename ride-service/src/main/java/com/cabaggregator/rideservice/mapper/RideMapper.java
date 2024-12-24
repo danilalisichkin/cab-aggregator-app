@@ -1,8 +1,8 @@
 package com.cabaggregator.rideservice.mapper;
 
-import com.cabaggregator.rideservice.core.RideAddingDto;
-import com.cabaggregator.rideservice.core.RideDto;
-import com.cabaggregator.rideservice.core.RideUpdatingDto;
+import com.cabaggregator.rideservice.core.dto.ride.RideAddingDto;
+import com.cabaggregator.rideservice.core.dto.ride.RideDto;
+import com.cabaggregator.rideservice.core.dto.ride.RideUpdatingDto;
 import com.cabaggregator.rideservice.entity.Ride;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;

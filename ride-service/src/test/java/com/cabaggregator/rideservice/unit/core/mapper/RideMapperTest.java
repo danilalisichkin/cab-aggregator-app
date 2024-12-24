@@ -1,8 +1,8 @@
 package com.cabaggregator.rideservice.unit.core.mapper;
 
-import com.cabaggregator.rideservice.core.RideAddingDto;
-import com.cabaggregator.rideservice.core.RideDto;
-import com.cabaggregator.rideservice.core.RideUpdatingDto;
+import com.cabaggregator.rideservice.core.dto.ride.RideAddingDto;
+import com.cabaggregator.rideservice.core.dto.ride.RideDto;
+import com.cabaggregator.rideservice.core.dto.ride.RideUpdatingDto;
 import com.cabaggregator.rideservice.entity.Ride;
 import com.cabaggregator.rideservice.mapper.RideMapper;
 import com.cabaggregator.rideservice.util.PaginationTestUtil;
