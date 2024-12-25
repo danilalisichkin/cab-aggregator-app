@@ -58,14 +58,14 @@ class PaymentContextRepositoryTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void findByTypeAndContextId_ShouldReturnPaymentContext_WhenTypeAndContextIdAreEqualToProvided() {
+    void findAllByTypeAndContextId_ShouldReturnPaymentContext_WhenTypeAndContextIdAreEqualToProvided() {
         int expectedListSize = 1;
         PaymentContext paymentContext =
                 PaymentContextTestUtil.getPaymentContextBuilder()
                         .build();
 
         List<PaymentContext> actual =
-                paymentContextRepository.findByTypeAndContextId(
+                paymentContextRepository.findAllByTypeAndContextId(
                         paymentContext.getType(),
                         paymentContext.getContextId());
 
@@ -76,9 +76,9 @@ class PaymentContextRepositoryTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void findByTypeAndContextId_ShouldReturnEmptyList_WhenContextIdIsNotEqualToProvided() {
+    void findAllByTypeAndContextId_ShouldReturnEmptyList_WhenContextIdIsNotEqualToProvided() {
         List<PaymentContext> actual =
-                paymentContextRepository.findByTypeAndContextId(
+                paymentContextRepository.findAllByTypeAndContextId(
                         PaymentContextTestUtil.TYPE,
                         PaymentContextTestUtil.NOT_EXISTING_CONTEXT_ID);
 

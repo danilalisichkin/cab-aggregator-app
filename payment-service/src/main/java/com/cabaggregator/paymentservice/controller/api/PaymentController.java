@@ -1,9 +1,11 @@
-package com.cabaggregator.paymentservice.api;
+package com.cabaggregator.paymentservice.controller.api;
 
+import com.cabaggregator.paymentservice.core.dto.payment.PaymentDto;
 import com.cabaggregator.paymentservice.core.dto.payment.PaymentRequest;
 import com.cabaggregator.paymentservice.core.dto.payment.PaymentResponse;
-import com.cabaggregator.paymentservice.entity.Payment;
+import com.cabaggregator.paymentservice.service.PaymentService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,18 +21,23 @@ import java.util.List;
 
 @Validated
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/payments")
 public class PaymentController {
 
+    private final PaymentService paymentService;
+
     @PostMapping
     public ResponseEntity<PaymentResponse> createPayment(@RequestBody @Valid PaymentRequest paymentRequest) {
+        PaymentResponse paymentResponse = paymentService.createPayment(paymentRequest);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK).body(paymentResponse);
     }
 
     @GetMapping("/ride/{rideId}")
-    public ResponseEntity<List<Payment>> getRidePayments(@PathVariable ObjectId rideId) {
+    public ResponseEntity<List<PaymentDto>> getRidePayments(@PathVariable ObjectId rideId) {
+        List<PaymentDto> ridePayments = paymentService.getRidePayments(rideId);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK).body(ridePayments);
     }
 }

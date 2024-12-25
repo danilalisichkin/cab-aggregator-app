@@ -8,7 +8,7 @@ import com.cabaggregator.paymentservice.exception.BadRequestException;
 import com.cabaggregator.paymentservice.exception.ResourceNotFoundException;
 import com.cabaggregator.paymentservice.service.StripeService;
 import com.cabaggregator.paymentservice.service.impl.PaymentMethodServiceImpl;
-import com.cabaggregator.paymentservice.stripe.enums.PaymentMethodTypes;
+import com.cabaggregator.paymentservice.stripe.enums.PaymentMethodType;
 import com.cabaggregator.paymentservice.util.PaymentAccountTestUtil;
 import com.cabaggregator.paymentservice.util.PaymentTestUtil;
 import com.cabaggregator.paymentservice.util.StripeTestUtil;
@@ -103,7 +103,7 @@ class PaymentMethodServiceImplTest {
         PaymentAccount paymentAccount = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
         Customer stripeCustomer = new Customer();
         PaymentMethod paymentMethod = StripeTestUtil.buildPaymentMethod();
-        paymentMethod.setType(PaymentMethodTypes.PAYPAL);
+        paymentMethod.setType(PaymentMethodType.PAYPAL.getValue());
 
         when(stripeService.retrieveCustomer(paymentAccount.getStripeCustomerId()))
                 .thenReturn(stripeCustomer);
@@ -125,7 +125,7 @@ class PaymentMethodServiceImplTest {
         PaymentAccount paymentAccount = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
         Customer stripeCustomer = new Customer();
         PaymentMethod paymentMethod = StripeTestUtil.buildPaymentMethod();
-        paymentMethod.setType(PaymentMethodTypes.PAYPAL);
+        paymentMethod.setType(PaymentMethodType.PAYPAL.getValue());
 
         when(stripeService.retrieveCustomer(paymentAccount.getStripeCustomerId()))
                 .thenReturn(stripeCustomer);
@@ -171,7 +171,7 @@ class PaymentMethodServiceImplTest {
         String paymentMethodId = StripeTestUtil.METHOD_ID;
         Customer stripeCustomer = new Customer();
         PaymentMethod paymentMethod = StripeTestUtil.buildPaymentMethod();
-        paymentMethod.setType(PaymentMethodTypes.PAYPAL);
+        paymentMethod.setType(PaymentMethodType.PAYPAL.getValue());
 
         when(stripeService.retrieveCustomer(paymentAccount.getStripeCustomerId()))
                 .thenReturn(stripeCustomer);

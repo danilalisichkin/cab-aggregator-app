@@ -2,6 +2,7 @@ package com.cabaggregator.paymentservice.unit.service.impl;
 
 import com.cabaggregator.paymentservice.client.RideServiceApiClient;
 import com.cabaggregator.paymentservice.core.constant.ApplicationMessages;
+import com.cabaggregator.paymentservice.core.dto.payment.PaymentDto;
 import com.cabaggregator.paymentservice.core.dto.payment.PaymentRequest;
 import com.cabaggregator.paymentservice.core.dto.payment.PaymentResponse;
 import com.cabaggregator.paymentservice.core.mapper.PaymentMapper;
@@ -31,12 +32,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -67,6 +71,47 @@ class PaymentServiceImplTest {
 
     @Mock
     private PaymentMapper paymentMapper;
+
+    @Test
+    void getRidePayments_ShouldReturnListOfPayments_WhenTheyFound() {
+        ObjectId rideId = new ObjectId(PaymentContextTestUtil.CONTEXT_ID);
+        PaymentContextType contextType = PaymentContextType.RIDE;
+        PaymentContext paymentContext = PaymentContextTestUtil.getPaymentContextBuilder().build();
+        List<PaymentContext> paymentContextList = Collections.singletonList(paymentContext);
+        PaymentDto paymentDto = PaymentTestUtil.buildPaymentDto();
+        List<PaymentDto> paymentDtoList = Collections.singletonList(paymentDto);
+
+        when(paymentContextService.getPaymentContextsByTypeAndContextId(contextType, rideId.toString()))
+                .thenReturn(paymentContextList);
+        when(paymentMapper.entityListToDtoList(anyList()))
+                .thenReturn(paymentDtoList);
+
+        List<PaymentDto> actual = paymentService.getRidePayments(rideId);
+
+        assertThat(actual)
+                .isNotNull()
+                .isNotEmpty()
+                .isEqualTo(paymentDtoList);
+
+        verify(paymentContextService).getPaymentContextsByTypeAndContextId(contextType, rideId.toString());
+        verify(paymentMapper).entityListToDtoList(anyList());
+    }
+
+    @Test
+    void getRidePayments_ShouldThrowResourceNotFoundException_WhenPaymentsNotFound() {
+        ObjectId rideId = new ObjectId(PaymentContextTestUtil.CONTEXT_ID);
+        PaymentContextType contextType = PaymentContextType.RIDE;
+
+        when(paymentContextService.getPaymentContextsByTypeAndContextId(contextType, rideId.toString()))
+                .thenReturn(Collections.emptyList());
+
+        assertThatThrownBy(
+                () -> paymentService.getRidePayments(rideId))
+                .isInstanceOf(ResourceNotFoundException.class);
+
+        verify(paymentContextService).getPaymentContextsByTypeAndContextId(contextType, rideId.toString());
+        verifyNoInteractions(paymentMapper);
+    }
 
     @Test
     void createPayment_ShouldReturnPaymentResponse_WhenPaymentIntentIsCreated() {

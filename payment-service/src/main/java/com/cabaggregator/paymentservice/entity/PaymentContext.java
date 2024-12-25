@@ -30,7 +30,7 @@ public class PaymentContext {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "payment_id", nullable = false)
     private Payment payment;
 

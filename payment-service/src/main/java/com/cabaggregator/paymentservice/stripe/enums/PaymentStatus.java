@@ -7,11 +7,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum PaymentStatus {
     CANCELED("canceled"),
+    CREATED("created"),
+    PARTIALLY_FUNDED("partially_funded"),
+    PAYMENT_FAILED("payment_failed"),
     PROCESSING("processing"),
     REQUIRES_ACTION("requires_action"),
-    REQUIRES_CAPTURE("requires_capture"),
-    REQUIRES_CONFIRMATION("requires_confirmation"),
-    REQUIRES_PAYMENT_METHOD("requires_payment_method"),
     SUCCEEDED("succeeded");
 
     private final String value;

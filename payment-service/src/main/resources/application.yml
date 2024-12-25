@@ -22,5 +22,6 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.xml
 stripe:
   secret-key: ${STRIPE_SECRET_KEY}
+  endpoint-secret: ${STRIPE_ENDPOINT_SECRET}
 server:
   port: ${SERVER_PORT:8087}

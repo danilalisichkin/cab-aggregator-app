@@ -10,10 +10,17 @@ import com.cabaggregator.paymentservice.service.PaymentContextService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PaymentContextServiceImpl implements PaymentContextService {
     private final PaymentContextRepository paymentContextRepository;
+
+    @Override
+    public List<PaymentContext> getPaymentContextsByTypeAndContextId(PaymentContextType type, String contextId) {
+        return paymentContextRepository.findAllByTypeAndContextId(type, contextId);
+    }
 
     @Override
     public void savePaymentContext(Payment payment, PaymentContextType type, String contextId) {

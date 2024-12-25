@@ -12,6 +12,7 @@ public final class ApplicationMessages {
     public static final String DEFAULT_PAYMENT_METHOD_NOT_FOUND = "error.default.payment.method.not.found";
     public static final String DEFAULT_PAYMENT_METHOD_NOT_CARD = "error.default.payment.method.not.card";
     public static final String PAYMENT_WITH_ID_NOT_FOUND = "error.payment.with.id.not.found";
+    public static final String PAYMENTS_FOR_RIDE_WITH_ID_NOT_FOUND = "error.payments.for.ride.with.id.not.found";
     public static final String PROVIDED_PAYMENT_METHOD_NOT_CARD = "error.provided.payment.method.not.card";
     public static final String CARD_PAYMENT_ERROR = "error.cart.payment";
     public static final String INVALID_REQUEST = "error.invalid.request";

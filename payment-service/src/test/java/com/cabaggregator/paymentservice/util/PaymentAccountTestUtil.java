@@ -20,7 +20,8 @@ public final class PaymentAccountTestUtil {
     public static final String USER_FIRST_NAME = "Adam";
     public static final String USER_LAST_NAME = "Smith";
 
-    public static final String NOT_EXISTING_STRIPE_CUSTOMER_ID = "not_existing_id";
+    public static final UUID NOT_EXISTING_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+    public static final String NOT_EXISTING_STRIPE_CUSTOMER_ID = "cus_000000000000000000000000";
 
     public static PaymentAccount.PaymentAccountBuilder getPaymentAccountBuilder() {
         return PaymentAccount.builder()

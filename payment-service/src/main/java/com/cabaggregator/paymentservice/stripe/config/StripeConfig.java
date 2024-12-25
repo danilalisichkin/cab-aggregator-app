@@ -11,6 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "stripe")
 public class StripeConfig {
     private final String secretKey;
+    private final String endpointSecret;
 
     @PostConstruct
     public void setApiKey() {

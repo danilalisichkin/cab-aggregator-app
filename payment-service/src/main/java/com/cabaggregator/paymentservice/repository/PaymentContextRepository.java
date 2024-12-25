@@ -13,5 +13,5 @@ import java.util.Optional;
 public interface PaymentContextRepository extends JpaRepository<PaymentContext, Long> {
     Optional<PaymentContext> findByPayment(Payment payment);
 
-    List<PaymentContext> findByTypeAndContextId(PaymentContextType contextType, String contextId);
+    List<PaymentContext> findAllByTypeAndContextId(PaymentContextType contextType, String contextId);
 }
