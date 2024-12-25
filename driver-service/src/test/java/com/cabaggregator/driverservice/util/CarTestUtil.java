@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CarTestUtil {
-    public static final Long CAR_ID = 2L;
+    public static final Long CAR_ID = 1L;
     public static final String LICENSE_PLATE = "1234 AA-7";
     public static final String MAKE = "Ford";
     public static final String MODEL = "Focus";
@@ -20,6 +20,8 @@ public final class CarTestUtil {
     public static final String UPDATED_MAKE = "Porsche";
     public static final String UPDATED_MODEL = "Cayenne";
     public static final String UPDATED_COLOR = "Black";
+
+    public static final String NOT_EXISTING_LICENSE_PLATE = "0000 OO-1";
 
     public static Car.CarBuilder getCarBuilder() {
         return Car.builder()
