@@ -1,9 +1,9 @@
 package com.cabaggregator.rideservice.util;
 
-import com.cabaggregator.rideservice.core.RideAddingDto;
-import com.cabaggregator.rideservice.core.RideDto;
-import com.cabaggregator.rideservice.core.RideUpdatingDto;
 import com.cabaggregator.rideservice.core.dto.Address;
+import com.cabaggregator.rideservice.core.dto.ride.RideAddingDto;
+import com.cabaggregator.rideservice.core.dto.ride.RideDto;
+import com.cabaggregator.rideservice.core.dto.ride.RideUpdatingDto;
 import com.cabaggregator.rideservice.core.enums.PaymentMethod;
 import com.cabaggregator.rideservice.core.enums.PaymentStatus;
 import com.cabaggregator.rideservice.core.enums.RideFare;
