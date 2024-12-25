@@ -119,7 +119,7 @@ class PayoutAccountServiceImplTest {
     }
 
     @Test
-    void getPayoutAccount_ShouldReturnPaymentAccount_WhenPayoutAccountFound() {
+    void getPayoutAccount_ShouldReturnPayoutAccount_WhenPayoutAccountFound() {
         PayoutAccount account = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
         PayoutAccountDto accountDto = PayoutAccountTestUtil.buildPayoutAccountDto();
 
@@ -154,7 +154,7 @@ class PayoutAccountServiceImplTest {
     }
 
     @Test
-    void createPaymentAccount_ShouldReturnPaymentAccount_WhenPaymentAccountIsValid() {
+    void createPayoutAccount_ShouldReturnPayoutAccount_WhenPayoutAccountIsValid() {
         PayoutAccount account = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
         PayoutAccountDto accountDto = PayoutAccountTestUtil.buildPayoutAccountDto();
         PayoutAccountAddingDto addingDto = PayoutAccountTestUtil.buildPayoutAccountAddingDto();
@@ -186,7 +186,7 @@ class PayoutAccountServiceImplTest {
     }
 
     @Test
-    void createPaymentAccount_ShouldThrowDataUniquenessException_WhenPaymentAccountIdNotUnique() {
+    void createPayoutAccount_ShouldThrowDataUniquenessException_WhenPayoutAccountIdNotUnique() {
         PayoutAccountAddingDto addingDto = PayoutAccountTestUtil.buildPayoutAccountAddingDto();
 
         doThrow(new DataUniquenessConflictException("error"))
@@ -202,7 +202,7 @@ class PayoutAccountServiceImplTest {
     }
 
     @Test
-    void createPaymentAccount_ShouldThrowDataUniquenessException_WhenStripeAccountIdNotUnique() {
+    void createPayoutAccount_ShouldThrowDataUniquenessException_WhenStripeAccountIdNotUnique() {
         PayoutAccountAddingDto addingDto = PayoutAccountTestUtil.buildPayoutAccountAddingDto();
         Account stripeAccount = StripeTestUtil.buildStripeAccount();
 
