@@ -1,4 +1,4 @@
-package com.cabaggregator.driverservice;
+package com.cabaggregator.driverservice.util;
 
 import com.cabaggregator.driverservice.core.dto.car.details.CarDetailsDto;
 import com.cabaggregator.driverservice.core.dto.car.details.CarDetailsSettingDto;
@@ -16,12 +16,11 @@ public final class CarDetailsTestUtil {
     public static final LocalDate UPDATED_RELEASE_DATE = LocalDate.of(2014, 1, 1);
     public static final Integer UPDATED_SEAT_CAPACITY = 4;
 
-    public static CarDetails buildCarDetails() {
+    public static CarDetails.CarDetailsBuilder getCarDetailsBuilder() {
         return CarDetails.builder()
                 .releaseDate(RELEASE_DATE)
                 .seatCapacity(SEAT_CAPACITY)
-                .car(CarTestUtil.buildCar())
-                .build();
+                .car(CarTestUtil.getCarBuilder().build());
     }
 
     public static CarDetailsDto buildCarDetailsDto() {

@@ -1,4 +1,4 @@
-package com.cabaggregator.driverservice;
+package com.cabaggregator.driverservice.util;
 
 import com.cabaggregator.driverservice.core.dto.driver.DriverAddingDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverDto;
@@ -25,7 +25,7 @@ public final class DriverTestUtil {
     public static final String UPDATED_LAST_NAME = "Johnson";
     public static final Double UPDATED_RATING = 4.0;
 
-    public static Driver buildDriver() {
+    public static Driver.DriverBuilder getDriverBuilder() {
         return Driver.builder()
                 .id(DRIVER_ID)
                 .phoneNumber(PHONE_NUMBER)
@@ -33,8 +33,7 @@ public final class DriverTestUtil {
                 .firstName(FIRST_NAME)
                 .lastName(LAST_NAME)
                 .rating(RATING)
-                .car(CarTestUtil.buildCar())
-                .build();
+                .car(CarTestUtil.getCarBuilder().build());
     }
 
     public static DriverDto buildDriverDto() {

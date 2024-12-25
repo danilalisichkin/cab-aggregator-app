@@ -1,4 +1,4 @@
-package com.cabaggregator.driverservice;
+package com.cabaggregator.driverservice.util;
 
 import com.cabaggregator.driverservice.core.dto.car.CarAddingDto;
 import com.cabaggregator.driverservice.core.dto.car.CarDto;
@@ -21,14 +21,13 @@ public final class CarTestUtil {
     public static final String UPDATED_MODEL = "Cayenne";
     public static final String UPDATED_COLOR = "Black";
 
-    public static Car buildCar() {
+    public static Car.CarBuilder getCarBuilder() {
         return Car.builder()
                 .id(CAR_ID)
                 .licensePlate(LICENSE_PLATE)
                 .make(MAKE)
                 .model(MODEL)
-                .color(COLOR)
-                .build();
+                .color(COLOR);
     }
 
     public static CarDto buildCarDto() {
