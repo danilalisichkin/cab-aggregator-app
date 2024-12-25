@@ -55,7 +55,8 @@ class BalanceOperationMapperTest {
     @Test
     void dtoToEntity_ShouldConvertEntityToDto_WhenDtoIsNotNull() {
         BalanceOperation balanceOperation = buildBalanceOperation();
-        BalanceOperationAddingDto balanceOperationAddingDto = BalanceOperationTestUtil.buildBalanceOperationAddingDto();
+        BalanceOperationAddingDto balanceOperationAddingDto =
+                BalanceOperationTestUtil.buildBalanceOperationAddingDto(balanceOperation.getAmount());
 
         BalanceOperation actual = mapper.dtoToEntity(balanceOperationAddingDto);
 
