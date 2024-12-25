@@ -25,6 +25,7 @@ public final class DriverTestUtil {
     public static final String UPDATED_LAST_NAME = "Johnson";
     public static final Double UPDATED_RATING = 4.0;
 
+    public static final UUID NOT_EXISTING_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
     public static final String NOT_EXISTING_PHONE_NUMBER = "375251111111";
     public static final String NOT_EXISTING_EMAIL = "noexist@noexist.com";
     public static final Long NOT_EXISTING_CAR_ID = 0L;

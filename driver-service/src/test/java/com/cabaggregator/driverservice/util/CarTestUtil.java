@@ -21,7 +21,10 @@ public final class CarTestUtil {
     public static final String UPDATED_MODEL = "Cayenne";
     public static final String UPDATED_COLOR = "Black";
 
+    public static final Long NOT_EXISTING_CAR_ID = 1L;
     public static final String NOT_EXISTING_LICENSE_PLATE = "0000 OO-1";
+
+    public static final String OTHER_LICENSE_PLATE = "7777 KK-7";
 
     public static Car.CarBuilder getCarBuilder() {
         return Car.builder()
