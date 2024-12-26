@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum PaymentStatus {
+public enum StripePaymentStatus {
     CANCELED("canceled"),
     CREATED("created"),
     PARTIALLY_FUNDED("partially_funded"),

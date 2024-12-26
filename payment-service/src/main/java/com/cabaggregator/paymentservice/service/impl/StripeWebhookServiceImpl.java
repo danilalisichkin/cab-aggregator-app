@@ -1,11 +1,13 @@
 package com.cabaggregator.paymentservice.service.impl;
 
+import com.cabaggregator.paymentservice.entity.enums.PaymentStatus;
 import com.cabaggregator.paymentservice.exception.InternalErrorException;
 import com.cabaggregator.paymentservice.service.PaymentService;
 import com.cabaggregator.paymentservice.service.StripeWebhookService;
 import com.cabaggregator.paymentservice.stripe.config.StripeConfig;
 import com.cabaggregator.paymentservice.stripe.enums.EventTypePrefix;
-import com.cabaggregator.paymentservice.stripe.enums.PaymentStatus;
+import com.cabaggregator.paymentservice.stripe.enums.StripePaymentStatus;
+import com.cabaggregator.paymentservice.util.PaymentStatusMapper;
 import com.stripe.model.Event;
 import com.stripe.model.PaymentIntent;
 import com.stripe.net.Webhook;
@@ -19,6 +21,8 @@ public class StripeWebhookServiceImpl implements StripeWebhookService {
     private final StripeConfig stripeConfig;
 
     private final PaymentService paymentService;
+
+    private final PaymentStatusMapper paymentStatusMapper;
 
     @Override
     public void processWebhookEvent(String payload, String sigHeader) {
@@ -48,18 +52,8 @@ public class StripeWebhookServiceImpl implements StripeWebhookService {
 
     private void processPaymentIntentEvent(String suffix, Event event) {
         String paymentIntentId = extractPaymentIntentId(event);
-
-        com.cabaggregator.paymentservice.entity.enums.PaymentStatus paymentStatus;
-
-        PaymentStatus suffixAsPaymentStatus = PaymentStatus.valueOf(suffix);
-
-        paymentStatus = switch (suffixAsPaymentStatus) {
-            case PaymentStatus.SUCCEEDED -> com.cabaggregator.paymentservice.entity.enums.PaymentStatus.SUCCEEDED;
-            case PaymentStatus.CANCELED -> com.cabaggregator.paymentservice.entity.enums.PaymentStatus.CANCELED;
-            case PaymentStatus.PROCESSING, PaymentStatus.CREATED ->
-                    com.cabaggregator.paymentservice.entity.enums.PaymentStatus.PROCESSING;
-            default -> com.cabaggregator.paymentservice.entity.enums.PaymentStatus.FAILED;
-        };
+        StripePaymentStatus suffixAsStripePaymentStatus = StripePaymentStatus.valueOf(suffix);
+        PaymentStatus paymentStatus = paymentStatusMapper.fromStripeToBusiness(suffixAsStripePaymentStatus);
 
         paymentService.updatePaymentStatus(paymentIntentId, paymentStatus);
     }

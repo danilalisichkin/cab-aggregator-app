@@ -49,12 +49,6 @@ public class PaymentServiceImpl implements PaymentService {
                 paymentContextService.getPaymentContextsByTypeAndContextId(
                         PaymentContextType.RIDE, rideId.toString());
 
-        if (paymentContexts.isEmpty()) {
-            throw new ResourceNotFoundException(
-                    ApplicationMessages.PAYMENTS_FOR_RIDE_WITH_ID_NOT_FOUND,
-                    rideId.toString());
-        }
-
         List<Payment> payments = paymentContexts.stream()
                 .map(PaymentContext::getPayment)
                 .toList();

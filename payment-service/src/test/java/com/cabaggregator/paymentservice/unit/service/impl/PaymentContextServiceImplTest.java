@@ -46,10 +46,7 @@ class PaymentContextServiceImplTest {
 
         List<PaymentContext> actual = paymentContextService.getPaymentContextsByTypeAndContextId(type, contextId);
 
-        assertThat(actual)
-                .isNotNull()
-                .isNotEmpty()
-                .isEqualTo(paymentContexts);
+        assertThat(actual).isEqualTo(paymentContexts);
     }
 
     @Test
