@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Repository
@@ -21,4 +22,8 @@ public interface RideRepository extends MongoRepository<Ride, ObjectId> {
     Page<Ride> findAllByDriverIdAndStatus(UUID driverId, RideStatus status, Pageable pageable);
 
     Page<Ride> findAllByStatus(RideStatus status, Pageable pageable);
+
+    boolean existsByDriverIdAndStatusNotIn(UUID driverId, Set<RideStatus> statuses);
+
+    boolean existsByPassengerIdAndStatusNotIn(UUID passengerId, Set<RideStatus> statuses);
 }

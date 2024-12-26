@@ -40,7 +40,7 @@ class RideRepositoryTest extends AbstractIntegrationTest {
         int pageNumber = 0;
         int pageSize = 10;
         int expectedContentSize = 1;
-        Ride ride = RideTestUtil.getRideBuilder().build();
+        Ride ride = RideTestUtil.buildDefaultRide();
 
         Page<Ride> actual = rideRepository.findAllByPassengerId(
                 ride.getPassengerId(), PageRequest.of(pageNumber, pageSize));
@@ -69,7 +69,7 @@ class RideRepositoryTest extends AbstractIntegrationTest {
         int pageNumber = 0;
         int pageSize = 10;
         int expectedContentSize = 1;
-        Ride ride = RideTestUtil.getRideBuilder().build();
+        Ride ride = RideTestUtil.buildDefaultRide();
 
         Page<Ride> actual = rideRepository.findAllByDriverId(
                 ride.getDriverId(), PageRequest.of(pageNumber, pageSize));
@@ -98,7 +98,7 @@ class RideRepositoryTest extends AbstractIntegrationTest {
         int pageNumber = 0;
         int pageSize = 10;
         int expectedContentSize = 1;
-        Ride ride = RideTestUtil.getRideBuilder().build();
+        Ride ride = RideTestUtil.buildDefaultRide();
 
         Page<Ride> actual = rideRepository.findAllByPassengerIdAndStatus(
                 ride.getPassengerId(), ride.getStatus(), PageRequest.of(pageNumber, pageSize));
@@ -139,7 +139,7 @@ class RideRepositoryTest extends AbstractIntegrationTest {
         int pageNumber = 0;
         int pageSize = 10;
         int expectedContentSize = 1;
-        Ride ride = RideTestUtil.getRideBuilder().build();
+        Ride ride = RideTestUtil.buildDefaultRide();
 
         Page<Ride> actual = rideRepository.findAllByDriverIdAndStatus(
                 ride.getDriverId(), ride.getStatus(), PageRequest.of(pageNumber, pageSize));
@@ -179,7 +179,7 @@ class RideRepositoryTest extends AbstractIntegrationTest {
         int pageNumber = 0;
         int pageSize = 10;
         int expectedContentSize = 1;
-        Ride ride = RideTestUtil.getRideBuilder().build();
+        Ride ride = RideTestUtil.buildDefaultRide();
 
         Page<Ride> actual = rideRepository.findAllByStatus(
                 ride.getStatus(), PageRequest.of(pageNumber, pageSize));

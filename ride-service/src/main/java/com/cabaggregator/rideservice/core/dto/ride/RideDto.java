@@ -7,7 +7,6 @@ import com.cabaggregator.rideservice.core.enums.RideFare;
 import com.cabaggregator.rideservice.core.enums.RideStatus;
 import org.bson.types.ObjectId;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -32,6 +31,8 @@ public record RideDto(
 
         Address dropOffAddress,
 
+        Long distance,
+
         Long price,
 
         LocalDateTime orderTime,
@@ -40,6 +41,6 @@ public record RideDto(
 
         LocalDateTime endTime,
 
-        Duration estimatedDuration
+        Long estimatedDuration
 ) {
 }

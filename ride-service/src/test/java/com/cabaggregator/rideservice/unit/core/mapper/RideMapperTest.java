@@ -28,7 +28,7 @@ class RideMapperTest {
 
     @Test
     void entityToDto_ShouldConvertEntityToDto_WhenEntityIsNotNull() {
-        Ride ride = RideTestUtil.getRideBuilder().build();
+        Ride ride = RideTestUtil.buildDefaultRide();
         RideDto rideDto = RideTestUtil.buildRideDto();
 
         RideDto actual = mapper.entityToDto(ride);
@@ -45,7 +45,6 @@ class RideMapperTest {
 
     @Test
     void dtoToEntity_ShouldConvertDtoToEntity_WhenDtoIsNotNull() {
-        Ride ride = RideTestUtil.getRideBuilder().build();
         RideAddingDto rideAddingDto = RideTestUtil.buildRideAddingDto();
 
         Ride actual = mapper.dtoToEntity(rideAddingDto);
@@ -54,8 +53,9 @@ class RideMapperTest {
         assertThat(actual.getId()).isNull();
         assertThat(actual.getFare()).isEqualTo(rideAddingDto.fare());
         assertThat(actual.getPaymentMethod()).isEqualTo(rideAddingDto.paymentMethod());
-        assertThat(actual.getPickUpAddress()).isEqualTo(ride.getPickUpAddress());
-        assertThat(actual.getDropOffAddress()).isEqualTo(ride.getDropOffAddress());
+        assertThat(actual.getPickUpAddress()).isEqualTo(rideAddingDto.pickUpAddress());
+        assertThat(actual.getDropOffAddress()).isEqualTo(rideAddingDto.dropOffAddress());
+        assertThat(actual.getPromoCode()).isEqualTo(rideAddingDto.promoCode());
     }
 
     @Test
@@ -65,7 +65,7 @@ class RideMapperTest {
 
     @Test
     void updateEntityFromOrderDto_ShouldUpdateEntity_WhenDtoIsNotNull() {
-        Ride ride = RideTestUtil.getRideBuilder().build();
+        Ride ride = RideTestUtil.buildDefaultRide();
         RideUpdatingDto rideUpdatingDto = RideTestUtil.buildRideUpdatingDto();
 
         mapper.updateEntityFromOrderDto(rideUpdatingDto, ride);
@@ -86,7 +86,7 @@ class RideMapperTest {
 
     @Test
     void entityListToDtoList_ShouldConvertEntityListToDtoList_WhenListIsNotNull() {
-        Ride ride = RideTestUtil.getRideBuilder().build();
+        Ride ride = RideTestUtil.buildDefaultRide();
         List<Ride> rides = Arrays.asList(ride, ride);
         RideDto rideDto = RideTestUtil.buildRideDto();
         List<RideDto> expectedList = Arrays.asList(rideDto, rideDto);
@@ -116,7 +116,7 @@ class RideMapperTest {
 
     @Test
     void entityPageToDtoPage_ShouldConvertEntityPageToDtoPage_WhenPageIsNotNull() {
-        Ride ride = RideTestUtil.getRideBuilder().build();
+        Ride ride = RideTestUtil.buildDefaultRide();
         List<Ride> entityList = Arrays.asList(ride, ride);
         Page<Ride> entityPage = PaginationTestUtil.buildPageFromList(entityList);
         RideDto rideDto = RideTestUtil.buildRideDto();
@@ -130,4 +130,3 @@ class RideMapperTest {
                 .isEqualTo(expectedDtoPage);
     }
 }
-

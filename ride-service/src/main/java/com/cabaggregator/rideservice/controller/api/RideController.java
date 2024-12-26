@@ -8,6 +8,7 @@ import com.cabaggregator.rideservice.core.dto.ride.RideUpdatingDto;
 import com.cabaggregator.rideservice.core.enums.PaymentStatus;
 import com.cabaggregator.rideservice.core.enums.RideStatus;
 import com.cabaggregator.rideservice.core.enums.sort.RideSortField;
+import com.cabaggregator.rideservice.service.RideService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
@@ -29,11 +30,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/rides")
 public class RideController {
+
+    private final RideService rideService;
 
     @GetMapping
     public ResponseEntity<PageDto<RideDto>> getPageOfRides(
@@ -46,7 +51,9 @@ public class RideController {
             @RequestParam(defaultValue = "ASC") Sort.Direction sortOrder,
             @RequestParam(required = false) RideStatus status) {
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        PageDto<RideDto> rides = rideService.getPageOfRides(offset, limit, sortBy, sortOrder, status);
+
+        return ResponseEntity.status(HttpStatus.OK).body(rides);
     }
 
     @GetMapping("/driver/{driverId}")
@@ -59,9 +66,12 @@ public class RideController {
             @RequestParam(defaultValue = "id") RideSortField sortBy,
             @RequestParam(defaultValue = "ASC") Sort.Direction sortOrder,
             @RequestParam(required = false) RideStatus status,
-            @PathVariable ObjectId driverId) {
+            @PathVariable UUID driverId) {
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        PageDto<RideDto> driverRides =
+                rideService.getPageOfDriverRides(offset, limit, sortBy, sortOrder, status, driverId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(driverRides);
     }
 
     @GetMapping("/passenger/{passengerId}")
@@ -74,9 +84,12 @@ public class RideController {
             @RequestParam(defaultValue = "id") RideSortField sortBy,
             @RequestParam(defaultValue = "ASC") Sort.Direction sortOrder,
             @RequestParam(required = false) RideStatus status,
-            @PathVariable ObjectId passengerId) {
+            @PathVariable UUID passengerId) {
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        PageDto<RideDto> driverRides =
+                rideService.getPageOfPassengerRides(offset, limit, sortBy, sortOrder, status, passengerId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(driverRides);
     }
 
     @GetMapping("/available")
@@ -89,19 +102,24 @@ public class RideController {
             @RequestParam(defaultValue = "id") RideSortField sortBy,
             @RequestParam(defaultValue = "ASC") Sort.Direction sortOrder) {
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        PageDto<RideDto> availableRides =
+                rideService.getPageOfAvailableRides(offset, limit, sortBy, sortOrder);
+
+        return ResponseEntity.status(HttpStatus.OK).body(availableRides);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<RideDto> getRide(@PathVariable ObjectId id) {
+        RideDto ride = rideService.getRide(id);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK).body(ride);
     }
 
     @PostMapping
     public ResponseEntity<RideDto> createRide(@RequestBody @Valid RideAddingDto addingDto) {
+        RideDto ride = rideService.createRide(addingDto);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(ride);
     }
 
     @PutMapping("/{id}")
@@ -109,7 +127,9 @@ public class RideController {
             @PathVariable ObjectId id,
             @RequestBody @Valid RideUpdatingDto updatingDto) {
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        RideDto ride = rideService.updateRide(id, updatingDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(ride);
     }
 
     @PatchMapping("/{id}/status")
@@ -117,7 +137,9 @@ public class RideController {
             @PathVariable ObjectId id,
             @RequestBody @NotNull RideStatus status) {
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        RideDto ride = rideService.changeRideStatus(id, status);
+
+        return ResponseEntity.status(HttpStatus.OK).body(ride);
     }
 
     @PatchMapping("/{id}/payment-status")
@@ -125,6 +147,8 @@ public class RideController {
             @PathVariable ObjectId id,
             @RequestBody @NotNull PaymentStatus paymentStatus) {
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        RideDto ride = rideService.changeRidePaymentStatus(id, paymentStatus);
+
+        return ResponseEntity.status(HttpStatus.OK).body(ride);
     }
 }

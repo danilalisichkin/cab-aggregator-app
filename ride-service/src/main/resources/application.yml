@@ -6,13 +6,19 @@ spring:
       encoding: "UTF-8"
       error-causes: "classpath:error_causes"
       validation-errors: "classpath:validation_errors"
+      messages: "classpath:messages"
   data:
     mongodb:
       uri: mongodb://${DB_HOSTPORT:localhost:27017}/${DB_NAME:ride_database}
       username: ${DB_USERNAME:mongo}
       password: ${DB_PASSWORD:root}
+      replica-set-name: ${DB_REPLICA_SET_NAME:rs0}
+      database: ${DB_NAME:ride_database}
 mongock:
   migration-scan-package: com.cabaggregator.rideservice.migrations
   enabled: true
+app:
+  open-route:
+    api-key: ${OPENROUTE_API_KEY:KEY}
 server:
   port: ${SERVER_PORT:8084}

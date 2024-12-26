@@ -17,4 +17,11 @@ public record Address(
         @Size(min = 2, max = 2, message = ValidationErrors.INVALID_COLLECTION_SIZE)
         List<Double> coordinates
 ) {
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Address)) return false;
+        Address other = (Address) obj;
+        return coordinates.equals(other.coordinates);
+    }
 }
