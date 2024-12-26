@@ -44,7 +44,50 @@ public class RideController {
             @Max(value = 40, message = ValidationErrors.INVALID_NUMBER_MAX_VALUE) Integer limit,
             @RequestParam(defaultValue = "id") RideSortField sortBy,
             @RequestParam(defaultValue = "ASC") Sort.Direction sortOrder,
-            @RequestParam RideStatus status) {
+            @RequestParam(required = false) RideStatus status) {
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/driver/{driverId}")
+    public ResponseEntity<PageDto<RideDto>> getPageOfDriverRides(
+            @RequestParam(defaultValue = "0")
+            @PositiveOrZero(message = ValidationErrors.NUMBER_IS_NOT_POSITIVE_OR_ZERO) Integer offset,
+            @RequestParam(defaultValue = "10")
+            @Positive(message = ValidationErrors.NUMBER_IS_NOT_POSITIVE)
+            @Max(value = 40, message = ValidationErrors.INVALID_NUMBER_MAX_VALUE) Integer limit,
+            @RequestParam(defaultValue = "id") RideSortField sortBy,
+            @RequestParam(defaultValue = "ASC") Sort.Direction sortOrder,
+            @RequestParam(required = false) RideStatus status,
+            @PathVariable ObjectId driverId) {
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/passenger/{passengerId}")
+    public ResponseEntity<PageDto<RideDto>> getPageOfPassengerRides(
+            @RequestParam(defaultValue = "0")
+            @PositiveOrZero(message = ValidationErrors.NUMBER_IS_NOT_POSITIVE_OR_ZERO) Integer offset,
+            @RequestParam(defaultValue = "10")
+            @Positive(message = ValidationErrors.NUMBER_IS_NOT_POSITIVE)
+            @Max(value = 40, message = ValidationErrors.INVALID_NUMBER_MAX_VALUE) Integer limit,
+            @RequestParam(defaultValue = "id") RideSortField sortBy,
+            @RequestParam(defaultValue = "ASC") Sort.Direction sortOrder,
+            @RequestParam(required = false) RideStatus status,
+            @PathVariable ObjectId passengerId) {
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/available")
+    public ResponseEntity<PageDto<RideDto>> getAvailableRides(
+            @RequestParam(defaultValue = "0")
+            @PositiveOrZero(message = ValidationErrors.NUMBER_IS_NOT_POSITIVE_OR_ZERO) Integer offset,
+            @RequestParam(defaultValue = "10")
+            @Positive(message = ValidationErrors.NUMBER_IS_NOT_POSITIVE)
+            @Max(value = 40, message = ValidationErrors.INVALID_NUMBER_MAX_VALUE) Integer limit,
+            @RequestParam(defaultValue = "id") RideSortField sortBy,
+            @RequestParam(defaultValue = "ASC") Sort.Direction sortOrder) {
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
