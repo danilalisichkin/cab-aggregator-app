@@ -20,7 +20,7 @@ public class CarDetailsServiceImpl implements CarDetailsService {
 
     @Override
     @Transactional
-    public CarDetailsDto saveCarDetails(Long id, CarDetailsSettingDto carDetailsDto) {
+    public CarDetailsDto updateCarDetails(Long id, CarDetailsSettingDto carDetailsDto) {
         CarDetails carDetails = getCarDetailsEntityById(id);
         carDetailsMapper.updateEntityFromDto(carDetailsDto, carDetails);
 

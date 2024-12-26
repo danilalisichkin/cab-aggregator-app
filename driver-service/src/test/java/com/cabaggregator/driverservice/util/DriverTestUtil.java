@@ -1,4 +1,4 @@
-package com.cabaggregator.driverservice;
+package com.cabaggregator.driverservice.util;
 
 import com.cabaggregator.driverservice.core.dto.driver.DriverAddingDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverDto;
@@ -25,7 +25,12 @@ public final class DriverTestUtil {
     public static final String UPDATED_LAST_NAME = "Johnson";
     public static final Double UPDATED_RATING = 4.0;
 
-    public static Driver buildDriver() {
+    public static final UUID NOT_EXISTING_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+    public static final String NOT_EXISTING_PHONE_NUMBER = "375251111111";
+    public static final String NOT_EXISTING_EMAIL = "noexist@noexist.com";
+    public static final Long NOT_EXISTING_CAR_ID = 0L;
+
+    public static Driver buildDefaultDriver() {
         return Driver.builder()
                 .id(DRIVER_ID)
                 .phoneNumber(PHONE_NUMBER)
@@ -33,7 +38,7 @@ public final class DriverTestUtil {
                 .firstName(FIRST_NAME)
                 .lastName(LAST_NAME)
                 .rating(RATING)
-                .car(CarTestUtil.buildCar())
+                .car(CarTestUtil.buildDefaultCar())
                 .build();
     }
 

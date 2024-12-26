@@ -1,9 +1,10 @@
-package com.cabaggregator.driverservice.core.mapper;
+package com.cabaggregator.driverservice.unit.core.mapper;
 
-import com.cabaggregator.driverservice.CarDetailsTestUtil;
 import com.cabaggregator.driverservice.core.dto.car.details.CarDetailsDto;
 import com.cabaggregator.driverservice.core.dto.car.details.CarDetailsSettingDto;
+import com.cabaggregator.driverservice.core.mapper.CarDetailsMapper;
 import com.cabaggregator.driverservice.entity.CarDetails;
+import com.cabaggregator.driverservice.util.CarDetailsTestUtil;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,12 +21,12 @@ class CarDetailsMapperTest {
 
     @Test
     void entityToDto_ShouldConvertEntityToDto_WhenEntityIsNotNull() {
-        CarDetails carDetails = CarDetailsTestUtil.buildCarDetails();
+        CarDetails carDetails = CarDetailsTestUtil.buildDefaultCarDetails();
         CarDetailsDto carDetailsDto = CarDetailsTestUtil.buildCarDetailsDto();
 
-        CarDetailsDto convertedDto = mapper.entityToDto(carDetails);
+        CarDetailsDto actual = mapper.entityToDto(carDetails);
 
-        assertThat(convertedDto)
+        assertThat(actual)
                 .isNotNull()
                 .isEqualTo(carDetailsDto);
     }
@@ -37,21 +38,22 @@ class CarDetailsMapperTest {
 
     @Test
     void updateEntityFromDto_ShouldUpdateEntity_WhenDtoIsNotNull() {
-        CarDetails carDetails = CarDetailsTestUtil.buildCarDetails();
+        CarDetails actual = CarDetailsTestUtil.buildDefaultCarDetails();
         CarDetailsSettingDto carDetailsSettingDto = CarDetailsTestUtil.buildCarDetailsSettingDto();
 
-        mapper.updateEntityFromDto(carDetailsSettingDto, carDetails);
+        mapper.updateEntityFromDto(carDetailsSettingDto, actual);
 
-        assertThat(carDetails).isNotNull();
-        assertThat(carDetails.getReleaseDate()).isEqualTo(CarDetailsTestUtil.UPDATED_RELEASE_DATE);
-        assertThat(carDetails.getSeatCapacity()).isEqualTo(CarDetailsTestUtil.UPDATED_SEAT_CAPACITY);
+        assertThat(actual).isNotNull();
+        assertThat(actual.getReleaseDate()).isEqualTo(CarDetailsTestUtil.UPDATED_RELEASE_DATE);
+        assertThat(actual.getSeatCapacity()).isEqualTo(CarDetailsTestUtil.UPDATED_SEAT_CAPACITY);
     }
 
     @Test
     void updateEntityFromDto_ShouldThrowNullPointerException_WhenDtoIsNull() {
         CarDetailsSettingDto carDetailsSettingDto = CarDetailsTestUtil.buildCarDetailsSettingDto();
 
-        assertThatThrownBy(() -> mapper.updateEntityFromDto(carDetailsSettingDto, null))
+        assertThatThrownBy(
+                () -> mapper.updateEntityFromDto(carDetailsSettingDto, null))
                 .isInstanceOf(NullPointerException.class);
     }
 }

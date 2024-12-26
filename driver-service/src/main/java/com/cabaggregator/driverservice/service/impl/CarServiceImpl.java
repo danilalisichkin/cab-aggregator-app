@@ -15,7 +15,6 @@ import com.cabaggregator.driverservice.core.mapper.PageMapper;
 import com.cabaggregator.driverservice.entity.Car;
 import com.cabaggregator.driverservice.entity.CarDetails;
 import com.cabaggregator.driverservice.exception.ResourceNotFoundException;
-import com.cabaggregator.driverservice.repository.CarDetailsRepository;
 import com.cabaggregator.driverservice.repository.CarRepository;
 import com.cabaggregator.driverservice.service.CarDetailsService;
 import com.cabaggregator.driverservice.service.CarService;
@@ -32,7 +31,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CarServiceImpl implements CarService {
     private final CarRepository carRepository;
-    private final CarDetailsRepository carDetailsRepository;
 
     private final CarDetailsService carDetailsService;
 
@@ -102,9 +100,11 @@ public class CarServiceImpl implements CarService {
     public CarFullDto updateCarDetails(Long carId, CarDetailsSettingDto carDetailsDto) {
         carDetailsValidator.validateReleaseDate(carDetailsDto.releaseDate());
 
-        CarDto carDto = carMapper.entityToDto(getCarEntityById(carId));
-        CarDetailsDto detailsDto = carDetailsService.saveCarDetails(carId, carDetailsDto);
+        Car carToUpdate = getCarEntityById(carId);
 
+        CarDetailsDto detailsDto = carDetailsService.updateCarDetails(carId, carDetailsDto);
+        CarDto carDto = carMapper.entityToDto(carToUpdate);
+        
         return new CarFullDto(carDto, detailsDto);
     }
 

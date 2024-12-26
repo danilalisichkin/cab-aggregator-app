@@ -1,4 +1,4 @@
-package com.cabaggregator.driverservice;
+package com.cabaggregator.driverservice.util;
 
 import com.cabaggregator.driverservice.core.dto.car.CarAddingDto;
 import com.cabaggregator.driverservice.core.dto.car.CarDto;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CarTestUtil {
-    public static final Long CAR_ID = 2L;
+    public static final Long CAR_ID = 1L;
     public static final String LICENSE_PLATE = "1234 AA-7";
     public static final String MAKE = "Ford";
     public static final String MODEL = "Focus";
@@ -21,7 +21,12 @@ public final class CarTestUtil {
     public static final String UPDATED_MODEL = "Cayenne";
     public static final String UPDATED_COLOR = "Black";
 
-    public static Car buildCar() {
+    public static final Long NOT_EXISTING_CAR_ID = 1L;
+    public static final String NOT_EXISTING_LICENSE_PLATE = "0000 OO-1";
+
+    public static final String OTHER_LICENSE_PLATE = "7777 KK-7";
+
+    public static Car buildDefaultCar() {
         return Car.builder()
                 .id(CAR_ID)
                 .licensePlate(LICENSE_PLATE)
