@@ -16,11 +16,12 @@ public final class CarDetailsTestUtil {
     public static final LocalDate UPDATED_RELEASE_DATE = LocalDate.of(2014, 1, 1);
     public static final Integer UPDATED_SEAT_CAPACITY = 4;
 
-    public static CarDetails.CarDetailsBuilder getCarDetailsBuilder() {
+    public static CarDetails buildDefaultCarDetails() {
         return CarDetails.builder()
                 .releaseDate(RELEASE_DATE)
                 .seatCapacity(SEAT_CAPACITY)
-                .car(CarTestUtil.getCarBuilder().build());
+                .car(CarTestUtil.buildDefaultCar())
+                .build();
     }
 
     public static CarDetailsDto buildCarDetailsDto() {

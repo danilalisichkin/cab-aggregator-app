@@ -61,7 +61,7 @@ class CarDetailsServiceImplTest {
     void updateCarDetails_ShouldUpdateCarDetails_WhenTheyFound() {
         Long id = CarTestUtil.CAR_ID;
         CarDetailsSettingDto carDetailsSettingDto = CarDetailsTestUtil.buildCarDetailsSettingDto();
-        CarDetails carDetails = CarDetailsTestUtil.getCarDetailsBuilder().build();
+        CarDetails carDetails = CarDetailsTestUtil.buildDefaultCarDetails();
         CarDetailsDto carDetailsDto = CarDetailsTestUtil.buildCarDetailsDto();
 
         when(carDetailsRepository.findById(id))

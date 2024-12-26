@@ -28,7 +28,7 @@ class DriverMapperTest {
 
     @Test
     void entityToDto_ShouldConvertEntityToDto_WhenEntityIsNotNull() {
-        Driver driver = DriverTestUtil.getDriverBuilder().build();
+        Driver driver = DriverTestUtil.buildDefaultDriver();
         DriverDto driverDto = DriverTestUtil.buildDriverDto();
 
         DriverDto actual = mapper.entityToDto(driver);
@@ -45,7 +45,7 @@ class DriverMapperTest {
 
     @Test
     void updateEntityFromDto_ShouldUpdateEntity_WhenDtoIsNotNull() {
-        Driver actual = DriverTestUtil.getDriverBuilder().build();
+        Driver actual = DriverTestUtil.buildDefaultDriver();
         DriverUpdatingDto driverUpdatingDto = DriverTestUtil.buildDriverUpdatingDto();
 
         mapper.updateEntityFromDto(driverUpdatingDto, actual);
@@ -70,7 +70,7 @@ class DriverMapperTest {
 
     @Test
     void dtoToEntity_ShouldConvertDtoToEntity_WhenDtoIsNotNull() {
-        Driver driver = DriverTestUtil.getDriverBuilder().build();
+        Driver driver = DriverTestUtil.buildDefaultDriver();
         DriverAddingDto driverAddingDto = DriverTestUtil.buildDriverAddingDto();
 
         Driver actual = mapper.dtoToEntity(driverAddingDto);
@@ -92,7 +92,7 @@ class DriverMapperTest {
 
     @Test
     void entityListToDtoList_ShouldConvertEntityListToDtoList_WhenEntityListIsNotEmpty() {
-        Driver driver = DriverTestUtil.getDriverBuilder().build();
+        Driver driver = DriverTestUtil.buildDefaultDriver();
         List<Driver> entityList = Arrays.asList(driver, driver);
         DriverDto driverDto = DriverTestUtil.buildDriverDto();
         List<DriverDto> dtoList = Arrays.asList(driverDto, driverDto);
@@ -122,7 +122,7 @@ class DriverMapperTest {
 
     @Test
     void entityPageToDtoPage_ShouldConvertEntityPageToDtoPage_WhenPageIsNotNull() {
-        Driver driver = DriverTestUtil.getDriverBuilder().build();
+        Driver driver = DriverTestUtil.buildDefaultDriver();
         List<Driver> entityList = Arrays.asList(driver, driver);
         Page<Driver> entityPage = PaginationTestUtil.buildPageFromList(entityList);
         DriverDto driverDto = DriverTestUtil.buildDriverDto();

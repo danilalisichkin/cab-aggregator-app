@@ -84,7 +84,7 @@ class CarServiceImplTest {
         CarSortField sortBy = CarSortField.ID;
         Sort.Direction sortOrder = Sort.Direction.ASC;
 
-        Car car = CarTestUtil.getCarBuilder().build();
+        Car car = CarTestUtil.buildDefaultCar();
         CarDto carDto = CarTestUtil.buildCarDto();
 
         PageRequest pageRequest = PaginationTestUtil.buildPageRequest(offset, limit, sortBy.getValue(), sortOrder);
@@ -117,7 +117,7 @@ class CarServiceImplTest {
 
     @Test
     void getCarById_ShouldReturnCar_WhenCarFound() {
-        Car car = CarTestUtil.getCarBuilder().build();
+        Car car = CarTestUtil.buildDefaultCar();
         CarDto carDto = CarTestUtil.buildCarDto();
 
         when(carRepository.findById(car.getId()))
@@ -137,7 +137,7 @@ class CarServiceImplTest {
 
     @Test
     void getCarById_ShouldThrowResourceNotFoundException_WhenCarNotFound() {
-        Car car = CarTestUtil.getCarBuilder().build();
+        Car car = CarTestUtil.buildDefaultCar();
 
         when(carRepository.findById(car.getId()))
                 .thenReturn(Optional.empty());
@@ -152,7 +152,7 @@ class CarServiceImplTest {
 
     @Test
     void getFullCarById_ShouldReturnFullCar_WhenCarFound() {
-        Car car = CarTestUtil.getCarBuilder().build();
+        Car car = CarTestUtil.buildDefaultCar();
         CarFullDto carFullDto = CarTestUtil.buildCarFullDto();
 
         when(carRepository.findById(car.getId()))
@@ -172,7 +172,7 @@ class CarServiceImplTest {
 
     @Test
     void getFullCarById_ShouldThrowResourceNotFoundException_WhenCarNotFound() {
-        Car car = CarTestUtil.getCarBuilder().build();
+        Car car = CarTestUtil.buildDefaultCar();
 
         when(carRepository.findById(car.getId()))
                 .thenReturn(Optional.empty());
@@ -221,7 +221,7 @@ class CarServiceImplTest {
     void saveCar_ShouldSaveCar_WhenCarDetailsAreValid() {
         CarAddingDto carAddingDto = CarTestUtil.buildCarAddingDto();
         CarDto carDto = CarTestUtil.buildCarDto();
-        Car car = CarTestUtil.getCarBuilder().build();
+        Car car = CarTestUtil.buildDefaultCar();
 
         doNothing().when(carDetailsValidator).validateReleaseDate(carAddingDto.details().releaseDate());
         doNothing().when(carValidator).validateLicencePlateUniqueness(carAddingDto.licensePlate());
@@ -265,7 +265,8 @@ class CarServiceImplTest {
     @Test
     void updateCar_ShouldThrowDataUniquenessException_WhenNewCarLicensePlateNotUnique() {
         CarUpdatingDto carUpdatingDto = CarTestUtil.buildCarUpdatingDto();
-        Car car = CarTestUtil.getCarBuilder()
+        Car car = CarTestUtil.buildDefaultCar()
+                .toBuilder()
                 .licensePlate(CarTestUtil.OTHER_LICENSE_PLATE)
                 .build();
         Long carId = car.getId();
@@ -288,7 +289,8 @@ class CarServiceImplTest {
     @Test
     void updateCar_ShouldUpdateCar_WhenCarFound() {
         CarUpdatingDto carUpdatingDto = CarTestUtil.buildCarUpdatingDto();
-        Car car = CarTestUtil.getCarBuilder()
+        Car car = CarTestUtil.buildDefaultCar()
+                .toBuilder()
                 .licensePlate(CarTestUtil.OTHER_LICENSE_PLATE)
                 .build();
         Long carId = car.getId();
@@ -354,7 +356,7 @@ class CarServiceImplTest {
     void updateCarDetails_ShouldUpdateCarDetails_WhenCarFoundAndReleaseDateIsValid() {
         Long carId = CarTestUtil.CAR_ID;
         CarDetailsSettingDto carDetailsSettingDto = CarDetailsTestUtil.buildCarDetailsSettingDto();
-        Car car = CarTestUtil.getCarBuilder().build();
+        Car car = CarTestUtil.buildDefaultCar();
         CarDetailsDto carDetailsDto = CarDetailsTestUtil.buildCarDetailsDto();
         CarDto carDto = CarTestUtil.buildCarDto();
         CarFullDto carFullDto = new CarFullDto(carDto, carDetailsDto);

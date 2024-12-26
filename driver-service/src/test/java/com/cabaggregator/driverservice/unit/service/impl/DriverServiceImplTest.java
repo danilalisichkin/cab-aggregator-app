@@ -76,7 +76,7 @@ class DriverServiceImplTest {
         DriverSortField sortBy = DriverSortField.ID;
         Sort.Direction sortOrder = Sort.Direction.ASC;
 
-        Driver driver = DriverTestUtil.getDriverBuilder().build();
+        Driver driver = DriverTestUtil.buildDefaultDriver();
         DriverDto driverDto = DriverTestUtil.buildDriverDto();
 
         PageRequest pageRequest = PaginationTestUtil.buildPageRequest(offset, limit, sortBy.getValue(), sortOrder);
@@ -109,7 +109,7 @@ class DriverServiceImplTest {
 
     @Test
     void getDriverById_ShouldReturnDriver_WhenDriverFound() {
-        Driver driver = DriverTestUtil.getDriverBuilder().build();
+        Driver driver = DriverTestUtil.buildDefaultDriver();
         DriverDto driverDto = DriverTestUtil.buildDriverDto();
 
         when(driverRepository.findById(driver.getId()))
@@ -129,7 +129,7 @@ class DriverServiceImplTest {
 
     @Test
     void getDriverById_ShouldThrowResourceNotFoundException_WhenDriverNotFound() {
-        Driver driver = DriverTestUtil.getDriverBuilder().build();
+        Driver driver = DriverTestUtil.buildDefaultDriver();
 
         when(driverRepository.findById(driver.getId()))
                 .thenReturn(Optional.empty());
@@ -198,7 +198,7 @@ class DriverServiceImplTest {
     @Test
     void saveDriver_ShouldReturnDriver_WhenDriverIsValid() {
         DriverAddingDto driverAddingDto = DriverTestUtil.buildDriverAddingDto();
-        Driver driver = DriverTestUtil.getDriverBuilder().build();
+        Driver driver = DriverTestUtil.buildDefaultDriver();
         DriverDto driverDto = DriverTestUtil.buildDriverDto();
 
         doNothing().when(driverValidator).validateIdUniqueness(driverAddingDto.id());
@@ -227,7 +227,7 @@ class DriverServiceImplTest {
 
     @Test
     void updateDriver_ShouldReturnDriver_WhenDriverFound() {
-        Driver driver = DriverTestUtil.getDriverBuilder().build();
+        Driver driver = DriverTestUtil.buildDefaultDriver();
         DriverDto driverDto = DriverTestUtil.buildDriverDto();
         DriverUpdatingDto driverUpdatingDto = DriverTestUtil.buildDriverUpdatingDto();
 
@@ -290,7 +290,7 @@ class DriverServiceImplTest {
 
     @Test
     void updateDriverRating_ShouldUpdateDriverRating_WhenDriverFound() {
-        Driver driver = DriverTestUtil.getDriverBuilder().build();
+        Driver driver = DriverTestUtil.buildDefaultDriver();
         UUID driverId = driver.getId();
         Double newRating = DriverTestUtil.UPDATED_RATING;
         DriverDto driverDto = DriverTestUtil.buildDriverDto();
@@ -334,7 +334,7 @@ class DriverServiceImplTest {
     void updateDriverCarId_ShouldThrowDataUniquenessException_WhenCarIdNotUnique() {
         UUID driverId = DriverTestUtil.DRIVER_ID;
         Long carId = CarTestUtil.CAR_ID;
-        Driver driver = DriverTestUtil.getDriverBuilder().build();
+        Driver driver = DriverTestUtil.buildDefaultDriver();
 
         when(driverRepository.findById(driverId))
                 .thenReturn(Optional.of(driver));
@@ -355,7 +355,7 @@ class DriverServiceImplTest {
     void updateDriverCarId_ShouldThrowResourceNotFoundException_WhenCarNotFound() {
         UUID driverId = DriverTestUtil.DRIVER_ID;
         Long carId = CarTestUtil.NOT_EXISTING_CAR_ID;
-        Driver driver = DriverTestUtil.getDriverBuilder().build();
+        Driver driver = DriverTestUtil.buildDefaultDriver();
 
         when(driverRepository.findById(driverId))
                 .thenReturn(Optional.of(driver));
@@ -378,8 +378,8 @@ class DriverServiceImplTest {
     void updateDriverCarId_ShouldUpdateCarId_WhenDriverAndCarFound() {
         UUID driverId = DriverTestUtil.DRIVER_ID;
         Long carId = CarTestUtil.CAR_ID;
-        Driver driver = DriverTestUtil.getDriverBuilder().build();
-        Car car = CarTestUtil.getCarBuilder().build();
+        Driver driver = DriverTestUtil.buildDefaultDriver();
+        Car car = CarTestUtil.buildDefaultCar();
         DriverDto driverDto = DriverTestUtil.buildDriverDto();
 
         when(driverRepository.findById(driverId))

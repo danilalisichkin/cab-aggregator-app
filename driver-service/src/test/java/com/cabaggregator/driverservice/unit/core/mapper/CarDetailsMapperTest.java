@@ -21,7 +21,7 @@ class CarDetailsMapperTest {
 
     @Test
     void entityToDto_ShouldConvertEntityToDto_WhenEntityIsNotNull() {
-        CarDetails carDetails = CarDetailsTestUtil.getCarDetailsBuilder().build();
+        CarDetails carDetails = CarDetailsTestUtil.buildDefaultCarDetails();
         CarDetailsDto carDetailsDto = CarDetailsTestUtil.buildCarDetailsDto();
 
         CarDetailsDto actual = mapper.entityToDto(carDetails);
@@ -38,7 +38,7 @@ class CarDetailsMapperTest {
 
     @Test
     void updateEntityFromDto_ShouldUpdateEntity_WhenDtoIsNotNull() {
-        CarDetails actual = CarDetailsTestUtil.getCarDetailsBuilder().build();
+        CarDetails actual = CarDetailsTestUtil.buildDefaultCarDetails();
         CarDetailsSettingDto carDetailsSettingDto = CarDetailsTestUtil.buildCarDetailsSettingDto();
 
         mapper.updateEntityFromDto(carDetailsSettingDto, actual);

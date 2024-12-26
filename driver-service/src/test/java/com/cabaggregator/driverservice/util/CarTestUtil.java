@@ -26,13 +26,14 @@ public final class CarTestUtil {
 
     public static final String OTHER_LICENSE_PLATE = "7777 KK-7";
 
-    public static Car.CarBuilder getCarBuilder() {
+    public static Car buildDefaultCar() {
         return Car.builder()
                 .id(CAR_ID)
                 .licensePlate(LICENSE_PLATE)
                 .make(MAKE)
                 .model(MODEL)
-                .color(COLOR);
+                .color(COLOR)
+                .build();
     }
 
     public static CarDto buildCarDto() {

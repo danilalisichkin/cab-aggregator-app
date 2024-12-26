@@ -37,7 +37,7 @@ class CarMapperTest {
 
     @Test
     void entityToDto_ShouldConvertEntityToDto_WhenEntityIsNotNull() {
-        Car car = CarTestUtil.getCarBuilder().build();
+        Car car = CarTestUtil.buildDefaultCar();
         CarDto carDto = CarTestUtil.buildCarDto();
 
         CarDto actual = mapper.entityToDto(car);
@@ -54,8 +54,10 @@ class CarMapperTest {
 
     @Test
     void entityToFullDto_ShouldConvertEntityToFullDto_WhenEntityIsNotNull() {
-        Car car = CarTestUtil.getCarBuilder().build();
-        car.setCarDetails(CarDetailsTestUtil.getCarDetailsBuilder().build());
+        Car car = CarTestUtil.buildDefaultCar()
+                .toBuilder()
+                .carDetails(CarDetailsTestUtil.buildDefaultCarDetails())
+                .build();
         CarFullDto carFullDto = CarTestUtil.buildCarFullDto();
         Mockito.when(carDetailsMapper.entityToDto(car.getCarDetails()))
                 .thenReturn(CarDetailsTestUtil.buildCarDetailsDto());
@@ -69,7 +71,7 @@ class CarMapperTest {
 
     @Test
     void updateEntityFromDto_ShouldUpdateEntity_WhenDtoIsNotNull() {
-        Car actual = CarTestUtil.getCarBuilder().build();
+        Car actual = CarTestUtil.buildDefaultCar();
         CarUpdatingDto carUpdatingDto = CarTestUtil.buildCarUpdatingDto();
 
         mapper.updateEntityFromDto(carUpdatingDto, actual);
@@ -93,7 +95,7 @@ class CarMapperTest {
 
     @Test
     void dtoToEntity_ShouldConvertDtoToEntity_WhenDtoIsNotNull() {
-        Car car = CarTestUtil.getCarBuilder().build();
+        Car car = CarTestUtil.buildDefaultCar();
         CarAddingDto carAddingDto = CarTestUtil.buildCarAddingDto();
 
         Car actual = mapper.dtoToEntity(carAddingDto);
@@ -111,7 +113,7 @@ class CarMapperTest {
 
     @Test
     void entityListToDtoList_ShouldConvertEntityListToDtoList_WhenEntityListIsNotEmpty() {
-        Car car = CarTestUtil.getCarBuilder().build();
+        Car car = CarTestUtil.buildDefaultCar();
         List<Car> entityList = Arrays.asList(car, car);
         CarDto carDto = CarTestUtil.buildCarDto();
         List<CarDto> dtoList = Arrays.asList(carDto, carDto);
@@ -141,7 +143,7 @@ class CarMapperTest {
 
     @Test
     void entityPageToDtoPage_ShouldConvertEntityPageToDtoPage_WhenPageIsNotNull() {
-        Car car = CarTestUtil.getCarBuilder().build();
+        Car car = CarTestUtil.buildDefaultCar();
         List<Car> entityList = Arrays.asList(car, car);
         Page<Car> entityPage = PaginationTestUtil.buildPageFromList(entityList);
         CarDto carDto = CarTestUtil.buildCarDto();
