@@ -1,8 +1,10 @@
-package com.cabaggregator.paymentservice.api;
+package com.cabaggregator.paymentservice.controller.api;
 
 import com.cabaggregator.paymentservice.core.constant.ValidationErrors;
+import com.cabaggregator.paymentservice.service.StripeWebhookService;
 import com.cabaggregator.paymentservice.stripe.StripeHttpHeaders;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -14,14 +16,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Validated
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("api/v1/stripe/webhooks")
-public class StripeWebHookController {
+public class StripeWebhookController {
+
+    private final StripeWebhookService stripeWebhookService;
 
     @PostMapping
-    public ResponseEntity<String> handleStripeWebhook(
+    public ResponseEntity<Void> handleStripeWebhook(
             @RequestBody @NotEmpty(message = ValidationErrors.STRING_IS_EMPTY) String payload,
             @RequestHeader(StripeHttpHeaders.STRIPE_SIGNATURE) String sigHeader) {
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        stripeWebhookService.processWebhookEvent(payload, sigHeader);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

@@ -4,10 +4,11 @@ import com.cabaggregator.paymentservice.entity.enums.PaymentContextType;
 import com.cabaggregator.paymentservice.entity.enums.PaymentStatus;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record PaymentDto(
         String paymentIntentId,
-        String paymentAccountId,
+        UUID paymentAccountId,
         PaymentStatus status,
         LocalDateTime createdAt,
         PaymentContextType contextType,

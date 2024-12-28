@@ -1,5 +1,6 @@
 package com.cabaggregator.paymentservice.util;
 
+import com.cabaggregator.paymentservice.core.dto.payment.PaymentDto;
 import com.cabaggregator.paymentservice.core.dto.payment.PaymentRequest;
 import com.cabaggregator.paymentservice.core.dto.payment.PaymentResponse;
 import com.cabaggregator.paymentservice.core.dto.payment.method.PaymentCardDto;
@@ -20,6 +21,16 @@ public final class PaymentTestUtil {
                 .paymentAccount(PaymentAccountTestUtil.getPaymentAccountBuilder().build())
                 .status(StripeTestUtil.STATUS)
                 .createdAt(CREATED_AT);
+    }
+
+    public static PaymentDto buildPaymentDto() {
+        return new PaymentDto(
+                StripeTestUtil.INTENT_ID,
+                PaymentAccountTestUtil.getPaymentAccountBuilder().build().getId(),
+                StripeTestUtil.STATUS,
+                CREATED_AT,
+                PaymentContextTestUtil.TYPE,
+                PaymentContextTestUtil.CONTEXT_ID);
     }
 
     public static PaymentRequest buildPaymentRequest() {

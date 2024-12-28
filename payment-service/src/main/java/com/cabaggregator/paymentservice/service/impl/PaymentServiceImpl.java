@@ -3,6 +3,7 @@ package com.cabaggregator.paymentservice.service.impl;
 import com.cabaggregator.paymentservice.client.RideServiceApiClient;
 import com.cabaggregator.paymentservice.core.constant.ApplicationMessages;
 import com.cabaggregator.paymentservice.core.constant.StringTemplates;
+import com.cabaggregator.paymentservice.core.dto.payment.PaymentDto;
 import com.cabaggregator.paymentservice.core.dto.payment.PaymentRequest;
 import com.cabaggregator.paymentservice.core.dto.payment.PaymentResponse;
 import com.cabaggregator.paymentservice.core.mapper.PaymentMapper;
@@ -24,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -40,6 +42,19 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
 
     private final PaymentMapper paymentMapper;
+
+    @Override
+    public List<PaymentDto> getRidePayments(ObjectId rideId) {
+        List<PaymentContext> paymentContexts =
+                paymentContextService.getPaymentContextsByTypeAndContextId(
+                        PaymentContextType.RIDE, rideId.toString());
+
+        List<Payment> payments = paymentContexts.stream()
+                .map(PaymentContext::getPayment)
+                .toList();
+
+        return paymentMapper.entityListToDtoList(payments);
+    }
 
     @Override
     public PaymentResponse createPayment(PaymentRequest paymentRequest) {

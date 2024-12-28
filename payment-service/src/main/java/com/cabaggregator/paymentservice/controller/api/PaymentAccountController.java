@@ -1,4 +1,4 @@
-package com.cabaggregator.paymentservice.api;
+package com.cabaggregator.paymentservice.controller.api;
 
 import com.cabaggregator.paymentservice.core.constant.ValidationErrors;
 import com.cabaggregator.paymentservice.core.dto.page.PageDto;
@@ -6,10 +6,12 @@ import com.cabaggregator.paymentservice.core.dto.payment.account.PaymentAccountA
 import com.cabaggregator.paymentservice.core.dto.payment.account.PaymentAccountDto;
 import com.cabaggregator.paymentservice.core.dto.payment.method.PaymentCardDto;
 import com.cabaggregator.paymentservice.core.enums.sort.PaymentAccountSortField;
+import com.cabaggregator.paymentservice.service.PaymentAccountService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +30,11 @@ import java.util.UUID;
 
 @Validated
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/payment-accounts")
 public class PaymentAccountController {
+
+    private final PaymentAccountService paymentAccountService;
 
     @GetMapping
     public ResponseEntity<PageDto<PaymentAccountDto>> getPageOfPaymentAccounts(
@@ -40,32 +45,40 @@ public class PaymentAccountController {
             @RequestParam(defaultValue = "createdAt") PaymentAccountSortField sortBy,
             @RequestParam(defaultValue = "ASC") Sort.Direction sortOrder) {
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        PageDto<PaymentAccountDto> page =
+                paymentAccountService.getPageOfPaymentAccounts(offset, limit, sortBy, sortOrder);
+
+        return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PaymentAccountDto> getPaymentAccount(@PathVariable UUID id) {
+        PaymentAccountDto account = paymentAccountService.getPaymentAccount(id);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK).body(account);
     }
 
     @GetMapping("/{id}/payment-cards")
     public ResponseEntity<List<PaymentCardDto>> getPaymentCards(@PathVariable UUID id) {
+        List<PaymentCardDto> paymentCards = paymentAccountService.getAccountPaymentCards(id);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK).body(paymentCards);
     }
 
     @GetMapping("/{id}/payment-cards/default")
-    public ResponseEntity<Void> getDefaultPaymentCard(@PathVariable UUID id) {
+    public ResponseEntity<PaymentCardDto> getDefaultPaymentCard(@PathVariable UUID id) {
+        PaymentCardDto paymentCard = paymentAccountService.getAccountDefaultPaymentCard(id);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.OK).body(paymentCard);
     }
 
     @PostMapping
     public ResponseEntity<PaymentAccountDto> createPaymentAccount(
             @RequestBody @Valid PaymentAccountAddingDto addingDto) {
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        PaymentAccountDto account = paymentAccountService.createPaymentAccount(addingDto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(account);
     }
 
     @PostMapping("/{id}/payment-cards/default")
@@ -73,6 +86,8 @@ public class PaymentAccountController {
             @PathVariable UUID id,
             @RequestBody @Size(min = 1, max = 40, message = ValidationErrors.INVALID_STRING_LENGTH)
             String paymentMethodId) {
+
+        paymentAccountService.setAccountDefaultPaymentCard(id, paymentMethodId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -83,6 +98,8 @@ public class PaymentAccountController {
             @RequestBody @Size(min = 1, max = 30, message = ValidationErrors.INVALID_STRING_LENGTH)
             String stripeAccountId) {
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        PaymentAccountDto account = paymentAccountService.updatePaymentAccount(id, stripeAccountId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(account);
     }
 }

@@ -4,6 +4,7 @@ import com.cabaggregator.paymentservice.core.constant.ApplicationMessages;
 import com.cabaggregator.paymentservice.core.dto.page.PageDto;
 import com.cabaggregator.paymentservice.core.dto.payment.account.PaymentAccountAddingDto;
 import com.cabaggregator.paymentservice.core.dto.payment.account.PaymentAccountDto;
+import com.cabaggregator.paymentservice.core.dto.payment.method.PaymentCardDto;
 import com.cabaggregator.paymentservice.core.enums.sort.PaymentAccountSortField;
 import com.cabaggregator.paymentservice.core.mapper.PageMapper;
 import com.cabaggregator.paymentservice.core.mapper.PaymentAccountMapper;
@@ -11,6 +12,7 @@ import com.cabaggregator.paymentservice.entity.PaymentAccount;
 import com.cabaggregator.paymentservice.exception.ResourceNotFoundException;
 import com.cabaggregator.paymentservice.repository.PaymentAccountRepository;
 import com.cabaggregator.paymentservice.service.PaymentAccountService;
+import com.cabaggregator.paymentservice.service.PaymentMethodService;
 import com.cabaggregator.paymentservice.service.StripeService;
 import com.cabaggregator.paymentservice.util.PageRequestBuilder;
 import com.cabaggregator.paymentservice.validator.PaymentAccountValidator;
@@ -21,12 +23,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class PaymentAccountServiceImpl implements PaymentAccountService {
     private final StripeService stripeService;
+
+    private final PaymentMethodService paymentMethodService;
 
     private final PaymentAccountRepository paymentAccountRepository;
 
@@ -52,6 +57,28 @@ public class PaymentAccountServiceImpl implements PaymentAccountService {
     public PaymentAccountDto getPaymentAccount(UUID id) {
         return paymentAccountMapper.entityToDto(
                 getPaymentAccountEntity(id));
+    }
+
+    @Override
+    public List<PaymentCardDto> getAccountPaymentCards(UUID id) {
+        PaymentAccount paymentAccount = getPaymentAccountEntity(id);
+
+        return paymentMethodService.getPaymentCards(paymentAccount);
+    }
+
+    @Override
+    public PaymentCardDto getAccountDefaultPaymentCard(UUID id) {
+        PaymentAccount paymentAccount = getPaymentAccountEntity(id);
+
+        return paymentMethodService.getDefaultPaymentCard(paymentAccount);
+    }
+
+    @Override
+    @Transactional
+    public void setAccountDefaultPaymentCard(UUID id, String paymentMethodId) {
+        PaymentAccount paymentAccount = getPaymentAccountEntity(id);
+
+        paymentMethodService.setDefaultPaymentCard(paymentAccount, paymentMethodId);
     }
 
     @Override

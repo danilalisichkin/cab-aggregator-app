@@ -3,6 +3,7 @@ package com.cabaggregator.paymentservice.unit.service.impl;
 import com.cabaggregator.paymentservice.core.dto.page.PageDto;
 import com.cabaggregator.paymentservice.core.dto.payment.account.PaymentAccountAddingDto;
 import com.cabaggregator.paymentservice.core.dto.payment.account.PaymentAccountDto;
+import com.cabaggregator.paymentservice.core.dto.payment.method.PaymentCardDto;
 import com.cabaggregator.paymentservice.core.enums.sort.PaymentAccountSortField;
 import com.cabaggregator.paymentservice.core.mapper.PageMapper;
 import com.cabaggregator.paymentservice.core.mapper.PaymentAccountMapper;
@@ -10,11 +11,14 @@ import com.cabaggregator.paymentservice.entity.PaymentAccount;
 import com.cabaggregator.paymentservice.exception.DataUniquenessConflictException;
 import com.cabaggregator.paymentservice.exception.ResourceNotFoundException;
 import com.cabaggregator.paymentservice.repository.PaymentAccountRepository;
+import com.cabaggregator.paymentservice.service.PaymentMethodService;
 import com.cabaggregator.paymentservice.service.StripeService;
 import com.cabaggregator.paymentservice.service.impl.PaymentAccountServiceImpl;
 import com.cabaggregator.paymentservice.util.PageRequestBuilder;
 import com.cabaggregator.paymentservice.util.PaginationTestUtil;
 import com.cabaggregator.paymentservice.util.PaymentAccountTestUtil;
+import com.cabaggregator.paymentservice.util.PaymentTestUtil;
+import com.cabaggregator.paymentservice.util.StripeTestUtil;
 import com.cabaggregator.paymentservice.validator.PaymentAccountValidator;
 import com.stripe.model.Customer;
 import org.junit.jupiter.api.Tag;
@@ -28,9 +32,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -49,6 +57,9 @@ class PaymentAccountServiceImplTest {
 
     @Mock
     private StripeService stripeService;
+
+    @Mock
+    private PaymentMethodService paymentMethodService;
 
     @Mock
     private PaymentAccountRepository paymentAccountRepository;
@@ -133,6 +144,109 @@ class PaymentAccountServiceImplTest {
 
         verify(paymentAccountRepository).findById(account.getId());
         verifyNoInteractions(paymentAccountMapper);
+    }
+
+    @Test
+    void getAccountPaymentCards_ShouldReturnPaymentCards_WhenPaymentAccountFound() {
+        PaymentAccount account = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
+        List<PaymentCardDto> paymentCards = Collections.singletonList(PaymentTestUtil.buildPaymentCardDto());
+
+        when(paymentAccountRepository.findById(account.getId()))
+                .thenReturn(Optional.of(account));
+        when(paymentMethodService.getPaymentCards(account))
+                .thenReturn(paymentCards);
+
+        List<PaymentCardDto> actual = paymentAccountService.getAccountPaymentCards(account.getId());
+
+        assertThat(actual)
+                .isNotNull()
+                .isEqualTo(paymentCards);
+
+        verify(paymentAccountRepository).findById(account.getId());
+        verify(paymentMethodService).getPaymentCards(account);
+    }
+
+    @Test
+    void getAccountPaymentCards_ShouldThrowResourceNotFoundException_WhenPaymentAccountNotFound() {
+        UUID accountId = PaymentAccountTestUtil.NOT_EXISTING_ID;
+
+        when(paymentAccountRepository.findById(accountId))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(
+                () -> paymentAccountService.getAccountPaymentCards(accountId))
+                .isInstanceOf(ResourceNotFoundException.class);
+
+        verify(paymentAccountRepository).findById(accountId);
+        verifyNoInteractions(paymentMethodService);
+    }
+
+    @Test
+    void getAccountDefaultPaymentCard_ShouldReturnPaymentCard_WhenPaymentAccountFound() {
+        PaymentAccount account = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
+        PaymentCardDto paymentCard = PaymentTestUtil.buildPaymentCardDto();
+
+        when(paymentAccountRepository.findById(account.getId()))
+                .thenReturn(Optional.of(account));
+        when(paymentMethodService.getDefaultPaymentCard(account))
+                .thenReturn(paymentCard);
+
+        PaymentCardDto actual = paymentAccountService.getAccountDefaultPaymentCard(account.getId());
+
+        assertThat(actual)
+                .isNotNull()
+                .isEqualTo(paymentCard);
+
+        verify(paymentAccountRepository).findById(account.getId());
+        verify(paymentMethodService).getDefaultPaymentCard(account);
+    }
+
+    @Test
+    void getAccountDefaultPaymentCard_ShouldThrowResourceNotFoundException_WhenPaymentAccountNotFound() {
+        UUID accountId = PaymentAccountTestUtil.NOT_EXISTING_ID;
+
+        when(paymentAccountRepository.findById(accountId))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(
+                () -> paymentAccountService.getAccountDefaultPaymentCard(accountId))
+                .isInstanceOf(ResourceNotFoundException.class);
+
+        verify(paymentAccountRepository).findById(accountId);
+        verifyNoInteractions(paymentMethodService);
+    }
+
+    @Test
+    void setAccountDefaultPaymentCard_ShouldSetDefaultPaymentCard_WhenPaymentAccountFound() {
+        PaymentAccount account = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
+        String paymentMethodId = StripeTestUtil.METHOD_ID;
+
+        when(paymentAccountRepository.findById(account.getId()))
+                .thenReturn(Optional.of(account));
+        doNothing().when(paymentMethodService).setDefaultPaymentCard(account, paymentMethodId);
+
+        assertThatCode(
+                () -> paymentAccountService.setAccountDefaultPaymentCard(account.getId(), paymentMethodId))
+                .doesNotThrowAnyException();
+
+        verify(paymentAccountRepository).findById(account.getId());
+        verify(paymentMethodService).setDefaultPaymentCard(account, paymentMethodId);
+    }
+
+    @Test
+    void setAccountDefaultPaymentCard_ShouldThrowResourceNotFoundException_WhenPaymentAccountNotFound() {
+        UUID accountId = PaymentAccountTestUtil.NOT_EXISTING_ID;
+        String paymentMethodId = StripeTestUtil.METHOD_ID;
+
+        when(paymentAccountRepository.findById(accountId))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(
+                () -> paymentAccountService.setAccountDefaultPaymentCard(accountId, paymentMethodId))
+                .isInstanceOf(ResourceNotFoundException.class);
+
+        verify(paymentAccountRepository).findById(accountId);
+        verifyNoInteractions(paymentMethodService);
     }
 
     @Test

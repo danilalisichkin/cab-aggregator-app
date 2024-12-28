@@ -9,6 +9,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,7 +34,7 @@ public class Payment {
     private String paymentIntentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_account_user_id", nullable = false)
+    @JoinColumn(name = "payment_account_id", nullable = false)
     private PaymentAccount paymentAccount;
 
     @Column(nullable = false)
@@ -43,4 +44,7 @@ public class Payment {
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    @OneToOne(mappedBy = "payment", fetch = FetchType.EAGER)
+    private PaymentContext context;
 }

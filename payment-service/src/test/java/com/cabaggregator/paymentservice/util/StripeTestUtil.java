@@ -1,7 +1,7 @@
 package com.cabaggregator.paymentservice.util;
 
 import com.cabaggregator.paymentservice.entity.enums.PaymentStatus;
-import com.cabaggregator.paymentservice.stripe.enums.PaymentMethodTypes;
+import com.cabaggregator.paymentservice.stripe.enums.PaymentMethodType;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.PaymentMethod;
 import lombok.AccessLevel;
@@ -30,7 +30,7 @@ public final class StripeTestUtil {
     public static PaymentMethod buildPaymentMethod() {
         PaymentMethod paymentMethod = new PaymentMethod();
         paymentMethod.setId(METHOD_ID);
-        paymentMethod.setType(PaymentMethodTypes.CARD);
+        paymentMethod.setType(PaymentMethodType.CARD.getValue());
 
         PaymentMethod.Card card = new PaymentMethod.Card();
         card.setBrand(CARD_BRAND);
