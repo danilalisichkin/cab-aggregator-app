@@ -7,7 +7,6 @@ import com.cabaggregator.paymentservice.service.StripeWebhookService;
 import com.cabaggregator.paymentservice.stripe.config.StripeConfig;
 import com.cabaggregator.paymentservice.stripe.enums.EventTypePrefix;
 import com.cabaggregator.paymentservice.stripe.enums.StripePaymentStatus;
-import com.cabaggregator.paymentservice.util.PaymentStatusMapper;
 import com.stripe.model.Event;
 import com.stripe.model.PaymentIntent;
 import com.stripe.net.Webhook;
@@ -21,8 +20,6 @@ public class StripeWebhookServiceImpl implements StripeWebhookService {
     private final StripeConfig stripeConfig;
 
     private final PaymentService paymentService;
-
-    private final PaymentStatusMapper paymentStatusMapper;
 
     @Override
     public void processWebhookEvent(String payload, String sigHeader) {
@@ -53,7 +50,7 @@ public class StripeWebhookServiceImpl implements StripeWebhookService {
     private void processPaymentIntentEvent(String suffix, Event event) {
         String paymentIntentId = extractPaymentIntentId(event);
         StripePaymentStatus suffixAsStripePaymentStatus = StripePaymentStatus.valueOf(suffix);
-        PaymentStatus paymentStatus = paymentStatusMapper.fromStripeToBusiness(suffixAsStripePaymentStatus);
+        PaymentStatus paymentStatus = suffixAsStripePaymentStatus.getInternalStatus();
 
         paymentService.updatePaymentStatus(paymentIntentId, paymentStatus);
     }
