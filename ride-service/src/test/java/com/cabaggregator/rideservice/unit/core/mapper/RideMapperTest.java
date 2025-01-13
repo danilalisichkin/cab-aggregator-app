@@ -64,11 +64,11 @@ class RideMapperTest {
     }
 
     @Test
-    void updateEntityFromOrderDto_ShouldUpdateEntity_WhenDtoIsNotNull() {
+    void updateEntityFromDto_ShouldUpdateEntity_WhenDtoIsNotNull() {
         Ride ride = RideTestUtil.buildDefaultRide();
         RideUpdatingDto rideUpdatingDto = RideTestUtil.buildRideUpdatingDto();
 
-        mapper.updateEntityFromOrderDto(rideUpdatingDto, ride);
+        mapper.updateEntityFromDto(rideUpdatingDto, ride);
 
         assertThat(ride).isNotNull();
         assertThat(ride.getPaymentMethod()).isEqualTo(RideTestUtil.UPDATED_PAYMENT_METHOD);
@@ -77,10 +77,10 @@ class RideMapperTest {
     }
 
     @Test
-    void updateEntityFromOrderDto_ShouldThrowNullPointerException_WhenDtoIsNull() {
+    void updateEntityFromDto_ShouldThrowNullPointerException_WhenDtoIsNull() {
         RideUpdatingDto rideUpdatingDto = RideTestUtil.buildRideUpdatingDto();
 
-        assertThatThrownBy(() -> mapper.updateEntityFromOrderDto(rideUpdatingDto, null))
+        assertThatThrownBy(() -> mapper.updateEntityFromDto(rideUpdatingDto, null))
                 .isInstanceOf(NullPointerException.class);
     }
 

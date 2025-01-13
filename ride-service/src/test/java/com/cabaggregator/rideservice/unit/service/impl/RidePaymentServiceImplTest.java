@@ -53,13 +53,14 @@ class RidePaymentServiceImplTest {
     @Test
     void changeRidePaymentStatus_ShouldThrowResourceNotFoundException_WhenRideIsNotFound() {
         ObjectId rideId = RideTestUtil.NOT_EXISTING_ID;
+        UUID driverId = RideTestUtil.DRIVER_ID;
         PaymentStatus paymentStatus = PaymentStatus.PAID;
 
         when(rideRepository.findById(rideId))
                 .thenReturn(Optional.empty());
 
         assertThatThrownBy(
-                () -> ridePaymentService.changeRidePaymentStatus(rideId, paymentStatus))
+                () -> ridePaymentService.changeRidePaymentStatus(driverId, rideId, paymentStatus))
                 .isInstanceOf(ResourceNotFoundException.class);
 
         verify(rideRepository).findById(rideId);
@@ -68,11 +69,35 @@ class RidePaymentServiceImplTest {
     }
 
     @Test
+    void changeRidePaymentStatus_ShouldThrowForbiddenException_WhenUserTriesToGetRideOfOtherDriver() {
+        Ride ride = RideTestUtil.buildDefaultRide();
+        ObjectId rideId = ride.getId();
+        UUID driverId = ride.getDriverId();
+        PaymentStatus paymentStatus = PaymentStatus.PAID;
+        UUID userId = RideTestUtil.NOT_EXISTING_DRIVER_ID;
+
+        when(rideRepository.findById(rideId))
+                .thenReturn(Optional.of(ride));
+        when(securityUtil.getUserIdFromSecurityContext())
+                .thenReturn(userId);
+
+        assertThatThrownBy(
+                () -> ridePaymentService.changeRidePaymentStatus(driverId, rideId, paymentStatus))
+                .isInstanceOf(ForbiddenException.class);
+
+        verify(rideRepository).findById(rideId);
+        verify(securityUtil).getUserIdFromSecurityContext();
+        verifyNoMoreInteractions(rideRepository);
+        verifyNoInteractions(rideValidator, rideMapper);
+    }
+
+    @Test
     void changeRidePaymentStatus_ShouldThrowForbiddenException_WhenDriverIsNotRideParticipant() {
         Ride ride = RideTestUtil.buildDefaultRide();
         ObjectId rideId = ride.getId();
-        PaymentStatus paymentStatus = PaymentStatus.PAID;
+        UUID driverId = RideTestUtil.NOT_EXISTING_DRIVER_ID;
         UUID userId = RideTestUtil.NOT_EXISTING_DRIVER_ID;
+        PaymentStatus paymentStatus = PaymentStatus.PAID;
 
         when(rideRepository.findById(rideId))
                 .thenReturn(Optional.of(ride));
@@ -81,7 +106,7 @@ class RidePaymentServiceImplTest {
         doThrow(new ForbiddenException("error")).when(rideValidator).validateDriverParticipation(ride, userId);
 
         assertThatThrownBy(
-                () -> ridePaymentService.changeRidePaymentStatus(rideId, paymentStatus))
+                () -> ridePaymentService.changeRidePaymentStatus(driverId, rideId, paymentStatus))
                 .isInstanceOf(ForbiddenException.class);
 
         verify(rideRepository).findById(rideId);
@@ -95,6 +120,7 @@ class RidePaymentServiceImplTest {
     void changeRidePaymentStatus_ShouldThrowForbiddenException_WhenDriverTriesToChangePaymentStatusForCardManually() {
         Ride ride = RideTestUtil.buildDefaultRide().toBuilder().build();
         ObjectId rideId = ride.getId();
+        UUID driverId = ride.getDriverId();
         PaymentStatus paymentStatus = PaymentStatus.DECLINED;
         UUID userId = ride.getDriverId();
 
@@ -105,7 +131,7 @@ class RidePaymentServiceImplTest {
         doNothing().when(rideValidator).validateDriverParticipation(ride, userId);
 
         assertThatThrownBy(
-                () -> ridePaymentService.changeRidePaymentStatus(rideId, paymentStatus))
+                () -> ridePaymentService.changeRidePaymentStatus(driverId, rideId, paymentStatus))
                 .isInstanceOf(ForbiddenException.class);
 
         verify(rideRepository).findById(rideId);
@@ -122,6 +148,7 @@ class RidePaymentServiceImplTest {
                 .build();
         RideDto rideDto = RideTestUtil.buildRideDto();
         ObjectId rideId = ride.getId();
+        UUID driverId = ride.getDriverId();
         PaymentStatus paymentStatus = PaymentStatus.PAID_IN_CASH;
         UUID userId = ride.getDriverId();
 
@@ -135,7 +162,7 @@ class RidePaymentServiceImplTest {
         when(rideMapper.entityToDto(ride))
                 .thenReturn(rideDto);
 
-        RideDto actual = ridePaymentService.changeRidePaymentStatus(rideId, paymentStatus);
+        RideDto actual = ridePaymentService.changeRidePaymentStatus(driverId, rideId, paymentStatus);
 
         assertThat(actual).isEqualTo(rideDto);
 
