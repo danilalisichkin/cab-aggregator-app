@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(
-        name = "pricingApiClient",
-        url = "http://localhost:8087/api/v1/pricing")
+        value = "${services.price.name}",
+        path = "${services.price.path}")
 public interface PriceCalculationApiClient {
     @PostMapping
     PriceResponse calculatePrice(@RequestBody PriceCalculationRequest priceCalculationRequest);

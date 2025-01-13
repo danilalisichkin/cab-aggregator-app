@@ -20,5 +20,18 @@ mongock:
 app:
   open-route:
     api-key: ${OPENROUTE_API_KEY}
+services:
+  open-route:
+    name: open-route-api
+    path: https://api.openrouteservice.org/v2
+  price:
+    name: price-service
+    path: api/v1/pricing
+  promo-code:
+    name: promo-code-service
+    path: /api/v1/promo-codes
+  promo-stat:
+    name: promo-code-service
+    path: /api/v1/promo-stats
 server:
   port: ${SERVER_PORT:8084}

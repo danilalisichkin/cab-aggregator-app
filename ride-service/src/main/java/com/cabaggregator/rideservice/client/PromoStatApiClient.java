@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(
-        name = "promoStatApiClient",
-        url = "http://localhost:8083/api/v1/promo-stats")
+        value = "${services.promo-stat.name}",
+        path = "${services.promo-stat.path}")
 public interface PromoStatApiClient {
     @PostMapping
     PromoStatDto createPromoStat(@RequestBody PromoStatAddingDto addingDto);

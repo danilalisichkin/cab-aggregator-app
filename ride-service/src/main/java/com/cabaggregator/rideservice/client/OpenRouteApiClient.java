@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.Map;
 
 @FeignClient(
-        name = "openRouteApiClient",
-        url = "https://api.openrouteservice.org/v2",
+        name = "${services.open-route.name}",
+        url = "${services.open-route.path}",
         configuration = OpenRouteApiClientInterceptor.class)
 public interface OpenRouteApiClient {
     @PostMapping("/directions/driving-car/json")
