@@ -4,7 +4,6 @@ import com.cabaggregator.rideservice.core.dto.page.PageDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideAddingDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideUpdatingDto;
-import com.cabaggregator.rideservice.core.enums.PaymentStatus;
 import com.cabaggregator.rideservice.core.enums.RideStatus;
 import com.cabaggregator.rideservice.core.enums.sort.RideSortField;
 import org.bson.types.ObjectId;
@@ -32,6 +31,4 @@ public interface RideService {
     RideDto updateRide(ObjectId id, RideUpdatingDto updatingDto);
 
     RideDto changeRideStatus(ObjectId id, RideStatus status);
-
-    RideDto changeRidePaymentStatus(ObjectId id, PaymentStatus paymentStatus);
 }

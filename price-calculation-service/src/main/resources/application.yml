@@ -27,7 +27,7 @@ spring:
       database: ${REDIS_DATABASE:0}
 app:
   weather:
-    api-key: ${WEATHER_API_KEY:KEY}
+    api-key: ${WEATHER_API_KEY}
   cache:
     ttl:
       fare-cache: ${FARE_CACHE_TTL:1440}

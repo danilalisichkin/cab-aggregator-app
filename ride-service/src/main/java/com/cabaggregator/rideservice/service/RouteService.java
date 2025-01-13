@@ -1,8 +1,9 @@
 package com.cabaggregator.rideservice.service;
 
-import com.cabaggregator.rideservice.core.dto.ride.RideAddingDto;
-import com.cabaggregator.rideservice.entity.Ride;
+import com.cabaggregator.rideservice.core.dto.route.RouteSummary;
+
+import java.util.List;
 
 public interface RouteService {
-    void setRouteSummary(Ride ride, RideAddingDto addingDto);
+    RouteSummary getRouteSummary(List<List<Double>> routeCoordinates);
 }

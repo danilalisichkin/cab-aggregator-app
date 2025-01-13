@@ -19,6 +19,6 @@ mongock:
   enabled: true
 app:
   open-route:
-    api-key: ${OPENROUTE_API_KEY:KEY}
+    api-key: ${OPENROUTE_API_KEY}
 server:
   port: ${SERVER_PORT:8084}

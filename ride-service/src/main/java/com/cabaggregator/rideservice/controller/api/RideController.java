@@ -8,6 +8,7 @@ import com.cabaggregator.rideservice.core.dto.ride.RideUpdatingDto;
 import com.cabaggregator.rideservice.core.enums.PaymentStatus;
 import com.cabaggregator.rideservice.core.enums.RideStatus;
 import com.cabaggregator.rideservice.core.enums.sort.RideSortField;
+import com.cabaggregator.rideservice.service.RidePaymentService;
 import com.cabaggregator.rideservice.service.RideService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -39,6 +40,8 @@ import java.util.UUID;
 public class RideController {
 
     private final RideService rideService;
+
+    private final RidePaymentService ridePaymentService;
 
     @GetMapping
     public ResponseEntity<PageDto<RideDto>> getPageOfRides(
@@ -147,7 +150,7 @@ public class RideController {
             @PathVariable ObjectId id,
             @RequestBody @NotNull PaymentStatus paymentStatus) {
 
-        RideDto ride = rideService.changeRidePaymentStatus(id, paymentStatus);
+        RideDto ride = ridePaymentService.changeRidePaymentStatus(id, paymentStatus);
 
         return ResponseEntity.status(HttpStatus.OK).body(ride);
     }

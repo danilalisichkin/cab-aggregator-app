@@ -4,6 +4,8 @@ import com.cabaggregator.rideservice.core.dto.route.RouteSummary;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class RouteTestUtil {
     public static final Long DISTANCE = 2400L;
@@ -13,5 +15,9 @@ public final class RouteTestUtil {
         return new RouteSummary(
                 ESTIMATED_DURATION,
                 DISTANCE);
+    }
+
+    public static List<List<Double>> buildRouteCoordinates() {
+        return List.of(RideTestUtil.PICK_UP_COORDINATES, RideTestUtil.DROP_OFF_COORDINATES);
     }
 }

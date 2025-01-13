@@ -1,11 +1,13 @@
 package com.cabaggregator.rideservice.service.impl;
 
+import com.cabaggregator.rideservice.client.dto.PriceCalculationRequest;
 import com.cabaggregator.rideservice.core.constant.ApplicationMessages;
 import com.cabaggregator.rideservice.core.dto.page.PageDto;
+import com.cabaggregator.rideservice.core.dto.price.PriceRecalculationDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideAddingDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideUpdatingDto;
-import com.cabaggregator.rideservice.core.enums.PaymentMethod;
+import com.cabaggregator.rideservice.core.dto.route.RouteSummary;
 import com.cabaggregator.rideservice.core.enums.PaymentStatus;
 import com.cabaggregator.rideservice.core.enums.RideStatus;
 import com.cabaggregator.rideservice.core.enums.sort.RideSortField;
@@ -33,6 +35,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 import static com.cabaggregator.rideservice.util.RideLifecyclePhaseChecker.isPrepared;
@@ -174,13 +177,14 @@ public class RideServiceImpl implements RideService {
         rideValidator.validatePassengerFreedom(userId);
 
         Ride rideToCreate = initDefaultRide(addingDto, userId);
-        routeService.setRouteSummary(rideToCreate, addingDto);
-        rideToCreate = rideRepository.save(rideToCreate);
-        priceService.calculateBasePrice(rideToCreate, addingDto);
 
-        if (addingDto.promoCode() != null) {
-            rideToCreate.setPromoCode(addingDto.promoCode());
-            priceService.recalculatePriceWithDiscount(rideToCreate, addingDto);
+        setRouteSummary(rideToCreate);
+        rideToCreate = rideRepository.save(rideToCreate);
+
+        calculateBasePrice(rideToCreate);
+
+        if (rideToCreate.getPromoCode() != null) {
+            recalculatePriceWithDiscount(rideToCreate);
         }
 
         return rideMapper.entityToDto(
@@ -224,29 +228,6 @@ public class RideServiceImpl implements RideService {
     }
 
     /**
-     * Updates the ride payment status.
-     * Used by Driver to confirm payment if it's set as CASH.
-     **/
-    @Override
-    @Transactional
-    public RideDto changeRidePaymentStatus(ObjectId id, PaymentStatus paymentStatus) {
-        Ride rideToUpdate = getRideEntity(id);
-
-        UUID userId = securityUtil.getUserIdFromSecurityContext();
-        rideValidator.validateDriverParticipation(rideToUpdate, userId);
-
-        boolean isRequiredPaymentWithCash = PaymentMethod.CASH.equals(rideToUpdate.getPaymentMethod());
-        if (isRequiredPaymentWithCash && paymentStatus.equals(PaymentStatus.PAID_IN_CASH)) {
-            rideToUpdate.setPaymentStatus(paymentStatus);
-        } else {
-            throw new ForbiddenException(ApplicationMessages.CANT_CHANGE_PAYMENT_STATUS_WHEN_PAID_WITH_CARD);
-        }
-
-        return rideMapper.entityToDto(
-                rideRepository.save(rideToUpdate));
-    }
-
-    /**
      * Initializes ride with default parameters.
      * Used before performing any operations on new ordered ride.
      **/
@@ -257,6 +238,42 @@ public class RideServiceImpl implements RideService {
         ride.setStatus(RideStatus.PREPARED);
 
         return ride;
+    }
+
+    /**
+     * Sets route summary: distance and estimated duration.
+     **/
+    private void setRouteSummary(Ride ride) {
+        List<List<Double>> routeCoordinates = List.of(
+                ride.getPickUpAddress().coordinates(),
+                ride.getDropOffAddress().coordinates());
+
+        RouteSummary routeSummary = routeService.getRouteSummary(routeCoordinates);
+
+        ride.setDistance(routeSummary.distance());
+        ride.setEstimatedDuration(routeSummary.duration());
+    }
+
+    /**
+     * Calculates ride base price.
+     **/
+    private void calculateBasePrice(Ride ride) {
+        PriceCalculationRequest request = rideMapper.entityToPriceCalculationRequest(ride);
+
+        Long basePrice = priceService.calculateBasePrice(request);
+
+        ride.setPrice(basePrice);
+    }
+
+    /**
+     * Recalculates ride price by applying discount.
+     **/
+    private void recalculatePriceWithDiscount(Ride ride) {
+        PriceRecalculationDto recalculationDto = rideMapper.entityToPriceRecalculationDto(ride);
+
+        Long priceWithDiscount = priceService.recalculatePriceWithDiscount(recalculationDto);
+
+        ride.setPrice(priceWithDiscount);
     }
 
     /**

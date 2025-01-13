@@ -1,10 +1,10 @@
 package com.cabaggregator.rideservice.service;
 
-import com.cabaggregator.rideservice.core.dto.ride.RideAddingDto;
-import com.cabaggregator.rideservice.entity.Ride;
+import com.cabaggregator.rideservice.client.dto.PriceCalculationRequest;
+import com.cabaggregator.rideservice.core.dto.price.PriceRecalculationDto;
 
 public interface PriceService {
-    void calculateBasePrice(Ride ride, RideAddingDto addingDto);
+    Long calculateBasePrice(PriceCalculationRequest priceCalculationRequest);
 
-    void recalculatePriceWithDiscount(Ride ride, RideAddingDto addingDto);
+    Long recalculatePriceWithDiscount(PriceRecalculationDto recalculationDto);
 }

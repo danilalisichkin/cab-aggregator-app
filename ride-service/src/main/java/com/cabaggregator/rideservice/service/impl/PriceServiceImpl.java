@@ -4,8 +4,7 @@ import com.cabaggregator.rideservice.client.PriceCalculationApiClient;
 import com.cabaggregator.rideservice.client.dto.PriceCalculationRequest;
 import com.cabaggregator.rideservice.client.dto.PriceResponse;
 import com.cabaggregator.rideservice.client.dto.PromoCodeDto;
-import com.cabaggregator.rideservice.core.dto.ride.RideAddingDto;
-import com.cabaggregator.rideservice.entity.Ride;
+import com.cabaggregator.rideservice.core.dto.price.PriceRecalculationDto;
 import com.cabaggregator.rideservice.service.PriceService;
 import com.cabaggregator.rideservice.service.PromoCodeService;
 import lombok.RequiredArgsConstructor;
@@ -24,17 +23,10 @@ public class PriceServiceImpl implements PriceService {
      * Uses synchronized Price Calculation Service API calls.
      **/
     @Override
-    public void calculateBasePrice(Ride ride, RideAddingDto addingDto) {
-        PriceCalculationRequest priceCalculationRequest = new PriceCalculationRequest(
-                ride.getId(),
-                addingDto.pickUpAddress().coordinates(),
-                ride.getDistance(),
-                ride.getEstimatedDuration(),
-                addingDto.fare());
-
+    public Long calculateBasePrice(PriceCalculationRequest priceCalculationRequest) {
         PriceResponse priceResponse = priceCalculationApiClient.calculatePrice(priceCalculationRequest);
 
-        ride.setPrice(priceResponse.getPrice());
+        return priceResponse.getPrice();
     }
 
     /**
@@ -44,12 +36,14 @@ public class PriceServiceImpl implements PriceService {
      * then creates promo stat record to redeem promo code and recalculates price by subtraction.
      **/
     @Override
-    public void recalculatePriceWithDiscount(Ride ride, RideAddingDto addingDto) {
-        PromoCodeDto promoCodeDto = promoCodeService.getPromoCode(addingDto.promoCode());
-        promoCodeService.createPromoStat(ride.getPassengerId(), promoCodeDto.value());
+    public Long recalculatePriceWithDiscount(PriceRecalculationDto recalculationDto) {
+        PromoCodeDto promoCodeDto = promoCodeService.getPromoCode(recalculationDto.promoCode());
+        promoCodeService.createPromoStat(recalculationDto.passengerId(), promoCodeDto.value());
 
-        Long priceWithDiscount = ride.getPrice() - ride.getPrice() * promoCodeDto.discountPercentage() / 100;
-        ride.setPromoCode(promoCodeDto.value());
-        ride.setPrice(priceWithDiscount);
+        Long originalPrice = recalculationDto.price();
+        Integer discountPercentage = promoCodeDto.discountPercentage();
+        Double discountAmount = originalPrice * discountPercentage / 100.0;
+
+        return originalPrice - discountAmount.longValue();
     }
 }

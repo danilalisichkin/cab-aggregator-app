@@ -4,13 +4,11 @@ import com.cabaggregator.rideservice.client.PriceCalculationApiClient;
 import com.cabaggregator.rideservice.client.dto.PriceCalculationRequest;
 import com.cabaggregator.rideservice.client.dto.PriceResponse;
 import com.cabaggregator.rideservice.client.dto.PromoCodeDto;
-import com.cabaggregator.rideservice.core.dto.ride.RideAddingDto;
-import com.cabaggregator.rideservice.entity.Ride;
+import com.cabaggregator.rideservice.core.dto.price.PriceRecalculationDto;
 import com.cabaggregator.rideservice.service.PromoCodeService;
 import com.cabaggregator.rideservice.service.impl.PriceServiceImpl;
 import com.cabaggregator.rideservice.util.PriceTestUtil;
 import com.cabaggregator.rideservice.util.PromoCodeTestUtil;
-import com.cabaggregator.rideservice.util.RideTestUtil;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,47 +36,35 @@ class PriceServiceImplTest {
 
     @Test
     void calculateBasePrice_ShouldCalculateBasePrice_WhenPriceCalculationServiceIsAvailable() {
-        Ride actual = RideTestUtil.buildDefaultRide().toBuilder()
-                .price(null)
-                .build();
-        RideAddingDto rideAddingDto = RideTestUtil.buildRideAddingDto();
+        PriceCalculationRequest calculationRequest = PriceTestUtil.buildPriceCalculationRequest();
         PriceResponse priceResponse = PriceTestUtil.buildPriceResponse();
 
         when(priceCalculationApiClient.calculatePrice(any(PriceCalculationRequest.class)))
                 .thenReturn(priceResponse);
 
-        priceService.calculateBasePrice(actual, rideAddingDto);
+        Long actual = priceService.calculateBasePrice(calculationRequest);
 
-        assertThat(actual.getPrice())
-                .isNotNull()
-                .isEqualTo(priceResponse.getPrice());
+        assertThat(actual).isEqualTo(priceResponse.getPrice());
 
         verify(priceCalculationApiClient).calculatePrice(any(PriceCalculationRequest.class));
     }
 
     @Test
     void recalculatePriceWithDiscount_ShouldRecalculatePriceWithDiscount_WhenPromoCodeServiceIsAvailable() {
-        Ride ride = RideTestUtil.buildDefaultRide().toBuilder()
-                .promoCode(null)
-                .build();
-        long basePrice = ride.getPrice();
-        RideAddingDto rideAddingDto = RideTestUtil.buildRideAddingDto();
+        PriceRecalculationDto priceRecalculationDto = PriceTestUtil.buildPriceRecalculationDto();
         PromoCodeDto promoCodeDto = PromoCodeTestUtil.buildPromoCodeDto();
 
-        when(promoCodeService.getPromoCode(rideAddingDto.promoCode()))
+        when(promoCodeService.getPromoCode(priceRecalculationDto.promoCode()))
                 .thenReturn(promoCodeDto);
-        doNothing().when(promoCodeService).createPromoStat(ride.getPassengerId(), promoCodeDto.value());
+        doNothing().when(promoCodeService).createPromoStat(priceRecalculationDto.passengerId(), promoCodeDto.value());
 
-        priceService.recalculatePriceWithDiscount(ride, rideAddingDto);
+        Long actual = priceService.recalculatePriceWithDiscount(priceRecalculationDto);
 
-        assertThat(ride.getPrice())
+        assertThat(actual)
                 .isNotNull()
-                .isLessThan(basePrice);
-        assertThat(ride.getPromoCode())
-                .isNotNull()
-                .isEqualTo(promoCodeDto.value());
+                .isLessThan(priceRecalculationDto.price());
 
-        verify(promoCodeService).getPromoCode(rideAddingDto.promoCode());
-        verify(promoCodeService).createPromoStat(ride.getPassengerId(), promoCodeDto.value());
+        verify(promoCodeService).getPromoCode(priceRecalculationDto.promoCode());
+        verify(promoCodeService).createPromoStat(priceRecalculationDto.passengerId(), promoCodeDto.value());
     }
 }
