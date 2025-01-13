@@ -1,6 +1,7 @@
 package com.cabaggregator.paymentservice.unit.service.impl;
 
 import com.cabaggregator.paymentservice.client.RideServiceApiClient;
+import com.cabaggregator.paymentservice.client.enums.RidePaymentStatus;
 import com.cabaggregator.paymentservice.core.constant.ApplicationMessages;
 import com.cabaggregator.paymentservice.core.dto.payment.PaymentDto;
 import com.cabaggregator.paymentservice.core.dto.payment.PaymentRequest;
@@ -224,7 +225,7 @@ class PaymentServiceImplTest {
                 .thenReturn(any(Payment.class));
         when(paymentContextService.getPaymentContext(payment))
                 .thenReturn(paymentContext);
-        when(rideServiceApiClient.setRidePaymentStatus(rideId, true))
+        when(rideServiceApiClient.setRidePaymentStatus(rideId, RidePaymentStatus.PAID))
                 .thenReturn(ResponseEntity.ok().build());
 
         assertThatCode(
@@ -234,6 +235,6 @@ class PaymentServiceImplTest {
         verify(paymentRepository).findById(paymentIntentId);
         verify(paymentRepository).save(any(Payment.class));
         verify(paymentContextService).getPaymentContext(any(Payment.class));
-        verify(rideServiceApiClient).setRidePaymentStatus(rideId, true);
+        verify(rideServiceApiClient).setRidePaymentStatus(rideId, RidePaymentStatus.PAID);
     }
 }
