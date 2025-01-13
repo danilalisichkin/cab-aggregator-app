@@ -27,14 +27,15 @@ public final class DriverRateTestUtil {
     public static final ObjectId NOT_EXISTING_RIDE_ID = new ObjectId("000000000000000000000000");
     public static final UUID NOT_EXISTING_DRIVER_ID = UUID.fromString("11111111-1111-1111-1111-111111111111");
 
-    public static DriverRate.DriverRateBuilder getDriverRateBuilder() {
+    public static DriverRate buildDefaultDriverRate() {
         return DriverRate.builder()
                 .id(ID)
                 .rideId(RIDE_ID)
                 .driverId(DRIVER_ID)
                 .passengerId(PASSENGER_ID)
                 .rate(RATE)
-                .feedbackOptions(FEEDBACK_OPTIONS);
+                .feedbackOptions(FEEDBACK_OPTIONS)
+                .build();
     }
 
     public static DriverRateDto buildDriverRateDto() {

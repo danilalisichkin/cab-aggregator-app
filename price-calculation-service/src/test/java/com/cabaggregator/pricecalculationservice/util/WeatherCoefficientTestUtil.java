@@ -17,10 +17,11 @@ public final class WeatherCoefficientTestUtil {
         buildWeatherResponse();
     }
 
-    public static WeatherCoefficient.WeatherCoefficientBuilder getWeatherCoefficientBuilder() {
+    public static WeatherCoefficient buildDefaultWeatherCoefficient() {
         return WeatherCoefficient.builder()
                 .weather(WEATHER)
-                .priceCoefficient(PRICE_COEFFICIENT);
+                .priceCoefficient(PRICE_COEFFICIENT)
+                .build();
     }
 
     private static void buildWeatherResponse() {

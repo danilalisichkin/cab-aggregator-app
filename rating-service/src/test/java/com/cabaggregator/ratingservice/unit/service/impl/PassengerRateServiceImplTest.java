@@ -72,7 +72,7 @@ class PassengerRateServiceImplTest {
         PassengerRateSortField sortBy = PassengerRateSortField.ID;
         Sort.Direction sortOrder = Sort.Direction.ASC;
 
-        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        PassengerRate passengerRate = PassengerRateTestUtil.buildDefaultPassengerRate();
         UUID passengerId = passengerRate.getPassengerId();
         PassengerRateDto passengerRateDto = PassengerRateTestUtil.buildPassengerRateDto();
 
@@ -128,7 +128,7 @@ class PassengerRateServiceImplTest {
 
     @Test
     void getPassengerRate_ShouldReturnPassengerRate_WhenPassengerRateFound() {
-        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        PassengerRate passengerRate = PassengerRateTestUtil.buildDefaultPassengerRate();
         UUID passengerId = passengerRate.getPassengerId();
         ObjectId rideId = passengerRate.getRideId();
         PassengerRateDto passengerRateDto = PassengerRateTestUtil.buildPassengerRateDto();
@@ -152,7 +152,7 @@ class PassengerRateServiceImplTest {
 
     @Test
     void getPassengerRate_ShouldThrowForbiddenException_WhenUserIsAnotherPassenger() {
-        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        PassengerRate passengerRate = PassengerRateTestUtil.buildDefaultPassengerRate();
         UUID passengerId = passengerRate.getPassengerId();
         ObjectId rideId = passengerRate.getRideId();
 
@@ -170,7 +170,7 @@ class PassengerRateServiceImplTest {
 
     @Test
     void getPassengerRate_ShouldThrowResourceNotFoundException_WhenPassengerRateNotFound() {
-        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        PassengerRate passengerRate = PassengerRateTestUtil.buildDefaultPassengerRate();
         UUID passengerId = passengerRate.getPassengerId();
         ObjectId rideId = passengerRate.getRideId();
 
@@ -192,7 +192,7 @@ class PassengerRateServiceImplTest {
         PassengerRateAddingDto passengerRateAddingDto = PassengerRateTestUtil.buildPassengerRateAddingDto();
         UUID passengerId = passengerRateAddingDto.passengerId();
         ObjectId rideId = passengerRateAddingDto.rideId();
-        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        PassengerRate passengerRate = PassengerRateTestUtil.buildDefaultPassengerRate();
         PassengerRateDto passengerRateDto = PassengerRateTestUtil.buildPassengerRateDto();
 
         doNothing().when(passengerRateValidator).validatePassengerRateUniqueness(passengerId, rideId);
@@ -237,7 +237,7 @@ class PassengerRateServiceImplTest {
     @Test
     void setPassengerRate_ShouldReturnPassengerRate_WhenPassengerRateFoundAndIsNotSet() {
         PassengerRateSettingDto passengerRateSettingDto = PassengerRateTestUtil.buildPassengerRateSettingDto();
-        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        PassengerRate passengerRate = PassengerRateTestUtil.buildDefaultPassengerRate();
         UUID passengerId = passengerRate.getPassengerId();
         ObjectId rideId = passengerRate.getRideId();
         PassengerRateDto passengerRateDto = PassengerRateTestUtil.buildPassengerRateDto();
@@ -265,7 +265,7 @@ class PassengerRateServiceImplTest {
     @Test
     void setPassengerRate_ShouldThrowResourceNotFoundException_WhenPassengerRateNotFound() {
         PassengerRateSettingDto passengerRateSettingDto = PassengerRateTestUtil.buildPassengerRateSettingDto();
-        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        PassengerRate passengerRate = PassengerRateTestUtil.buildDefaultPassengerRate();
         UUID passengerId = passengerRate.getPassengerId();
         ObjectId rideId = passengerRate.getRideId();
 
@@ -284,7 +284,7 @@ class PassengerRateServiceImplTest {
     @Test
     void setPassengerRate_ShouldThrowForbiddenException_WhenUserIsNotRideParticipant() {
         PassengerRateSettingDto passengerRateSettingDto = PassengerRateTestUtil.buildPassengerRateSettingDto();
-        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        PassengerRate passengerRate = PassengerRateTestUtil.buildDefaultPassengerRate();
         UUID passengerId = passengerRate.getPassengerId();
         ObjectId rideId = passengerRate.getRideId();
 
@@ -307,7 +307,7 @@ class PassengerRateServiceImplTest {
     @Test
     void setPassengerRate_ShouldThrowBadRequestException_WhenPassengerRateAlreadySet() {
         PassengerRateSettingDto passengerRateSettingDto = PassengerRateTestUtil.buildPassengerRateSettingDto();
-        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        PassengerRate passengerRate = PassengerRateTestUtil.buildDefaultPassengerRate();
         UUID passengerId = passengerRate.getPassengerId();
         ObjectId rideId = passengerRate.getRideId();
 

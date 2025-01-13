@@ -23,13 +23,14 @@ public final class PassengerRateTestUtil {
     public static final ObjectId NOT_EXISTING_RIDE_ID = new ObjectId("000000000000000000000000");
     public static final UUID NOT_EXISTING_PASSENGER_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
-    public static PassengerRate.PassengerRateBuilder getPassengerRateBuilder() {
+    public static PassengerRate buildDefaultPassengerRate() {
         return PassengerRate.builder()
                 .id(ID)
                 .rideId(RIDE_ID)
                 .driverId(DRIVER_ID)
                 .passengerId(PASSENGER_ID)
-                .rate(RATE);
+                .rate(RATE)
+                .build();
     }
 
     public static PassengerRateDto buildPassengerRateDto() {

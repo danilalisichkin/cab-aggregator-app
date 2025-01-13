@@ -48,7 +48,7 @@ class PaymentMethodServiceImplTest {
 
     @Test
     void getPaymentCards_ShouldReturnListOfPaymentCardDto_WhenPaymentCardsExist() {
-        PaymentAccount paymentAccount = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
+        PaymentAccount paymentAccount = PaymentAccountTestUtil.buildDefaultPaymentAccount();
         Customer stripeCustomer = new Customer();
         List<PaymentMethod> paymentCardList =
                 Collections.singletonList(StripeTestUtil.buildPaymentMethod());
@@ -75,7 +75,7 @@ class PaymentMethodServiceImplTest {
 
     @Test
     void getDefaultPaymentCard_ShouldReturnPaymentCard_WhenCustomerDefaultPaymentMethodIsCard() {
-        PaymentAccount paymentAccount = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
+        PaymentAccount paymentAccount = PaymentAccountTestUtil.buildDefaultPaymentAccount();
         Customer stripeCustomer = new Customer();
         PaymentMethod paymentMethod = StripeTestUtil.buildPaymentMethod();
         PaymentCardDto paymentCardDto = PaymentTestUtil.buildPaymentCardDto();
@@ -100,7 +100,7 @@ class PaymentMethodServiceImplTest {
 
     @Test
     void getDefaultPaymentCard_ShouldThrowResourceNotFoundException_WhenCustomerDefaultPaymentNotFound() {
-        PaymentAccount paymentAccount = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
+        PaymentAccount paymentAccount = PaymentAccountTestUtil.buildDefaultPaymentAccount();
         Customer stripeCustomer = new Customer();
         PaymentMethod paymentMethod = StripeTestUtil.buildPaymentMethod();
         paymentMethod.setType(PaymentMethodType.PAYPAL.getValue());
@@ -122,7 +122,7 @@ class PaymentMethodServiceImplTest {
 
     @Test
     void getDefaultPaymentCard_ShouldThrowResourceNotFoundException_WhenCustomerDefaultPaymentMethodIsNotCard() {
-        PaymentAccount paymentAccount = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
+        PaymentAccount paymentAccount = PaymentAccountTestUtil.buildDefaultPaymentAccount();
         Customer stripeCustomer = new Customer();
         PaymentMethod paymentMethod = StripeTestUtil.buildPaymentMethod();
         paymentMethod.setType(PaymentMethodType.PAYPAL.getValue());
@@ -145,7 +145,7 @@ class PaymentMethodServiceImplTest {
 
     @Test
     void setDefaultPaymentCard_ShouldSetCustomerDefaultPaymentAsCart_WhenPaymentMethodIsCard() {
-        PaymentAccount paymentAccount = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
+        PaymentAccount paymentAccount = PaymentAccountTestUtil.buildDefaultPaymentAccount();
         String paymentMethodId = StripeTestUtil.METHOD_ID;
         Customer stripeCustomer = new Customer();
         PaymentMethod paymentMethod = StripeTestUtil.buildPaymentMethod();
@@ -167,7 +167,7 @@ class PaymentMethodServiceImplTest {
 
     @Test
     void setDefaultPaymentCard_ShouldThrowBadRequestException_WhenCustomerDefaultPaymentMethodIsNotCard() {
-        PaymentAccount paymentAccount = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
+        PaymentAccount paymentAccount = PaymentAccountTestUtil.buildDefaultPaymentAccount();
         String paymentMethodId = StripeTestUtil.METHOD_ID;
         Customer stripeCustomer = new Customer();
         PaymentMethod paymentMethod = StripeTestUtil.buildPaymentMethod();

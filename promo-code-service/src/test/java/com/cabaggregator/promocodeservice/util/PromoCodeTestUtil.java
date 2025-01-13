@@ -22,12 +22,13 @@ public final class PromoCodeTestUtil {
 
     public static final String NOT_EXISTING_CODE = "NOT_EXISTING_CODE";
 
-    public static PromoCode.PromoCodeBuilder getPromoCodeBuilder() {
+    public static PromoCode buildDefaultPromoCode() {
         return PromoCode.builder()
                 .value(VALUE)
                 .discountPercentage(DISCOUNT_PERCENTAGE)
                 .endDate(END_DATE)
-                .limit(LIMIT);
+                .limit(LIMIT)
+                .build();
     }
 
     public static PromoCodeDto buildPromoCodeDto() {

@@ -48,15 +48,15 @@ class PriceCalculationServiceImplTest {
 
     @Test
     void calculatePrice_ShouldReturnPriceResponse_WhenAllPricePolicyFound() {
-        PriceCalculationRequest request = PriceCalculationTestUtil.getPriceCalculationRequest();
+        PriceCalculationRequest request = PriceCalculationTestUtil.buildPriceCalculationRequest();
         List<Double> coordinates = request.pickUpCoordinates();
         String gridCell = GeoGridTestUtil.GRID_CELL;
-        RideFare rideFare = RideFareTestUtil.getRideFareBuilder().build();
+        RideFare rideFare = RideFareTestUtil.buildDefaultRideFare();
         DemandCoefficient demandCoefficient =
                 DemandCoefficientTestUtil.buildStandardDemandCoefficient();
         WeatherCoefficient weatherCoefficient =
-                WeatherCoefficientTestUtil.getWeatherCoefficientBuilder().build();
-        PriceResponse priceResponse = PriceCalculationTestUtil.getPriceResponse();
+                WeatherCoefficientTestUtil.buildDefaultWeatherCoefficient();
+        PriceResponse priceResponse = PriceCalculationTestUtil.buildPriceResponse();
 
         when(geoGridService.calculateGridCell(coordinates.get(1), coordinates.get(0)))
                 .thenReturn(gridCell);

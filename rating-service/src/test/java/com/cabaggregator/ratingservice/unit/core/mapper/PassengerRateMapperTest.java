@@ -28,7 +28,7 @@ class PassengerRateMapperTest {
 
     @Test
     void entityToDto_ShouldConvertEntityToDto_WhenEntityIsNotNull() {
-        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        PassengerRate passengerRate = PassengerRateTestUtil.buildDefaultPassengerRate();
         PassengerRateDto passengerRateDto = PassengerRateTestUtil.buildPassengerRateDto();
 
         PassengerRateDto actual = mapper.entityToDto(passengerRate);
@@ -45,7 +45,7 @@ class PassengerRateMapperTest {
 
     @Test
     void updateEntityFromDto_ShouldUpdateEntity_WhenDtoIsNotNull() {
-        PassengerRate actual = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        PassengerRate actual = PassengerRateTestUtil.buildDefaultPassengerRate();
         PassengerRateSettingDto passengerRateSettingDto = PassengerRateTestUtil.buildPassengerRateSettingDto();
 
         mapper.updateEntityFromDto(passengerRateSettingDto, actual);
@@ -85,7 +85,7 @@ class PassengerRateMapperTest {
 
     @Test
     void entityListToDtoList_ShouldConvertEntityListToDtoList_WhenEntityListIsNotEmpty() {
-        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        PassengerRate passengerRate = PassengerRateTestUtil.buildDefaultPassengerRate();
         PassengerRateDto passengerRateDto = PassengerRateTestUtil.buildPassengerRateDto();
         List<PassengerRate> entityList = Arrays.asList(passengerRate, passengerRate);
         List<PassengerRateDto> expectedDtoList = Arrays.asList(passengerRateDto, passengerRateDto);
@@ -115,7 +115,7 @@ class PassengerRateMapperTest {
 
     @Test
     void entityPageToDtoPage_ShouldConvertEntityPageToDtoPage_WhenPageIsNotNull() {
-        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        PassengerRate passengerRate = PassengerRateTestUtil.buildDefaultPassengerRate();
         List<PassengerRate> entityList = Arrays.asList(passengerRate, passengerRate);
         Page<PassengerRate> entityPage = PaginationTestUtil.buildPageFromList(entityList);
         PassengerRateDto passengerRateDto = PassengerRateTestUtil.buildPassengerRateDto();

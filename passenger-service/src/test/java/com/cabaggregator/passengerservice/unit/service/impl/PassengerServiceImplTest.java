@@ -65,7 +65,7 @@ class PassengerServiceImplTest {
         PassengerSortField sortBy = PassengerSortField.ID;
         Sort.Direction sortOrder = Sort.Direction.ASC;
 
-        Passenger passenger = PassengerTestUtil.getPassengerBuilder().build();
+        Passenger passenger = PassengerTestUtil.buildDefaultPassenger();
         PassengerDto passengerDto = PassengerTestUtil.buildPassengerDto();
 
         PageRequest pageRequest = PaginationTestUtil.buildPageRequest(offset, limit, sortBy.getValue(), sortOrder);
@@ -98,7 +98,7 @@ class PassengerServiceImplTest {
 
     @Test
     void getPassengerById_ShouldReturnPassenger_WhenPassengerFound() {
-        Passenger passenger = PassengerTestUtil.getPassengerBuilder().build();
+        Passenger passenger = PassengerTestUtil.buildDefaultPassenger();
         PassengerDto passengerDto = PassengerTestUtil.buildPassengerDto();
 
         when(passengerRepository.findById(passenger.getId()))
@@ -118,7 +118,7 @@ class PassengerServiceImplTest {
 
     @Test
     void getPassengerById_ShouldThrowResourceNotFoundException_WhenPassengerNotFound() {
-        Passenger passenger = PassengerTestUtil.getPassengerBuilder().build();
+        Passenger passenger = PassengerTestUtil.buildDefaultPassenger();
 
         when(passengerRepository.findById(passenger.getId()))
                 .thenReturn(Optional.empty());
@@ -132,7 +132,7 @@ class PassengerServiceImplTest {
 
     @Test
     void updatePassenger_ShouldReturnPassenger_WhenPassengerFound() {
-        Passenger passenger = PassengerTestUtil.getPassengerBuilder().build();
+        Passenger passenger = PassengerTestUtil.buildDefaultPassenger();
         PassengerDto passengerDto = PassengerTestUtil.buildPassengerDto();
         PassengerUpdatingDto passengerUpdatingDto = PassengerTestUtil.buildPassengerUpdatingDto();
 
@@ -232,7 +232,7 @@ class PassengerServiceImplTest {
     @Test
     void savePassenger_ShouldReturnPassenger_WhenPassengerIsValid() {
         PassengerAddingDto passengerAddingDto = PassengerTestUtil.buildPassengerAddingDto();
-        Passenger passenger = PassengerTestUtil.getPassengerBuilder().build();
+        Passenger passenger = PassengerTestUtil.buildDefaultPassenger();
         PassengerDto passengerDto = PassengerTestUtil.buildPassengerDto();
 
         doNothing().when(passengerValidator).validateIdUniqueness(passengerAddingDto.id());

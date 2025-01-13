@@ -27,10 +27,11 @@ class BalanceOperationMapperTest {
     private final BalanceOperationMapper mapper = Mappers.getMapper(BalanceOperationMapper.class);
 
     private BalanceOperation buildBalanceOperation() {
-        PayoutAccount account = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
+        PayoutAccount account = PayoutAccountTestUtil.buildDefaultPayoutAccount();
 
         return BalanceOperationTestUtil
-                .getBalanceOperationBuilder()
+                .buildDefaultBalanceOperation()
+                .toBuilder()
                 .payoutAccount(account)
                 .build();
     }

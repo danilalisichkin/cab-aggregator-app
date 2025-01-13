@@ -64,7 +64,7 @@ class PassengerValidatorTest {
 
     @Test
     void checkExistenceOfPassengerWithId_ShouldThrowResourceNotFoundException_WhenPassengerNotFound() {
-        Passenger passenger = PassengerTestUtil.getPassengerBuilder().build();
+        Passenger passenger = PassengerTestUtil.buildDefaultPassenger();
 
         Mockito.when(passengerRepository.existsById(passenger.getId()))
                 .thenReturn(false);
@@ -75,7 +75,7 @@ class PassengerValidatorTest {
 
     @Test
     void checkExistenceOfPassengerWithId_ShouldNotThrowResourceNotFoundException_WhenPassengerFound() {
-        Passenger passenger = PassengerTestUtil.getPassengerBuilder().build();
+        Passenger passenger = PassengerTestUtil.buildDefaultPassenger();
 
         Mockito.when(passengerRepository.existsById(passenger.getId()))
                 .thenReturn(true);

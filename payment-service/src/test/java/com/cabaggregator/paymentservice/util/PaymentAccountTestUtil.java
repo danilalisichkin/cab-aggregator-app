@@ -23,11 +23,12 @@ public final class PaymentAccountTestUtil {
     public static final UUID NOT_EXISTING_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
     public static final String NOT_EXISTING_STRIPE_CUSTOMER_ID = "cus_000000000000000000000000";
 
-    public static PaymentAccount.PaymentAccountBuilder getPaymentAccountBuilder() {
+    public static PaymentAccount buildDefaultPaymentAccount() {
         return PaymentAccount.builder()
                 .id(ID)
                 .stripeCustomerId(STRIPE_CUSTOMER_ID)
-                .createdAt(CREATED_AT);
+                .createdAt(CREATED_AT)
+                .build();
     }
 
     public static PaymentAccountDto buildPaymentAccountDto() {

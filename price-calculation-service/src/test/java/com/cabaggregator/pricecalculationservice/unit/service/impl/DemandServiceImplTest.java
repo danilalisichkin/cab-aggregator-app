@@ -62,7 +62,6 @@ class DemandServiceImplTest {
         String gridCell = GeoGridTestUtil.GRID_CELL;
         ObjectId rideId = PriceCalculationTestUtil.RIDE_ID;
 
-
         when(cellDemandStore.get(gridCell))
                 .thenReturn(Optional.of(currentOrders));
         when(cellRideStore.exists(gridCell, rideId))

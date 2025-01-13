@@ -62,7 +62,7 @@ class PassengerRateValidatorTest {
 
     @Test
     void validatePassengerRateSetting_ShouldThrowBadRequestException_WhenPassengerRateAlreadySet() {
-        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        PassengerRate passengerRate = PassengerRateTestUtil.buildDefaultPassengerRate();
 
         assertThatThrownBy(
                 () -> passengerRateValidator.validatePassengerRateSetting(passengerRate))
@@ -74,7 +74,8 @@ class PassengerRateValidatorTest {
     @Test
     void validatePassengerRateSetting_ShouldNotThrowException_WhenPassengerRateNotSet() {
         PassengerRate passengerRate =
-                PassengerRateTestUtil.getPassengerRateBuilder()
+                PassengerRateTestUtil.buildDefaultPassengerRate()
+                        .toBuilder()
                         .rate(null)
                         .build();
 
@@ -87,7 +88,7 @@ class PassengerRateValidatorTest {
 
     @Test
     void validateDriverParticipation_ShouldThrowForbiddenException_WhenUserIsNotRideParticipant() {
-        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        PassengerRate passengerRate = PassengerRateTestUtil.buildDefaultPassengerRate();
 
         try (MockedStatic<SecurityUtil> mockedStatic = mockStatic(SecurityUtil.class)) {
             mockedStatic.when(SecurityUtil::getUserIdFromSecurityContext)
@@ -104,7 +105,7 @@ class PassengerRateValidatorTest {
 
     @Test
     void validateDriverParticipation_ShouldNotThrowException_WhenUserIsRideParticipant() {
-        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        PassengerRate passengerRate = PassengerRateTestUtil.buildDefaultPassengerRate();
 
         try (MockedStatic<SecurityUtil> mockedStatic = mockStatic(SecurityUtil.class)) {
             mockedStatic.when(SecurityUtil::getUserIdFromSecurityContext)

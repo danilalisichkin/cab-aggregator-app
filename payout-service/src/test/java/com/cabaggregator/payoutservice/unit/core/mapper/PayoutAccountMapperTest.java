@@ -26,7 +26,7 @@ class PayoutAccountMapperTest {
 
     @Test
     void entityToDto_ShouldConvertEntityToDto_WhenEntityIsNotNull() {
-        PayoutAccount payoutAccount = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
+        PayoutAccount payoutAccount = PayoutAccountTestUtil.buildDefaultPayoutAccount();
         PayoutAccountDto payoutAccountDto = PayoutAccountTestUtil.buildPayoutAccountDto();
 
         PayoutAccountDto actual = mapper.entityToDto(payoutAccount);
@@ -61,7 +61,7 @@ class PayoutAccountMapperTest {
 
     @Test
     void entityListToDtoList_ShouldConvertEntityListToDtoList_WhenEntityListIsNotEmpty() {
-        PayoutAccount payoutAccount = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
+        PayoutAccount payoutAccount = PayoutAccountTestUtil.buildDefaultPayoutAccount();
         List<PayoutAccount> entityList = Arrays.asList(payoutAccount, payoutAccount);
         PayoutAccountDto payoutAccountDto = PayoutAccountTestUtil.buildPayoutAccountDto();
         List<PayoutAccountDto> dtoList = Arrays.asList(payoutAccountDto, payoutAccountDto);
@@ -91,7 +91,7 @@ class PayoutAccountMapperTest {
 
     @Test
     void entityPageToDtoPage_ShouldConvertEntityPageToDtoPage_WhenPageIsNotNull() {
-        PayoutAccount payoutAccount = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
+        PayoutAccount payoutAccount = PayoutAccountTestUtil.buildDefaultPayoutAccount();
         List<PayoutAccount> entityList = Arrays.asList(payoutAccount, payoutAccount);
         Page<PayoutAccount> entityPage = PaginationTestUtil.buildPageFromList(entityList);
         PayoutAccountDto payoutAccountDto = PayoutAccountTestUtil.buildPayoutAccountDto();

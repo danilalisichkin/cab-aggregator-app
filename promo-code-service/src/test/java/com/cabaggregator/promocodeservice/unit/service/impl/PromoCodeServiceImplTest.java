@@ -66,7 +66,7 @@ class PromoCodeServiceImplTest {
         PromoCodeSortField sortBy = PromoCodeSortField.LIMIT;
         Sort.Direction sortOrder = Sort.Direction.ASC;
 
-        PromoCode promoCode = PromoCodeTestUtil.getPromoCodeBuilder().build();
+        PromoCode promoCode = PromoCodeTestUtil.buildDefaultPromoCode();
         PromoCodeDto promoCodeDto = PromoCodeTestUtil.buildPromoCodeDto();
 
         PageRequest pageRequest = PaginationTestUtil.buildPageRequest(offset, limit, sortBy.getValue(), sortOrder);
@@ -99,7 +99,7 @@ class PromoCodeServiceImplTest {
 
     @Test
     void getPromoCode_ShouldReturnPromoCode_WhenPromoCodeFound() {
-        PromoCode promoCode = PromoCodeTestUtil.getPromoCodeBuilder().build();
+        PromoCode promoCode = PromoCodeTestUtil.buildDefaultPromoCode();
         PromoCodeDto promoCodeDto = PromoCodeTestUtil.buildPromoCodeDto();
 
         when(promoCodeRepository.findById(promoCode.getValue()))
@@ -119,7 +119,7 @@ class PromoCodeServiceImplTest {
 
     @Test
     void getPromoCode_ShouldThrowResourceNotFoundException_WhenPromoCodeNotFound() {
-        PromoCode promoCode = PromoCodeTestUtil.getPromoCodeBuilder().build();
+        PromoCode promoCode = PromoCodeTestUtil.buildDefaultPromoCode();
 
         when(promoCodeRepository.findById(promoCode.getValue()))
                 .thenReturn(Optional.empty());
@@ -169,7 +169,7 @@ class PromoCodeServiceImplTest {
     @Test
     void savePromoCode_ShouldReturnPromoCode_WhenPromoCodeIsValid() {
         PromoCodeAddingDto promoCodeAddingDto = PromoCodeTestUtil.buildPromoCodeAddingDto();
-        PromoCode promoCode = PromoCodeTestUtil.getPromoCodeBuilder().build();
+        PromoCode promoCode = PromoCodeTestUtil.buildDefaultPromoCode();
         PromoCodeDto promoCodeDto = PromoCodeTestUtil.buildPromoCodeDto();
 
         doNothing().when(promoCodeValidator).validatePromoCodeUniqueness(promoCodeAddingDto.value());
@@ -196,7 +196,7 @@ class PromoCodeServiceImplTest {
 
     @Test
     void updatePromoCode_ShouldReturnPromoCode_WhenPromoCodeFound() {
-        PromoCode promoCode = PromoCodeTestUtil.getPromoCodeBuilder().build();
+        PromoCode promoCode = PromoCodeTestUtil.buildDefaultPromoCode();
         PromoCodeDto promoCodeDto = PromoCodeTestUtil.buildPromoCodeDto();
         PromoCodeUpdatingDto promoCodeUpdatingDto = PromoCodeTestUtil.buildPromoCodeUpdatingDto();
 

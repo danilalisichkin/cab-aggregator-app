@@ -62,7 +62,7 @@ class DriverRateValidatorTest {
 
     @Test
     void validateDriverRateSetting_ShouldThrowBadRequestException_WhenDriverRateAlreadySet() {
-        DriverRate driverRate = DriverRateTestUtil.getDriverRateBuilder().build();
+        DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
 
         assertThatThrownBy(
                 () -> driverRateValidator.validateDriverRateSetting(driverRate))
@@ -74,7 +74,8 @@ class DriverRateValidatorTest {
     @Test
     void validateDriverRateSetting_ShouldNotThrowException_WhenDriverRateNotSet() {
         DriverRate driverRate =
-                DriverRateTestUtil.getDriverRateBuilder()
+                DriverRateTestUtil.buildDefaultDriverRate()
+                        .toBuilder()
                         .rate(null)
                         .build();
 
@@ -87,7 +88,7 @@ class DriverRateValidatorTest {
 
     @Test
     void validatePassengerParticipation_ShouldThrowForbiddenException_WhenUserIsNotRideParticipant() {
-        DriverRate driverRate = DriverRateTestUtil.getDriverRateBuilder().build();
+        DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
 
         try (MockedStatic<SecurityUtil> mockedStatic = mockStatic(SecurityUtil.class)) {
             mockedStatic.when(SecurityUtil::getUserIdFromSecurityContext)
@@ -104,7 +105,7 @@ class DriverRateValidatorTest {
 
     @Test
     void validatePassengerParticipation_ShouldNotThrowException_WhenUserIsRideParticipant() {
-        DriverRate driverRate = DriverRateTestUtil.getDriverRateBuilder().build();
+        DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
 
         try (MockedStatic<SecurityUtil> mockedStatic = mockStatic(SecurityUtil.class)) {
             mockedStatic.when(SecurityUtil::getUserIdFromSecurityContext)

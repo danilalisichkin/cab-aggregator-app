@@ -45,10 +45,12 @@ public class PromoStatRepositoryTest {
 
     @Test
     void existsByPromoCodeAndUserId_ShouldReturnTrue_WhenPromoStatExists() {
-        final PromoCode promoCode = PromoCodeTestUtil.getPromoCodeBuilder().build();
+        final PromoCode promoCode = PromoCodeTestUtil.buildDefaultPromoCode();
         final PromoCode savedPromoCode = promoCodeRepository.save(promoCode);
 
-        PromoStat promoStat = PromoStatTestUtil.getPromoStatBuilder().id(null).build();
+        PromoStat promoStat = PromoStatTestUtil.buildDefaultPromoStat()
+                .toBuilder()
+                .id(null).build();
         promoStat.setPromoCode(savedPromoCode);
         promoStatRepository.save(promoStat);
 
@@ -59,7 +61,7 @@ public class PromoStatRepositoryTest {
 
     @Test
     void existsByPromoCodeAndUserId_ShouldReturnFalse_WhenPromoStatDoesNotExist() {
-        final PromoStat promoStat = PromoStatTestUtil.getPromoStatBuilder().build();
+        final PromoStat promoStat = PromoStatTestUtil.buildDefaultPromoStat();
 
         boolean result = promoStatRepository.existsByPromoCodeAndUserId(promoStat.getPromoCode(), promoStat.getUserId());
 

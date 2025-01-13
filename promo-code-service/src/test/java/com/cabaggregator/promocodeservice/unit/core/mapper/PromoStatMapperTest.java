@@ -23,7 +23,7 @@ class PromoStatMapperTest {
 
     @Test
     void entityToDto_ShouldConvertEntityToDto_WhenEntityIsNotNull() {
-        PromoStat promoStat = PromoStatTestUtil.getPromoStatBuilder().build();
+        PromoStat promoStat = PromoStatTestUtil.buildDefaultPromoStat();
         PromoStatDto promoStatDto = PromoStatTestUtil.buildPromoStatDto();
 
         PromoStatDto actual = mapper.entityToDto(promoStat);
@@ -57,7 +57,7 @@ class PromoStatMapperTest {
 
     @Test
     void entityListToDtoList_ShouldConvertEntityListToDtoList_WhenEntityListIsNotEmpty() {
-        PromoStat promoStat = PromoStatTestUtil.getPromoStatBuilder().build();
+        PromoStat promoStat = PromoStatTestUtil.buildDefaultPromoStat();
         PromoStatDto promoStatDto = PromoStatTestUtil.buildPromoStatDto();
 
         List<PromoStat> entityList = Arrays.asList(promoStat, promoStat);
@@ -88,7 +88,7 @@ class PromoStatMapperTest {
 
     @Test
     void entityPageToDtoPage_ShouldConvertEntityPageToDtoPage_WhenPageIsNotNull() {
-        PromoStat promoStat = PromoStatTestUtil.getPromoStatBuilder().build();
+        PromoStat promoStat = PromoStatTestUtil.buildDefaultPromoStat();
         List<PromoStat> entityList = Arrays.asList(promoStat, promoStat);
         Page<PromoStat> entityPage = PaginationTestUtil.buildPageFromList(entityList);
 

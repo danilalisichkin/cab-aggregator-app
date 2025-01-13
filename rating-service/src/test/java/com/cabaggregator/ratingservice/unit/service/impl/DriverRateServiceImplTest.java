@@ -72,7 +72,7 @@ class DriverRateServiceImplTest {
         DriverRateSortField sortBy = DriverRateSortField.ID;
         Sort.Direction sortOrder = Sort.Direction.ASC;
 
-        DriverRate driverRate = DriverRateTestUtil.getDriverRateBuilder().build();
+        DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
         UUID driverId = driverRate.getDriverId();
         DriverRateDto driverRateDto = DriverRateTestUtil.buildDriverRateDto();
 
@@ -128,7 +128,7 @@ class DriverRateServiceImplTest {
 
     @Test
     void getDriverRate_ShouldReturnDriverRate_WhenDriverRateFound() {
-        DriverRate driverRate = DriverRateTestUtil.getDriverRateBuilder().build();
+        DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
         UUID driverId = driverRate.getDriverId();
         ObjectId rideId = driverRate.getRideId();
         DriverRateDto driverRateDto = DriverRateTestUtil.buildDriverRateDto();
@@ -152,7 +152,7 @@ class DriverRateServiceImplTest {
 
     @Test
     void getDriverRate_ShouldThrowForbiddenException_WhenUserIsAnotherDriver() {
-        DriverRate driverRate = DriverRateTestUtil.getDriverRateBuilder().build();
+        DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
         UUID driverId = driverRate.getDriverId();
         ObjectId rideId = driverRate.getRideId();
 
@@ -170,7 +170,7 @@ class DriverRateServiceImplTest {
 
     @Test
     void getDriverRate_ShouldThrowResourceNotFoundException_WhenDriverRateNotFound() {
-        DriverRate driverRate = DriverRateTestUtil.getDriverRateBuilder().build();
+        DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
         UUID driverId = driverRate.getDriverId();
         ObjectId rideId = driverRate.getRideId();
 
@@ -192,7 +192,7 @@ class DriverRateServiceImplTest {
         DriverRateAddingDto driverRateAddingDto = DriverRateTestUtil.buildDriverRateAddingDto();
         UUID driverId = driverRateAddingDto.driverId();
         ObjectId rideId = driverRateAddingDto.rideId();
-        DriverRate driverRate = DriverRateTestUtil.getDriverRateBuilder().build();
+        DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
         DriverRateDto driverRateDto = DriverRateTestUtil.buildDriverRateDto();
 
         doNothing().when(driverRateValidator).validateDriverRateUniqueness(driverId, rideId);
@@ -237,7 +237,7 @@ class DriverRateServiceImplTest {
     @Test
     void setDriverRate_ShouldReturnDriverRate_WhenDriverRateFoundAndIsNotSet() {
         DriverRateSettingDto driverRateSettingDto = DriverRateTestUtil.buildDriverRateSettingDto();
-        DriverRate driverRate = DriverRateTestUtil.getDriverRateBuilder().build();
+        DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
         UUID driverId = driverRate.getDriverId();
         ObjectId rideId = driverRate.getRideId();
         DriverRateDto driverRateDto = DriverRateTestUtil.buildDriverRateDto();
@@ -265,7 +265,7 @@ class DriverRateServiceImplTest {
     @Test
     void setDriverRate_ShouldThrowResourceNotFoundException_WhenDriverRateNotFound() {
         DriverRateSettingDto driverRateSettingDto = DriverRateTestUtil.buildDriverRateSettingDto();
-        DriverRate driverRate = DriverRateTestUtil.getDriverRateBuilder().build();
+        DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
         UUID driverId = driverRate.getDriverId();
         ObjectId rideId = driverRate.getRideId();
 
@@ -284,7 +284,7 @@ class DriverRateServiceImplTest {
     @Test
     void setDriverRate_ShouldThrowForbiddenException_WhenUserIsNotRideParticipant() {
         DriverRateSettingDto driverRateSettingDto = DriverRateTestUtil.buildDriverRateSettingDto();
-        DriverRate driverRate = DriverRateTestUtil.getDriverRateBuilder().build();
+        DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
         UUID driverId = driverRate.getDriverId();
         ObjectId rideId = driverRate.getRideId();
 
@@ -307,7 +307,7 @@ class DriverRateServiceImplTest {
     @Test
     void setDriverRate_ShouldThrowBadRequestException_WhenDriverRateAlreadySet() {
         DriverRateSettingDto driverRateSettingDto = DriverRateTestUtil.buildDriverRateSettingDto();
-        DriverRate driverRate = DriverRateTestUtil.getDriverRateBuilder().build();
+        DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
         UUID driverId = driverRate.getDriverId();
         ObjectId rideId = driverRate.getRideId();
 

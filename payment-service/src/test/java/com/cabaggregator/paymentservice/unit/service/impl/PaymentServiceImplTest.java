@@ -76,7 +76,7 @@ class PaymentServiceImplTest {
     void getRidePayments_ShouldReturnListOfPayments_WhenTheyFound() {
         ObjectId rideId = new ObjectId(PaymentContextTestUtil.CONTEXT_ID);
         PaymentContextType contextType = PaymentContextType.RIDE;
-        PaymentContext paymentContext = PaymentContextTestUtil.getPaymentContextBuilder().build();
+        PaymentContext paymentContext = PaymentContextTestUtil.buildDefaultPaymentContext();
         List<PaymentContext> paymentContextList = Collections.singletonList(paymentContext);
         PaymentDto paymentDto = PaymentTestUtil.buildPaymentDto();
         List<PaymentDto> paymentDtoList = Collections.singletonList(paymentDto);
@@ -116,10 +116,10 @@ class PaymentServiceImplTest {
     @Test
     void createPayment_ShouldReturnPaymentResponse_WhenPaymentIntentIsCreated() {
         PaymentRequest paymentRequest = PaymentTestUtil.buildPaymentRequest();
-        PaymentAccount paymentAccount = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
+        PaymentAccount paymentAccount = PaymentAccountTestUtil.buildDefaultPaymentAccount();
         Customer stripeCustomer = new Customer();
         PaymentIntent paymentIntent = StripeTestUtil.buildPaymentIntent();
-        Payment payment = PaymentTestUtil.getPaymentBuilder().build();
+        Payment payment = PaymentTestUtil.buildDefaultPayment();
         PaymentResponse paymentResponse = PaymentTestUtil.buildPaymentResponse();
         String description = String.format("Ride №%s", paymentRequest.contextId());
 
@@ -175,7 +175,7 @@ class PaymentServiceImplTest {
     void updatePaymentStatus_ShouldUpdatePaymentStatusAndDoesNotEndRide_WhenPaymentExistsAndStatusNotSucceed() {
         String paymentIntentId = StripeTestUtil.INTENT_ID;
         PaymentStatus paymentStatus = PaymentStatus.PROCESSING;
-        Payment payment = PaymentTestUtil.getPaymentBuilder().build();
+        Payment payment = PaymentTestUtil.buildDefaultPayment();
         Payment updatedPayment = payment.withStatus(paymentStatus);
 
         when(paymentRepository.findById(paymentIntentId))
@@ -214,8 +214,8 @@ class PaymentServiceImplTest {
     void updatePaymentStatus_ShouldChangeRidePaymentStatus_WhenPaymentExistsAndStatusSucceed() {
         String paymentIntentId = StripeTestUtil.INTENT_ID;
         PaymentStatus paymentStatus = PaymentStatus.SUCCEEDED;
-        Payment payment = PaymentTestUtil.getPaymentBuilder().build();
-        PaymentContext paymentContext = PaymentContextTestUtil.getPaymentContextBuilder().build();
+        Payment payment = PaymentTestUtil.buildDefaultPayment();
+        PaymentContext paymentContext = PaymentContextTestUtil.buildDefaultPaymentContext();
         ObjectId rideId = new ObjectId(paymentContext.getContextId());
 
         when(paymentRepository.findById(paymentIntentId))

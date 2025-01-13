@@ -30,7 +30,7 @@ class RideFareServiceImplTest {
 
     @Test
     void getRideFare_ShouldReturnRideFare_WhenRideFareFound() {
-        RideFare rideFare = RideFareTestUtil.getRideFareBuilder().build();
+        RideFare rideFare = RideFareTestUtil.buildDefaultRideFare();
 
         when(rideFareRepository.findById(rideFare.getName()))
                 .thenReturn(Optional.of(rideFare));
@@ -46,7 +46,7 @@ class RideFareServiceImplTest {
 
     @Test
     void getRideFare_ShouldThrowInternalErrorException_WhenRideFareNotFound() {
-        RideFare rideFare = RideFareTestUtil.getRideFareBuilder().build();
+        RideFare rideFare = RideFareTestUtil.buildDefaultRideFare();
 
         when(rideFareRepository.findById(rideFare.getName()))
                 .thenReturn(Optional.empty());

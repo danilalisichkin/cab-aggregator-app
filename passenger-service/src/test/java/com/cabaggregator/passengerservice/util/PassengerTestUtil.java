@@ -28,14 +28,15 @@ public final class PassengerTestUtil {
     public static final String UPDATED_LAST_NAME = "NewLastName";
     public static final Double UPDATED_RATING = 2.0;
 
-    public static Passenger.PassengerBuilder getPassengerBuilder() {
+    public static Passenger buildDefaultPassenger() {
         return Passenger.builder()
                 .id(ID)
                 .phoneNumber(PHONE_NUMBER)
                 .email(EMAIL)
                 .firstName(FIRST_NAME)
                 .lastName(LAST_NAME)
-                .rating(RATING);
+                .rating(RATING)
+                .build();
     }
 
     public static PassengerDto buildPassengerDto() {

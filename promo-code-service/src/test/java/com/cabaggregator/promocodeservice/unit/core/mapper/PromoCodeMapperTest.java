@@ -25,7 +25,7 @@ class PromoCodeMapperTest {
 
     @Test
     void entityToDto_ShouldConvertEntityToDto_WhenEntityIsNotNull() {
-        PromoCode promoCode = PromoCodeTestUtil.getPromoCodeBuilder().build();
+        PromoCode promoCode = PromoCodeTestUtil.buildDefaultPromoCode();
         PromoCodeDto promoCodeDto = PromoCodeTestUtil.buildPromoCodeDto();
 
         PromoCodeDto actual = mapper.entityToDto(promoCode);
@@ -42,7 +42,7 @@ class PromoCodeMapperTest {
 
     @Test
     void updateEntityFromDto_ShouldUpdateEntity_WhenDtoIsNotNull() {
-        PromoCode actual = PromoCodeTestUtil.getPromoCodeBuilder().build();
+        PromoCode actual = PromoCodeTestUtil.buildDefaultPromoCode();
         PromoCodeUpdatingDto promoCodeUpdatingDto = PromoCodeTestUtil.buildPromoCodeUpdatingDto();
 
         mapper.updateEntityFromDto(promoCodeUpdatingDto, actual);
@@ -82,7 +82,7 @@ class PromoCodeMapperTest {
 
     @Test
     void entityListToDtoList_ShouldConvertEntityListToDtoList_WhenEntityListIsNotEmpty() {
-        PromoCode promoCode = PromoCodeTestUtil.getPromoCodeBuilder().build();
+        PromoCode promoCode = PromoCodeTestUtil.buildDefaultPromoCode();
         PromoCodeDto promoCodeDto = PromoCodeTestUtil.buildPromoCodeDto();
 
         List<PromoCode> entityList = Arrays.asList(promoCode, promoCode);
@@ -113,7 +113,7 @@ class PromoCodeMapperTest {
 
     @Test
     void entityPageToDtoPage_ShouldConvertEntityPageToDtoPage_WhenPageIsNotNull() {
-        PromoCode promoCode = PromoCodeTestUtil.getPromoCodeBuilder().build();
+        PromoCode promoCode = PromoCodeTestUtil.buildDefaultPromoCode();
         List<PromoCode> entityList = Arrays.asList(promoCode, promoCode);
         Page<PromoCode> entityPage = PaginationTestUtil.buildPageFromList(entityList);
 

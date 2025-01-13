@@ -36,7 +36,7 @@ class PaymentContextServiceImplTest {
 
     @Test
     void getPaymentContextsByTypeAndContextId_ShouldReturnListOfPaymentContexts_WhenTheyFound() {
-        PaymentContext paymentContext = PaymentContextTestUtil.getPaymentContextBuilder().build();
+        PaymentContext paymentContext = PaymentContextTestUtil.buildDefaultPaymentContext();
         PaymentContextType type = paymentContext.getType();
         String contextId = paymentContext.getContextId();
         List<PaymentContext> paymentContexts = Collections.singletonList(paymentContext);
@@ -66,8 +66,8 @@ class PaymentContextServiceImplTest {
 
     @Test
     void getPaymentContext_ShouldReturnPaymentContext_WhenContextExists() {
-        Payment payment = PaymentTestUtil.getPaymentBuilder().build();
-        PaymentContext paymentContext = PaymentContextTestUtil.getPaymentContextBuilder().build();
+        Payment payment = PaymentTestUtil.buildDefaultPayment();
+        PaymentContext paymentContext = PaymentContextTestUtil.buildDefaultPaymentContext();
 
         when(paymentContextRepository.findByPayment(payment))
                 .thenReturn(Optional.of(paymentContext));
@@ -83,7 +83,7 @@ class PaymentContextServiceImplTest {
 
     @Test
     void getPaymentContext_ShouldThrowResourceNotFoundException_WhenContextDoesNotExist() {
-        Payment payment = PaymentTestUtil.getPaymentBuilder().build();
+        Payment payment = PaymentTestUtil.buildDefaultPayment();
 
         when(paymentContextRepository.findByPayment(payment))
                 .thenReturn(Optional.empty());
