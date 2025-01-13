@@ -79,9 +79,10 @@ class BalanceOperationServiceImplTest {
         LocalDateTime startTime = BalanceOperationTestUtil.TIME_BEFORE_CREATION;
         LocalDateTime endTime = BalanceOperationTestUtil.TIME_AFTER_CREATION;
 
-        PayoutAccount payoutAccount = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
+        PayoutAccount payoutAccount = PayoutAccountTestUtil.buildDefaultPayoutAccount();
         BalanceOperation operation =
-                BalanceOperationTestUtil.getBalanceOperationBuilder()
+                BalanceOperationTestUtil.buildDefaultBalanceOperation()
+                        .toBuilder()
                         .payoutAccount(payoutAccount)
                         .build();
         BalanceOperationDto operationDto = BalanceOperationTestUtil.buildBalanceOperationDto();
@@ -117,11 +118,12 @@ class BalanceOperationServiceImplTest {
 
     @Test
     void processDeposit_ShouldProcessDepositSuccessfully_WhenValidAmount() {
-        PayoutAccount payoutAccount = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
+        PayoutAccount payoutAccount = PayoutAccountTestUtil.buildDefaultPayoutAccount();
         BalanceOperationAddingDto operationAddingDto =
                 BalanceOperationTestUtil.buildBalanceOperationAddingDto(BalanceOperationTestUtil.DEPOSIT_AMOUNT);
         BalanceOperation operation =
-                BalanceOperationTestUtil.getBalanceOperationBuilder()
+                BalanceOperationTestUtil.buildDefaultBalanceOperation()
+                        .toBuilder()
                         .payoutAccount(payoutAccount)
                         .build();
         BalanceOperationDto operationDto = BalanceOperationTestUtil.buildBalanceOperationDto();
@@ -142,7 +144,7 @@ class BalanceOperationServiceImplTest {
 
     @Test
     void processDeposit_ShouldThrowBadRequestException_WhenInvalidAmount() {
-        PayoutAccount payoutAccount = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
+        PayoutAccount payoutAccount = PayoutAccountTestUtil.buildDefaultPayoutAccount();
         BalanceOperationAddingDto operationAddingDto =
                 BalanceOperationTestUtil.buildBalanceOperationAddingDto(BalanceOperationTestUtil.WITHDRAW_AMOUNT);
 
@@ -160,10 +162,11 @@ class BalanceOperationServiceImplTest {
 
     @Test
     void processWithdraw_ShouldProcessWithdrawSuccessfully_WhenValidAmountAndSufficientFunds() {
-        PayoutAccount payoutAccount = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
+        PayoutAccount payoutAccount = PayoutAccountTestUtil.buildDefaultPayoutAccount();
         Long currentBalance = PayoutAccountTestUtil.COMPUTED_BALANCE;
         BalanceOperation operation =
-                BalanceOperationTestUtil.getBalanceOperationBuilder()
+                BalanceOperationTestUtil.buildDefaultBalanceOperation()
+                        .toBuilder()
                         .payoutAccount(payoutAccount)
                         .build();
         BalanceOperationAddingDto operationAddingDto =
@@ -193,7 +196,7 @@ class BalanceOperationServiceImplTest {
 
     @Test
     void processWithdraw_ShouldThrowBadRequestException_WhenInsufficientFunds() {
-        PayoutAccount payoutAccount = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
+        PayoutAccount payoutAccount = PayoutAccountTestUtil.buildDefaultPayoutAccount();
         Long currentBalance = PayoutAccountTestUtil.COMPUTED_BALANCE;
         Long withdrawAmount = 2 * BalanceOperationTestUtil.WITHDRAW_AMOUNT;
         BalanceOperationAddingDto operationAddingDto =
@@ -215,7 +218,7 @@ class BalanceOperationServiceImplTest {
 
     @Test
     void processWithdraw_ShouldThrowResourceNotFoundException_WhenStripeAccountNotFound() {
-        PayoutAccount payoutAccount = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
+        PayoutAccount payoutAccount = PayoutAccountTestUtil.buildDefaultPayoutAccount();
         BalanceOperationAddingDto operationAddingDto =
                 BalanceOperationTestUtil.buildBalanceOperationAddingDto(BalanceOperationTestUtil.WITHDRAW_AMOUNT);
         Long currentBalance = PayoutAccountTestUtil.COMPUTED_BALANCE;
@@ -236,7 +239,7 @@ class BalanceOperationServiceImplTest {
 
     @Test
     void getAccountBalance_ShouldReturnComputedBalance_WhenCalledWithValidParameters() {
-        PayoutAccount payoutAccount = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
+        PayoutAccount payoutAccount = PayoutAccountTestUtil.buildDefaultPayoutAccount();
         Long balance = PayoutAccountTestUtil.COMPUTED_BALANCE;
 
         when(balanceOperationRepository.getBalance(payoutAccount))

@@ -19,16 +19,18 @@ public final class PayoutAccountTestUtil {
 
     public static final UUID NOT_EXISTING_ID = UUID.fromString("f47ac10b-58cc-4372-a567-0e02b2c3d479");
 
-    public static PayoutAccount.PayoutAccountBuilder getPayoutAccountBuilder() {
+    public static PayoutAccount buildDefaultPayoutAccount() {
         return PayoutAccount.builder()
                 .id(ID)
                 .stripeAccountId(StripeTestUtil.STRIPE_ACCOUNT_ID)
                 .createdAt(CREATED_AT)
-                .active(ACTIVE);
+                .active(ACTIVE)
+                .build();
     }
 
     public static PayoutAccount getNotExistingPayoutAccount() {
-        return getPayoutAccountBuilder()
+        return buildDefaultPayoutAccount()
+                .toBuilder()
                 .id(NOT_EXISTING_ID)
                 .stripeAccountId(StripeTestUtil.NOT_EXISTING_STRIPE_ACCOUNT_ID)
                 .build();

@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 @With
 @Getter
 @Setter
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "payments")

@@ -86,7 +86,7 @@ class PayoutAccountServiceImplTest {
         PayoutAccountSortField sortBy = PayoutAccountSortField.ID;
         Sort.Direction sortOrder = Sort.Direction.ASC;
 
-        PayoutAccount account = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
+        PayoutAccount account = PayoutAccountTestUtil.buildDefaultPayoutAccount();
         PayoutAccountDto accountDto = PayoutAccountTestUtil.buildPayoutAccountDto();
 
         PageRequest pageRequest = PaginationTestUtil.buildPageRequest(offset, limit, sortBy.getValue(), sortOrder);
@@ -120,7 +120,7 @@ class PayoutAccountServiceImplTest {
 
     @Test
     void getPayoutAccount_ShouldReturnPayoutAccount_WhenPayoutAccountFound() {
-        PayoutAccount account = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
+        PayoutAccount account = PayoutAccountTestUtil.buildDefaultPayoutAccount();
         PayoutAccountDto accountDto = PayoutAccountTestUtil.buildPayoutAccountDto();
 
         when(payoutAccountRepository.findById(account.getId()))
@@ -140,7 +140,7 @@ class PayoutAccountServiceImplTest {
 
     @Test
     void getPayoutAccount_ShouldThrowResourceNotFoundException_WhenPayoutAccountNotFound() {
-        PayoutAccount account = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
+        PayoutAccount account = PayoutAccountTestUtil.buildDefaultPayoutAccount();
 
         when(payoutAccountRepository.findById(account.getId()))
                 .thenReturn(Optional.empty());
@@ -155,7 +155,7 @@ class PayoutAccountServiceImplTest {
 
     @Test
     void createPayoutAccount_ShouldReturnPayoutAccount_WhenPayoutAccountIsValid() {
-        PayoutAccount account = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
+        PayoutAccount account = PayoutAccountTestUtil.buildDefaultPayoutAccount();
         PayoutAccountDto accountDto = PayoutAccountTestUtil.buildPayoutAccountDto();
         PayoutAccountAddingDto addingDto = PayoutAccountTestUtil.buildPayoutAccountAddingDto();
         Account stripeAccount = StripeTestUtil.buildStripeAccount();
@@ -221,7 +221,7 @@ class PayoutAccountServiceImplTest {
 
     @Test
     void updatePayoutAccount_ShouldUpdateStripeAccountId_WhenPayoutAndStripeAccountsExist() {
-        PayoutAccount account = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
+        PayoutAccount account = PayoutAccountTestUtil.buildDefaultPayoutAccount();
         Account stripeAccount = StripeTestUtil.buildStripeAccount();
         PayoutAccountDto accountDto = PayoutAccountTestUtil.buildPayoutAccountDto();
 
@@ -381,7 +381,7 @@ class PayoutAccountServiceImplTest {
         LocalDateTime startTime = BalanceOperationTestUtil.TIME_BEFORE_CREATION;
         LocalDateTime endTime = BalanceOperationTestUtil.TIME_AFTER_CREATION;
 
-        PayoutAccount payoutAccount = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
+        PayoutAccount payoutAccount = PayoutAccountTestUtil.buildDefaultPayoutAccount();
         BalanceOperationDto operationDto = BalanceOperationTestUtil.buildBalanceOperationDto();
 
         Page<BalanceOperationDto> operationDtoPage = PaginationTestUtil.buildPageFromSingleElement(operationDto);

@@ -10,10 +10,11 @@ public final class RideFareTestUtil {
     public static final Long PRICE_PER_KILOMETER = 130L;
     public static final Long PRICE_PER_MINUTE = 100L;
 
-    public static RideFare.RideFareBuilder getRideFareBuilder() {
+    public static RideFare buildDefaultRideFare() {
         return RideFare.builder()
                 .name(NAME)
                 .pricePerKilometer(PRICE_PER_KILOMETER)
-                .pricePerMinute(PRICE_PER_MINUTE);
+                .pricePerMinute(PRICE_PER_MINUTE)
+                .build();
     }
 }

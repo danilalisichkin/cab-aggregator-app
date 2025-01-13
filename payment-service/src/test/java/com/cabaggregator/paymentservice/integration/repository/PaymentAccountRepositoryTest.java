@@ -25,9 +25,7 @@ class PaymentAccountRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void existsByStripeCustomerId_ShouldReturnTrue_WhenCustomerExists() {
-        PaymentAccount paymentAccount =
-                PaymentAccountTestUtil.getPaymentAccountBuilder()
-                        .build();
+        PaymentAccount paymentAccount = PaymentAccountTestUtil.buildDefaultPaymentAccount();
 
         paymentAccountRepository.save(paymentAccount);
 

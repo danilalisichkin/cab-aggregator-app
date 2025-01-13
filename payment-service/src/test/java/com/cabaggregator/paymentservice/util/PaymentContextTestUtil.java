@@ -13,11 +13,12 @@ public final class PaymentContextTestUtil {
 
     public static final String NOT_EXISTING_CONTEXT_ID = "not_existing_id";
 
-    public static PaymentContext.PaymentContextBuilder getPaymentContextBuilder() {
+    public static PaymentContext buildDefaultPaymentContext() {
         return PaymentContext.builder()
                 .id(ID)
                 .contextId(CONTEXT_ID)
                 .payment(PaymentTestUtil.getPaymentBuilder().build())
-                .type(TYPE);
+                .type(TYPE)
+                .build();
     }
 }

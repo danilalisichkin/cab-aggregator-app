@@ -27,7 +27,7 @@ class PassengerRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findByPhoneNumber_ShouldReturnPassenger_WhenPassengerWithPhoneNumberExists() {
-        Passenger passenger = PassengerTestUtil.getPassengerBuilder().build();
+        Passenger passenger = PassengerTestUtil.buildDefaultPassenger();
 
         Optional<Passenger> actual = passengerRepository.findByPhoneNumber(passenger.getPhoneNumber());
 
@@ -46,7 +46,7 @@ class PassengerRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findByEmail_ShouldReturnPassenger_WhenPassengerWithEmailExists() {
-        Passenger passenger = PassengerTestUtil.getPassengerBuilder().build();
+        Passenger passenger = PassengerTestUtil.buildDefaultPassenger();
 
         Optional<Passenger> actual = passengerRepository.findByEmail(passenger.getEmail());
 

@@ -25,14 +25,15 @@ public final class BalanceOperationTestUtil {
     public static final LocalDateTime TIME_INTERVAL_BEFORE_CREATION_START = CREATED_AT.minusDays(5);
     public static final LocalDateTime TIME_INTERVAL_BEFORE_CREATION_END = CREATED_AT.minusDays(1);
 
-    public static BalanceOperation.BalanceOperationBuilder getBalanceOperationBuilder() {
+    public static BalanceOperation buildDefaultBalanceOperation() {
         return BalanceOperation.builder()
                 .id(ID)
                 .payoutAccount(null)
                 .amount(DEPOSIT_AMOUNT)
                 .type(TYPE)
                 .transcript(TRANSCRIPT)
-                .createdAt(CREATED_AT);
+                .createdAt(CREATED_AT)
+                .build();
     }
 
     public static BalanceOperationDto buildBalanceOperationDto() {

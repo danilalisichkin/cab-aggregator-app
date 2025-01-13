@@ -28,7 +28,7 @@ class DriverRateMapperTest {
 
     @Test
     void entityToDto_ShouldConvertEntityToDto_WhenEntityIsNotNull() {
-        DriverRate driverRate = DriverRateTestUtil.getDriverRateBuilder().build();
+        DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
         DriverRateDto driverRateDto = DriverRateTestUtil.buildDriverRateDto();
 
         DriverRateDto actual = mapper.entityToDto(driverRate);
@@ -46,7 +46,8 @@ class DriverRateMapperTest {
     @Test
     void updateEntityFromDto_ShouldUpdateEntity_WhenDtoIsNotNull() {
         DriverRate actual =
-                DriverRateTestUtil.getDriverRateBuilder()
+                DriverRateTestUtil.buildDefaultDriverRate()
+                        .toBuilder()
                         .rate(null)
                         .feedbackOptions(null)
                         .build();
@@ -91,7 +92,7 @@ class DriverRateMapperTest {
 
     @Test
     void entityListToDtoList_ShouldConvertEntityListToDtoList_WhenEntityListIsNotEmpty() {
-        DriverRate driverRate = DriverRateTestUtil.getDriverRateBuilder().build();
+        DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
         List<DriverRate> entityList = Arrays.asList(driverRate, driverRate);
         DriverRateDto driverRateDto = DriverRateTestUtil.buildDriverRateDto();
         List<DriverRateDto> dtoList = Arrays.asList(driverRateDto, driverRateDto);
@@ -121,7 +122,7 @@ class DriverRateMapperTest {
 
     @Test
     void entityPageToDtoPage_ShouldConvertEntityPageToDtoPage_WhenPageIsNotNull() {
-        DriverRate driverRate = DriverRateTestUtil.getDriverRateBuilder().build();
+        DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
         List<DriverRate> entityList = Arrays.asList(driverRate, driverRate);
         Page<DriverRate> entityPage = PaginationTestUtil.buildPageFromList(entityList);
         DriverRateDto driverRateDto = DriverRateTestUtil.buildDriverRateDto();

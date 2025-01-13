@@ -26,8 +26,8 @@ class PaymentMapperTest {
 
     @Test
     void entityToDto_ShouldConvertEntityToDto_WhenEntityIsNotNull() {
-        Payment payment = PaymentTestUtil.getPaymentBuilder().build();
-        payment.setContext(PaymentContextTestUtil.getPaymentContextBuilder().build());
+        Payment payment = PaymentTestUtil.buildDefaultPayment();
+        payment.setContext(PaymentContextTestUtil.buildDefaultPaymentContext());
         PaymentDto paymentDto = PaymentTestUtil.buildPaymentDto();
 
         PaymentDto actual = mapper.entityToDto(payment);
@@ -44,8 +44,8 @@ class PaymentMapperTest {
 
     @Test
     void entityListToDtoList_ShouldConvertEntityListToDtoList_WhenEntityListIsNotEmpty() {
-        Payment payment = PaymentTestUtil.getPaymentBuilder().build();
-        payment.setContext(PaymentContextTestUtil.getPaymentContextBuilder().build());
+        Payment payment = PaymentTestUtil.buildDefaultPayment();
+        payment.setContext(PaymentContextTestUtil.buildDefaultPaymentContext());
         PaymentDto paymentDto = PaymentTestUtil.buildPaymentDto();
         List<Payment> entityList = Arrays.asList(payment, payment);
         List<PaymentDto> expectedDtoList = Arrays.asList(paymentDto, paymentDto);

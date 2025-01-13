@@ -33,9 +33,7 @@ class PaymentContextRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findByPayment_ShouldReturnPaymentContext_WhenPaymentExists() {
-        PaymentContext paymentContext =
-                PaymentContextTestUtil.getPaymentContextBuilder()
-                        .build();
+        PaymentContext paymentContext = PaymentContextTestUtil.buildDefaultPaymentContext();
 
         Optional<PaymentContext> actual =
                 paymentContextRepository.findByPayment(
@@ -47,10 +45,9 @@ class PaymentContextRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findByPayment_ShouldReturnEmptyOptional_WhenPaymentDoesNotExist() {
-        Payment notExistingPayment =
-                PaymentTestUtil.getPaymentBuilder()
-                        .paymentIntentId(StripeTestUtil.NOT_EXISTING_INTENT_ID)
-                        .build();
+        Payment notExistingPayment = PaymentTestUtil.buildDefaultPayment().toBuilder()
+                .paymentIntentId(StripeTestUtil.NOT_EXISTING_INTENT_ID)
+                .build();
 
         Optional<PaymentContext> actual = paymentContextRepository.findByPayment(notExistingPayment);
 
@@ -60,9 +57,7 @@ class PaymentContextRepositoryTest extends AbstractIntegrationTest {
     @Test
     void findAllByTypeAndContextId_ShouldReturnPaymentContext_WhenTypeAndContextIdAreEqualToProvided() {
         int expectedListSize = 1;
-        PaymentContext paymentContext =
-                PaymentContextTestUtil.getPaymentContextBuilder()
-                        .build();
+        PaymentContext paymentContext = PaymentContextTestUtil.buildDefaultPaymentContext();
 
         List<PaymentContext> actual =
                 paymentContextRepository.findAllByTypeAndContextId(

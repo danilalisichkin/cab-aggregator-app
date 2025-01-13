@@ -39,7 +39,7 @@ class DriverRateRepositoryTest extends AbstractIntegrationTest {
         int pageNumber = 0;
         int pageSize = 10;
         int expectedContentSize = 1;
-        DriverRate driverRate = DriverRateTestUtil.getDriverRateBuilder().build();
+        DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
 
         Page<DriverRate> actual =
                 driverRateRepository.findAllByDriverId(
@@ -67,7 +67,7 @@ class DriverRateRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findByDriverIdAndRideId_ShouldReturnDriverRate_WhenDriverRateExists() {
-        DriverRate driverRate = DriverRateTestUtil.getDriverRateBuilder().build();
+        DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
 
         Optional<DriverRate> actual = driverRateRepository.findByDriverIdAndRideId(
                 driverRate.getDriverId(), driverRate.getRideId());
@@ -87,7 +87,7 @@ class DriverRateRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void existsByDriverIdAndRideId_ShouldReturnTrue_WhenDriverRateExists() {
-        DriverRate driverRate = DriverRateTestUtil.getDriverRateBuilder().build();
+        DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
 
         boolean actual = driverRateRepository.existsByDriverIdAndRideId(
                 driverRate.getDriverId(), driverRate.getRideId());

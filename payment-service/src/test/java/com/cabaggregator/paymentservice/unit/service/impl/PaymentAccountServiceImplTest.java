@@ -80,7 +80,7 @@ class PaymentAccountServiceImplTest {
         PaymentAccountSortField sortBy = PaymentAccountSortField.ID;
         Sort.Direction sortOrder = Sort.Direction.ASC;
 
-        PaymentAccount account = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
+        PaymentAccount account = PaymentAccountTestUtil.buildDefaultPaymentAccount();
         PaymentAccountDto accountDto = PaymentAccountTestUtil.buildPaymentAccountDto();
 
         PageRequest pageRequest = PaginationTestUtil.buildPageRequest(offset, limit, sortBy.getValue(), sortOrder);
@@ -114,7 +114,7 @@ class PaymentAccountServiceImplTest {
 
     @Test
     void getPaymentAccount_ShouldReturnPaymentAccount_WhenPaymentAccountFound() {
-        PaymentAccount account = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
+        PaymentAccount account = PaymentAccountTestUtil.buildDefaultPaymentAccount();
         PaymentAccountDto accountDto = PaymentAccountTestUtil.buildPaymentAccountDto();
 
         when(paymentAccountRepository.findById(account.getId()))
@@ -134,7 +134,7 @@ class PaymentAccountServiceImplTest {
 
     @Test
     void getPaymentAccount_ShouldThrowResourceNotFoundException_WhenPaymentAccountNotFound() {
-        PaymentAccount account = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
+        PaymentAccount account = PaymentAccountTestUtil.buildDefaultPaymentAccount();
 
         when(paymentAccountRepository.findById(account.getId()))
                 .thenReturn(Optional.empty());
@@ -148,7 +148,7 @@ class PaymentAccountServiceImplTest {
 
     @Test
     void getAccountPaymentCards_ShouldReturnPaymentCards_WhenPaymentAccountFound() {
-        PaymentAccount account = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
+        PaymentAccount account = PaymentAccountTestUtil.buildDefaultPaymentAccount();
         List<PaymentCardDto> paymentCards = Collections.singletonList(PaymentTestUtil.buildPaymentCardDto());
 
         when(paymentAccountRepository.findById(account.getId()))
@@ -183,7 +183,7 @@ class PaymentAccountServiceImplTest {
 
     @Test
     void getAccountDefaultPaymentCard_ShouldReturnPaymentCard_WhenPaymentAccountFound() {
-        PaymentAccount account = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
+        PaymentAccount account = PaymentAccountTestUtil.buildDefaultPaymentAccount();
         PaymentCardDto paymentCard = PaymentTestUtil.buildPaymentCardDto();
 
         when(paymentAccountRepository.findById(account.getId()))
@@ -218,7 +218,7 @@ class PaymentAccountServiceImplTest {
 
     @Test
     void setAccountDefaultPaymentCard_ShouldSetDefaultPaymentCard_WhenPaymentAccountFound() {
-        PaymentAccount account = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
+        PaymentAccount account = PaymentAccountTestUtil.buildDefaultPaymentAccount();
         String paymentMethodId = StripeTestUtil.METHOD_ID;
 
         when(paymentAccountRepository.findById(account.getId()))
@@ -251,7 +251,7 @@ class PaymentAccountServiceImplTest {
 
     @Test
     void createPaymentAccount_ShouldReturnPaymentAccount_WhenPaymentAccountIsValid() {
-        PaymentAccount account = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
+        PaymentAccount account = PaymentAccountTestUtil.buildDefaultPaymentAccount();
         PaymentAccountDto accountDto = PaymentAccountTestUtil.buildPaymentAccountDto();
         PaymentAccountAddingDto addingDto = PaymentAccountTestUtil.buildPaymentAccountAddingDto();
         Customer customer = new Customer();
@@ -298,7 +298,7 @@ class PaymentAccountServiceImplTest {
 
     @Test
     void updatePaymentAccount_ShouldReturnPaymentAccount_WhenPaymentAccountFound() {
-        PaymentAccount account = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
+        PaymentAccount account = PaymentAccountTestUtil.buildDefaultPaymentAccount();
         PaymentAccountDto accountDto = PaymentAccountTestUtil.buildPaymentAccountDto();
         String newStripeCustomerId = PaymentAccountTestUtil.STRIPE_CUSTOMER_ID;
 
@@ -324,7 +324,7 @@ class PaymentAccountServiceImplTest {
 
     @Test
     void updatePaymentAccount_ShouldThrowDataUniquenessException_WhenStripeCustomerIdNotUnique() {
-        PaymentAccount account = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
+        PaymentAccount account = PaymentAccountTestUtil.buildDefaultPaymentAccount();
         String notUniqueStripeAccountId = PaymentAccountTestUtil.STRIPE_CUSTOMER_ID;
 
         when(paymentAccountRepository.findById(account.getId()))
@@ -344,7 +344,7 @@ class PaymentAccountServiceImplTest {
 
     @Test
     void updatePaymentAccount_ShouldThrowResourceNotFoundException_WhenPaymentAccountNotFound() {
-        PaymentAccount account = PaymentAccountTestUtil.getPaymentAccountBuilder().build();
+        PaymentAccount account = PaymentAccountTestUtil.buildDefaultPaymentAccount();
         String newStripeCustomerId = PaymentAccountTestUtil.STRIPE_CUSTOMER_ID;
 
         when(paymentAccountRepository.findById(account.getId()))

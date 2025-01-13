@@ -38,7 +38,7 @@ class BalanceOperationRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void getBalance_ShouldReturnAccountBalance_WhenAccountExists() {
-        PayoutAccount payoutAccount = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
+        PayoutAccount payoutAccount = PayoutAccountTestUtil.buildDefaultPayoutAccount();
 
         Long actual = balanceOperationRepository.getBalance(payoutAccount);
 
@@ -61,9 +61,10 @@ class BalanceOperationRepositoryTest extends AbstractIntegrationTest {
         int pageNumber = 0;
         int pageSize = 10;
         int expectedContentSize = 1;
-        PayoutAccount payoutAccount = PayoutAccountTestUtil.getPayoutAccountBuilder().build();
+        PayoutAccount payoutAccount = PayoutAccountTestUtil.buildDefaultPayoutAccount();
         BalanceOperation balanceOperation =
-                BalanceOperationTestUtil.getBalanceOperationBuilder()
+                BalanceOperationTestUtil.buildDefaultBalanceOperation()
+                        .toBuilder()
                         .payoutAccount(payoutAccount)
                         .build();
 
@@ -104,9 +105,7 @@ class BalanceOperationRepositoryTest extends AbstractIntegrationTest {
     void findAllByPayoutAccountAndCreatedAtBetween_ShouldReturnEmptyPage_WhenCreatedAtIsNotBetweenProvided() {
         int pageNumber = 0;
         int pageSize = 10;
-        PayoutAccount payoutAccount =
-                PayoutAccountTestUtil.getPayoutAccountBuilder()
-                        .build();
+        PayoutAccount payoutAccount = PayoutAccountTestUtil.buildDefaultPayoutAccount();
         Specification<BalanceOperation> spec = Specification
                 .where(BalanceOperationSpecification.hasPayoutAccount(payoutAccount))
                 .and(BalanceOperationSpecification.hasCreatedAtBefore(
@@ -126,11 +125,10 @@ class BalanceOperationRepositoryTest extends AbstractIntegrationTest {
         int pageNumber = 0;
         int pageSize = 10;
         int expectedContentSize = 1;
-        PayoutAccount payoutAccount =
-                PayoutAccountTestUtil.getPayoutAccountBuilder()
-                        .build();
+        PayoutAccount payoutAccount = PayoutAccountTestUtil.buildDefaultPayoutAccount();
         BalanceOperation balanceOperation =
-                BalanceOperationTestUtil.getBalanceOperationBuilder()
+                BalanceOperationTestUtil.buildDefaultBalanceOperation()
+                        .toBuilder()
                         .payoutAccount(payoutAccount)
                         .build();
         Specification<BalanceOperation> spec = Specification
@@ -153,9 +151,7 @@ class BalanceOperationRepositoryTest extends AbstractIntegrationTest {
     void findAllByPayoutAccountAndTypeAndCreatedAtBetween_ShouldReturnEmptyPage_WhenAccountIsNotEqualToProvided() {
         int pageNumber = 0;
         int pageSize = 10;
-        PayoutAccount payoutAccount =
-                PayoutAccountTestUtil.getPayoutAccountBuilder()
-                        .build();
+        PayoutAccount payoutAccount = PayoutAccountTestUtil.buildDefaultPayoutAccount();
         Specification<BalanceOperation> spec = Specification
                 .where(BalanceOperationSpecification.hasPayoutAccount(payoutAccount))
                 .and(BalanceOperationSpecification.hasOperationType(BalanceOperationTestUtil.TYPE))
@@ -173,9 +169,7 @@ class BalanceOperationRepositoryTest extends AbstractIntegrationTest {
     void findAllByPayoutAccountAndTypeAndCreatedAtBetween_ShouldReturnEmptyPage_WhenTypeIsNotEqualToProvided() {
         int pageNumber = 0;
         int pageSize = 10;
-        PayoutAccount payoutAccount =
-                PayoutAccountTestUtil.getPayoutAccountBuilder()
-                        .build();
+        PayoutAccount payoutAccount = PayoutAccountTestUtil.buildDefaultPayoutAccount();
         Specification<BalanceOperation> spec = Specification
                 .where(BalanceOperationSpecification.hasPayoutAccount(payoutAccount))
                 .and(BalanceOperationSpecification.hasOperationType(OperationType.WITHDRAWAL))
@@ -193,9 +187,7 @@ class BalanceOperationRepositoryTest extends AbstractIntegrationTest {
     void findAllByPayoutAccountAndTypeAndCreatedAtBetween_ShouldReturnEmptyPage_WhenCreatedAtIsNotBetweenProvided() {
         int pageNumber = 0;
         int pageSize = 10;
-        PayoutAccount payoutAccount =
-                PayoutAccountTestUtil.getPayoutAccountBuilder()
-                        .build();
+        PayoutAccount payoutAccount = PayoutAccountTestUtil.buildDefaultPayoutAccount();
         Specification<BalanceOperation> spec = Specification
                 .where(BalanceOperationSpecification.hasPayoutAccount(payoutAccount))
                 .and(BalanceOperationSpecification.hasOperationType(BalanceOperationTestUtil.TYPE))

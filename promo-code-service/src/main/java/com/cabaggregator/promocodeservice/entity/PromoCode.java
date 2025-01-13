@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Setter
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "promo_codes")

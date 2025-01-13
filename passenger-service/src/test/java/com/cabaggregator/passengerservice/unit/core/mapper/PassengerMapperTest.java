@@ -24,7 +24,7 @@ class PassengerMapperTest {
 
     @Test
     void entityToDto_ShouldConvertEntityToDto_WhenEntityIsNotNull() {
-        Passenger passenger = PassengerTestUtil.getPassengerBuilder().build();
+        Passenger passenger = PassengerTestUtil.buildDefaultPassenger();
         PassengerDto passengerDto = PassengerTestUtil.buildPassengerDto();
 
         PassengerDto actual = mapper.entityToDto(passenger);
@@ -41,7 +41,7 @@ class PassengerMapperTest {
 
     @Test
     void updateEntityFromDto_ShouldUpdateEntity_WhenDtoIsNotNull() {
-        Passenger actual = PassengerTestUtil.getPassengerBuilder().build();
+        Passenger actual = PassengerTestUtil.buildDefaultPassenger();
         PassengerUpdatingDto passengerUpdatingDto = PassengerTestUtil.buildPassengerUpdatingDto();
 
         mapper.updateEntityFromDto(passengerUpdatingDto, actual);
@@ -57,10 +57,9 @@ class PassengerMapperTest {
 
     @Test
     void dtoToEntity_ShouldConvertDtoToEntity_WhenDtoIsNotNull() {
-        Passenger passenger =
-                PassengerTestUtil.getPassengerBuilder()
-                        .rating(null)
-                        .build();
+        Passenger passenger = PassengerTestUtil.buildDefaultPassenger().toBuilder()
+                .rating(null)
+                .build();
         PassengerAddingDto passengerAddingDto = PassengerTestUtil.buildPassengerAddingDto();
 
         Passenger actual = mapper.dtoToEntity(passengerAddingDto);
@@ -77,7 +76,7 @@ class PassengerMapperTest {
 
     @Test
     void entityListToDtoList_ShouldConvertEntityListToDtoList_WhenListIsNotNull() {
-        Passenger passenger = PassengerTestUtil.getPassengerBuilder().build();
+        Passenger passenger = PassengerTestUtil.buildDefaultPassenger();
         List<Passenger> passengers = Arrays.asList(passenger, passenger);
         PassengerDto passengerDto = PassengerTestUtil.buildPassengerDto();
         List<PassengerDto> expectedList = Arrays.asList(passengerDto, passengerDto);
@@ -107,7 +106,7 @@ class PassengerMapperTest {
 
     @Test
     void entityPageToDtoPage_ShouldConvertEntityPageToDtoPage_WhenPageIsNotNull() {
-        Passenger passenger = PassengerTestUtil.getPassengerBuilder().build();
+        Passenger passenger = PassengerTestUtil.buildDefaultPassenger();
         List<Passenger> entityList = Arrays.asList(passenger, passenger);
         Page<Passenger> entityPage = PaginationTestUtil.buildPageFromList(entityList);
         PassengerDto passengerDto = PassengerTestUtil.buildPassengerDto();

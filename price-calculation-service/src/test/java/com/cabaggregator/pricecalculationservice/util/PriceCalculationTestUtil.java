@@ -13,7 +13,7 @@ public final class PriceCalculationTestUtil {
     public static final Long DURATION = 1317L;
     public static final Long PRICE = 2894L;
 
-    public static PriceCalculationRequest getPriceCalculationRequest() {
+    public static PriceCalculationRequest buildPriceCalculationRequest() {
         return new PriceCalculationRequest(
                 RIDE_ID,
                 GeoGridTestUtil.COORDINATES,
@@ -22,7 +22,7 @@ public final class PriceCalculationTestUtil {
                 RideFareTestUtil.NAME);
     }
 
-    public static PriceResponse getPriceResponse() {
+    public static PriceResponse buildPriceResponse() {
         return new PriceResponse(
                 PRICE,
                 DemandCoefficientTestUtil.CURRENT_DEMAND,

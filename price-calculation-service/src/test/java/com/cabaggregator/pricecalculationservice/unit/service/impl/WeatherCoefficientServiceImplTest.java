@@ -40,7 +40,7 @@ class WeatherCoefficientServiceImplTest {
     @Test
     void getCurrentWeatherCoefficient_ShouldReturnWeatherCoefficient_WhenWeatherCoefficientFound() {
         String gridCell = GeoGridTestUtil.GRID_CELL;
-        WeatherCoefficient weatherCoefficient = WeatherCoefficientTestUtil.getWeatherCoefficientBuilder().build();
+        WeatherCoefficient weatherCoefficient = WeatherCoefficientTestUtil.buildDefaultWeatherCoefficient();
         Map<String, Object> weatherResponse = WeatherCoefficientTestUtil.WEATHER_RESPONSE;
 
         when(weatherApiClient.getCurrentWeather(gridCell)).thenReturn(weatherResponse);

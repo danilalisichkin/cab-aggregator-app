@@ -15,18 +15,19 @@ public final class PaymentTestUtil {
     public static final Long UNIT_AMOUNT = 500L;
     public static final LocalDateTime CREATED_AT = LocalDateTime.now();
 
-    public static Payment.PaymentBuilder getPaymentBuilder() {
+    public static Payment buildDefaultPayment() {
         return Payment.builder()
                 .paymentIntentId(StripeTestUtil.INTENT_ID)
-                .paymentAccount(PaymentAccountTestUtil.getPaymentAccountBuilder().build())
+                .paymentAccount(PaymentAccountTestUtil.buildDefaultPaymentAccount())
                 .status(StripeTestUtil.STATUS)
-                .createdAt(CREATED_AT);
+                .createdAt(CREATED_AT)
+                .build();
     }
 
     public static PaymentDto buildPaymentDto() {
         return new PaymentDto(
                 StripeTestUtil.INTENT_ID,
-                PaymentAccountTestUtil.getPaymentAccountBuilder().build().getId(),
+                PaymentAccountTestUtil.ID,
                 StripeTestUtil.STATUS,
                 CREATED_AT,
                 PaymentContextTestUtil.TYPE,

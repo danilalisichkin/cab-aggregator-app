@@ -39,7 +39,7 @@ class PassengerRateRepositoryTest extends AbstractIntegrationTest {
         int pageNumber = 0;
         int pageSize = 10;
         int expectedContentSize = 1;
-        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        PassengerRate passengerRate = PassengerRateTestUtil.buildDefaultPassengerRate();
 
         Page<PassengerRate> actual =
                 passengerRateRepository.findAllByPassengerId(
@@ -67,7 +67,7 @@ class PassengerRateRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void findByPassengerIdAndRideId_ShouldReturnPassengerRate_WhenPassengerRateExists() {
-        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        PassengerRate passengerRate = PassengerRateTestUtil.buildDefaultPassengerRate();
 
         Optional<PassengerRate> actual = passengerRateRepository.findByPassengerIdAndRideId(
                 passengerRate.getPassengerId(), passengerRate.getRideId());
@@ -87,7 +87,7 @@ class PassengerRateRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void existsByPassengerIdAndRideId_ShouldReturnTrue_WhenPassengerRateExists() {
-        PassengerRate passengerRate = PassengerRateTestUtil.getPassengerRateBuilder().build();
+        PassengerRate passengerRate = PassengerRateTestUtil.buildDefaultPassengerRate();
 
         boolean actual = passengerRateRepository.existsByPassengerIdAndRideId(
                 passengerRate.getPassengerId(), passengerRate.getRideId());

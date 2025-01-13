@@ -73,7 +73,7 @@ class PromoStatServiceImplTest {
         PromoStatSortField sortBy = PromoStatSortField.USER_ID;
         Sort.Direction sortOrder = Sort.Direction.ASC;
 
-        PromoStat promoStat = PromoStatTestUtil.getPromoStatBuilder().build();
+        PromoStat promoStat = PromoStatTestUtil.buildDefaultPromoStat();
         PromoStatDto promoStatDto = PromoStatTestUtil.buildPromoStatDto();
 
         PageRequest pageRequest = PaginationTestUtil.buildPageRequest(offset, limit, sortBy.getValue(), sortOrder);
@@ -106,9 +106,7 @@ class PromoStatServiceImplTest {
 
     @Test
     void getPromoStat_ShouldReturnPromoStat_WhenPromoStatFound() {
-        PromoStat promoStat =
-                PromoStatTestUtil.getPromoStatBuilder()
-                        .build();
+        PromoStat promoStat = PromoStatTestUtil.buildDefaultPromoStat();
         PromoStatDto promoStatDto = PromoStatTestUtil.buildPromoStatDto();
 
         when(promoStatRepository.findById(promoStat.getId()))
@@ -128,9 +126,7 @@ class PromoStatServiceImplTest {
 
     @Test
     void getPromoStat_ShouldThrowResourceNotFoundException_WhenPromoStatNotFound() {
-        PromoStat promoStat =
-                PromoStatTestUtil.getPromoStatBuilder()
-                        .build();
+        PromoStat promoStat = PromoStatTestUtil.buildDefaultPromoStat();
 
         when(promoStatRepository.findById(promoStat.getId()))
                 .thenReturn(Optional.empty());
@@ -145,7 +141,7 @@ class PromoStatServiceImplTest {
 
     @Test
     void savePromoStat_ShouldReturnPromoStat_WhenPromoCodeIsValidAndItExists() {
-        PromoStat promoStat = PromoStatTestUtil.getPromoStatBuilder().build();
+        PromoStat promoStat = PromoStatTestUtil.buildDefaultPromoStat();
         PromoCode promoCode = promoStat.getPromoCode();
         PromoStatDto promoStatDto = PromoStatTestUtil.buildPromoStatDto();
         PromoStatAddingDto promoStatAddingDto = PromoStatTestUtil.buildPromoStatAddingDto();
@@ -186,7 +182,7 @@ class PromoStatServiceImplTest {
 
     @Test
     void savePromoStat_ShouldThrowBadRequestException_WhenPromoCodeExistsAndAlreadyHasBeenApplied() {
-        PromoStat promoStat = PromoStatTestUtil.getPromoStatBuilder().build();
+        PromoStat promoStat = PromoStatTestUtil.buildDefaultPromoStat();
         PromoCode promoCode = promoStat.getPromoCode();
         PromoStatAddingDto promoStatAddingDto = PromoStatTestUtil.buildPromoStatAddingDto();
 
@@ -208,7 +204,7 @@ class PromoStatServiceImplTest {
 
     @Test
     void savePromoStat_ShouldThrowBadRequestException_WhenPromoCodeExistsAndHasExpired() {
-        PromoStat promoStat = PromoStatTestUtil.getPromoStatBuilder().build();
+        PromoStat promoStat = PromoStatTestUtil.buildDefaultPromoStat();
         PromoCode promoCode = promoStat.getPromoCode();
         PromoStatAddingDto promoStatAddingDto = PromoStatTestUtil.buildPromoStatAddingDto();
 
@@ -232,7 +228,7 @@ class PromoStatServiceImplTest {
 
     @Test
     void savePromoStat_ShouldThrowBadRequestException_WhenPromoCodeExistsAndItsApplicationLimitHasReached() {
-        PromoStat promoStat = PromoStatTestUtil.getPromoStatBuilder().build();
+        PromoStat promoStat = PromoStatTestUtil.buildDefaultPromoStat();
         PromoCode promoCode = promoStat.getPromoCode();
         PromoStatAddingDto promoStatAddingDto = PromoStatTestUtil.buildPromoStatAddingDto();
 
