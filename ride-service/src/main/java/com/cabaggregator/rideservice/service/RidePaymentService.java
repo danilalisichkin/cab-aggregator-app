@@ -4,6 +4,8 @@ import com.cabaggregator.rideservice.core.dto.ride.RideDto;
 import com.cabaggregator.rideservice.core.enums.PaymentStatus;
 import org.bson.types.ObjectId;
 
+import java.util.UUID;
+
 public interface RidePaymentService {
-    RideDto changeRidePaymentStatus(ObjectId id, PaymentStatus paymentStatus);
+    RideDto changeRidePaymentStatus(UUID driverId, ObjectId id, PaymentStatus paymentStatus);
 }

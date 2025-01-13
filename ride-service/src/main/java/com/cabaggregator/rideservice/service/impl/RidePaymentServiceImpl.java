@@ -37,10 +37,13 @@ public class RidePaymentServiceImpl implements RidePaymentService {
      **/
     @Override
     @Transactional
-    public RideDto changeRidePaymentStatus(ObjectId id, PaymentStatus paymentStatus) {
+    public RideDto changeRidePaymentStatus(UUID driverId, ObjectId id, PaymentStatus paymentStatus) {
         Ride rideToUpdate = getRideEntity(id);
 
         UUID userId = securityUtil.getUserIdFromSecurityContext();
+        if (!driverId.equals(userId)) {
+            throw new ForbiddenException(ApplicationMessages.CANT_GET_RIDES_OF_OTHER_USER);
+        }
         rideValidator.validateDriverParticipation(rideToUpdate, userId);
 
         boolean isRequiredPaymentWithCash = PaymentMethod.CASH.equals(rideToUpdate.getPaymentMethod());

@@ -24,7 +24,7 @@ public interface RideMapper {
 
     PriceRecalculationDto entityToPriceRecalculationDto(Ride ride);
 
-    void updateEntityFromOrderDto(RideUpdatingDto dto, @MappingTarget Ride ride);
+    void updateEntityFromDto(RideUpdatingDto dto, @MappingTarget Ride ride);
 
     List<RideDto> entityListToDtoList(List<Ride> rides);
 

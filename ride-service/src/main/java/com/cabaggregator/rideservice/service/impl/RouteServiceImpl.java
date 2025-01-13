@@ -18,7 +18,7 @@ public class RouteServiceImpl implements RouteService {
     private final OpenRouteApiClient openRouteApiClient;
 
     /**
-     * Get route summary for ride: its distance and estimated duration.
+     * Gets route summary for ride: its distance and estimated duration.
      * Uses synchronized calls to OpenRoute API.
      **/
     @Override
