@@ -1,6 +1,6 @@
 package com.cabaggregator.passengerservice.controller.api;
 
-import com.cabaggregator.passengerservice.controller.api.doc.PassengerControllerDocumentation;
+import com.cabaggregator.passengerservice.controller.doc.PassengerControllerDocumentation;
 import com.cabaggregator.passengerservice.core.constant.ValidationErrors;
 import com.cabaggregator.passengerservice.core.dto.page.PageDto;
 import com.cabaggregator.passengerservice.core.dto.passenger.PassengerAddingDto;
@@ -10,8 +10,6 @@ import com.cabaggregator.passengerservice.core.enums.sort.PassengerSortField;
 import com.cabaggregator.passengerservice.service.PassengerService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +56,7 @@ public class PassengerController implements PassengerControllerDocumentation {
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<PassengerDto> getPassenger(@PathVariable @org.hibernate.validator.constraints.UUID UUID id) {
+    public ResponseEntity<PassengerDto> getPassenger(@PathVariable UUID id) {
 
         log.info("Getting passenger with id={}", id);
 
@@ -69,7 +67,7 @@ public class PassengerController implements PassengerControllerDocumentation {
 
     @Override
     @PostMapping
-    public ResponseEntity<PassengerDto> savePassenger(
+    public ResponseEntity<PassengerDto> createPassenger(
             @RequestBody @Valid PassengerAddingDto passengerAddingDto) {
 
         log.info("Saving passenger with phone={}", passengerAddingDto.phoneNumber());
@@ -88,22 +86,6 @@ public class PassengerController implements PassengerControllerDocumentation {
         log.info("Updating passenger with id={}", id);
 
         PassengerDto passenger = passengerService.updatePassenger(id, passengerDto);
-
-        return ResponseEntity.status(HttpStatus.OK).body(passenger);
-    }
-
-    @Override
-    @PutMapping("/{id}/rating")
-    public ResponseEntity<PassengerDto> updatePassengerRating(
-            @PathVariable UUID id,
-            @RequestBody @NotNull
-            @Min(value = 0, message = ValidationErrors.INVALID_NUMBER_MIN_VALUE)
-            @Max(value = 5, message = ValidationErrors.INVALID_NUMBER_MAX_VALUE)
-            Double rating) {
-
-        log.info("Updating rating of passenger with id={}", id);
-
-        PassengerDto passenger = passengerService.updatePassengerRating(id, rating);
 
         return ResponseEntity.status(HttpStatus.OK).body(passenger);
     }

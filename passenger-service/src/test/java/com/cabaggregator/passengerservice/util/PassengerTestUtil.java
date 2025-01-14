@@ -18,6 +18,8 @@ public final class PassengerTestUtil {
     public static final String LAST_NAME = "Smith";
     public static final Double RATING = 5.0;
 
+    public static final String OTHER_PHONE_NUMBER = "375291122334";
+
     public static final UUID NOT_EXISTING_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
     public static final String NOT_EXISTING_PHONE_NUMBER = "375441111111";
     public static final String NOT_EXISTING_EMAIL = "notexisting@mail.com";
@@ -49,9 +51,28 @@ public final class PassengerTestUtil {
                 RATING);
     }
 
+    public static PassengerDto buildUpdatedPassengerDto() {
+        return new PassengerDto(
+                ID,
+                UPDATED_PHONE_NUMBER,
+                UPDATED_EMAIL,
+                UPDATED_FIRST_NAME,
+                UPDATED_LAST_NAME,
+                UPDATED_RATING);
+    }
+
     public static PassengerUpdatingDto buildPassengerUpdatingDto() {
         return new PassengerUpdatingDto(
                 UPDATED_PHONE_NUMBER,
+                UPDATED_EMAIL,
+                UPDATED_FIRST_NAME,
+                UPDATED_LAST_NAME,
+                UPDATED_RATING);
+    }
+
+    public static PassengerUpdatingDto buildConflictPassengerUpdatingDto() {
+        return new PassengerUpdatingDto(
+                OTHER_PHONE_NUMBER,
                 UPDATED_EMAIL,
                 UPDATED_FIRST_NAME,
                 UPDATED_LAST_NAME,
