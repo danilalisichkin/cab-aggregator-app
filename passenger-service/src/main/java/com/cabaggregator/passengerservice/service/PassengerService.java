@@ -19,7 +19,5 @@ public interface PassengerService {
 
     PassengerDto updatePassenger(UUID id, PassengerUpdatingDto passengerDto);
 
-    PassengerDto updatePassengerRating(UUID id, Double rating);
-
     void deletePassengerById(UUID id);
 }

@@ -85,17 +85,6 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     @Transactional
-    public PassengerDto updatePassengerRating(UUID id, Double rating) {
-        Passenger passengerToUpdate = getPassengerEntityById(id);
-
-        passengerToUpdate.setRating(rating);
-
-        return passengerMapper.entityToDto(
-                passengerRepository.save(passengerToUpdate));
-    }
-
-    @Override
-    @Transactional
     public void deletePassengerById(UUID id) {
         passengerValidator.validateExistenceOfPassengerWithId(id);
 
