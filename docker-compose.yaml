@@ -1,6 +1,31 @@
 version: "3.7"
 
 services:
+
+  ride-database1:
+    build:
+      context: .
+    container_name: ride-database1
+    image: mongo:7.0
+    restart: always
+    command: mongod --replSet rs0 --bind_ip_all
+    ports:
+      - "27017:27017"
+    volumes:
+      - ride-database1_data:/data/db
+
+  ride-database2:
+    build:
+      context: .
+    container_name: ride-database2
+    image: mongo:7.0
+    restart: always
+    command: mongod --replSet rs0 --bind_ip_all
+    ports:
+      - "27018:27017"
+    volumes:
+      - ride-database2_data:/data/db
+
   zookeeper:
     image: zookeeper:3.7.0
     container_name: zookeeper
@@ -25,3 +50,7 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     depends_on:
       - zookeeper
+
+volumes:
+  ride-database1_data:
+  ride-database2_data:

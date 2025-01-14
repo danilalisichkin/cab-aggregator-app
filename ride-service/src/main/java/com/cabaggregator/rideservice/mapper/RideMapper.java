@@ -1,5 +1,7 @@
 package com.cabaggregator.rideservice.mapper;
 
+import com.cabaggregator.rideservice.client.dto.PriceCalculationRequest;
+import com.cabaggregator.rideservice.core.dto.price.PriceRecalculationDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideAddingDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideUpdatingDto;
@@ -18,7 +20,11 @@ public interface RideMapper {
 
     Ride dtoToEntity(RideAddingDto dto);
 
-    void updateEntityFromOrderDto(RideUpdatingDto dto, @MappingTarget Ride ride);
+    PriceCalculationRequest entityToPriceCalculationRequest(Ride ride);
+
+    PriceRecalculationDto entityToPriceRecalculationDto(Ride ride);
+
+    void updateEntityFromDto(RideUpdatingDto dto, @MappingTarget Ride ride);
 
     List<RideDto> entityListToDtoList(List<Ride> rides);
 

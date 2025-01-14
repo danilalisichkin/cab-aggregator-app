@@ -5,9 +5,6 @@ import com.cabaggregator.rideservice.core.enums.PaymentMethod;
 import com.cabaggregator.rideservice.core.enums.PaymentStatus;
 import com.cabaggregator.rideservice.core.enums.RideFare;
 import com.cabaggregator.rideservice.core.enums.RideStatus;
-import com.cabaggregator.rideservice.util.DurationConverter;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,12 +14,11 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Document("rides")
@@ -60,7 +56,5 @@ public class Ride {
 
     private LocalDateTime endTime;
 
-    @JsonSerialize(using = DurationConverter.Serializer.class)
-    @JsonDeserialize(using = DurationConverter.Deserializer.class)
-    private Duration estimatedDuration;
+    private Long estimatedDuration;
 }

@@ -13,7 +13,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -23,18 +22,14 @@ public final class RideTestUtil {
     public static final ObjectId ID = new ObjectId("60c72b2f9b1e8c001c8d5a3f");
     public static final UUID PASSENGER_ID = UUID.fromString("1000e57c-114a-433d-6ac2-55048a29eab9");
     public static final UUID DRIVER_ID = UUID.fromString("4665e57c-884a-433d-8fd2-55078f29eab9");
-    public static final String PROMO_CODE = "PROMO2024";
     public static final RideFare FARE = RideFare.COMFORT;
     public static final RideStatus STATUS = RideStatus.COMPLETED;
     public static final PaymentMethod PAYMENT_METHOD = PaymentMethod.CARD;
     public static final PaymentStatus PAYMENT_STATUS = PaymentStatus.PAID;
-    public static final Long DISTANCE = 2400L;
-    public static final Long PRICE = 1200L;
 
     public static final LocalDateTime ORDER_TIME = LocalDateTime.parse("2024-12-01T11:30:00");
     public static final LocalDateTime START_TIME = LocalDateTime.parse("2024-12-01T11:35:00");
     public static final LocalDateTime END_TIME = LocalDateTime.parse("2024-12-01T11:45:00");
-    public static final Duration ESTIMATED_DURATION = Duration.ofMinutes(12);
 
     public static final String PICK_UP_FULL_ADDRESS = "123 N Main St, Los Angeles, CA 90012";
     public static final List<Double> PICK_UP_COORDINATES = List.of(-118.238512, 34.05756);
@@ -42,6 +37,7 @@ public final class RideTestUtil {
             = "Los Angeles County Museum of Art, 5905 Wilshire Blvd, Los Angeles, CA 90036";
     public static final List<Double> DROP_OFF_COORDINATES = List.of(-118.358467, 34.063621);
 
+    public static final ObjectId NOT_EXISTING_ID = new ObjectId("000000000000000000000000");
     public static final UUID NOT_EXISTING_PASSENGER_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
     public static final UUID NOT_EXISTING_DRIVER_ID = UUID.fromString("11111111-1111-1111-1111-111111111111");
     public static final RideStatus NOT_EXISTING_STATUS = RideStatus.ARRIVING;
@@ -50,24 +46,25 @@ public final class RideTestUtil {
     public static final String UPDATED_PICK_UP_FULL_ADDRESS = "Broadway St, Los Angeles, CA 90012";
     public static final List<Double> UPDATED_PICK_UP_COORDINATES = List.of(-118.24605588892796, 34.05469971000838);
 
-    public static Ride.RideBuilder getRideBuilder() {
+    public static Ride buildDefaultRide() {
         return Ride.builder()
                 .id(ID)
                 .passengerId(PASSENGER_ID)
                 .driverId(DRIVER_ID)
-                .promoCode(PROMO_CODE)
+                .promoCode(PromoCodeTestUtil.VALUE)
                 .fare(FARE)
                 .status(STATUS)
                 .paymentMethod(PAYMENT_METHOD)
                 .paymentStatus(PAYMENT_STATUS)
                 .pickUpAddress(buildPickUpAddress())
                 .dropOffAddress(buildDropOffAddress())
-                .distance(DISTANCE)
-                .price(PRICE)
+                .distance(RouteTestUtil.DISTANCE)
+                .price(PriceTestUtil.PRICE)
                 .orderTime(ORDER_TIME)
                 .startTime(START_TIME)
                 .endTime(END_TIME)
-                .estimatedDuration(ESTIMATED_DURATION);
+                .estimatedDuration(RouteTestUtil.ESTIMATED_DURATION)
+                .build();
     }
 
     public static Address buildPickUpAddress() {
@@ -93,18 +90,19 @@ public final class RideTestUtil {
                 ID,
                 PASSENGER_ID,
                 DRIVER_ID,
-                PROMO_CODE,
+                PromoCodeTestUtil.VALUE,
                 FARE,
                 STATUS,
                 PAYMENT_METHOD,
                 PAYMENT_STATUS,
                 buildPickUpAddress(),
                 buildDropOffAddress(),
-                PRICE,
+                RouteTestUtil.DISTANCE,
+                PriceTestUtil.PRICE,
                 ORDER_TIME,
                 START_TIME,
                 END_TIME,
-                ESTIMATED_DURATION);
+                RouteTestUtil.ESTIMATED_DURATION);
     }
 
     public static RideUpdatingDto buildRideUpdatingDto() {
@@ -119,6 +117,7 @@ public final class RideTestUtil {
                 FARE,
                 PAYMENT_METHOD,
                 buildPickUpAddress(),
-                buildDropOffAddress());
+                buildDropOffAddress(),
+                PromoCodeTestUtil.VALUE);
     }
 }

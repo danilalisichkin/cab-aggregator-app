@@ -21,7 +21,7 @@
     "orderTime": "2024-12-01T11:30:00",
     "startTime": "2024-12-01T11:35:00",
     "endTime": "2024-12-01T11:45:00",
-    "estimatedDuration": "PT12M"
+    "estimatedDuration": 720
   },
   {
     "id": "60c72b3f9b1e8c001c8d5a40",
@@ -45,6 +45,6 @@
     "orderTime": "2024-12-03T14:00:00",
     "startTime": null,
     "endTime": null,
-    "estimatedDuration": "PT30M"
+    "estimatedDuration": 1800
   }
 ]
