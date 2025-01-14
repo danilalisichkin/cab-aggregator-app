@@ -7,6 +7,7 @@ import com.cabaggregator.passengerservice.util.PassengerTestUtil;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -19,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Sql(scripts = {
         "classpath:/sql.repository/import_passengers.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class PassengerRepositoryTest extends AbstractPostgresIntegrationTest {
     @Autowired
     private PassengerRepository passengerRepository;

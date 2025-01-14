@@ -1,4 +1,4 @@
-package com.cabaggregator.passengerservice.config;
+package com.cabaggregator.promocodeservice.config;
 
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -6,11 +6,11 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 @ActiveProfiles("test")
-public abstract class AbstractPostgresIntegrationTest {
+public abstract class AbstractIntegrationTest {
 
     static final PostgreSQLContainer<?> postgresqlContainer
             = new PostgreSQLContainer<>("postgres:17-alpine")
-            .withDatabaseName("test_passenger_database")
+            .withDatabaseName("test_promo_code_database")
             .withUsername("postgres")
             .withPassword("root")
             .withReuse(false);

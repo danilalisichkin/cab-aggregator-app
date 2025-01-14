@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -37,4 +38,22 @@ public class Passenger {
 
     @Column(nullable = false)
     private Double rating;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Passenger passenger = (Passenger) o;
+        return Objects.equals(id, passenger.id) &&
+                Objects.equals(phoneNumber, passenger.phoneNumber) &&
+                Objects.equals(email, passenger.email) &&
+                Objects.equals(firstName, passenger.firstName) &&
+                Objects.equals(lastName, passenger.lastName) &&
+                Objects.equals(rating, passenger.rating);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, phoneNumber, email, firstName, lastName, rating);
+    }
 }
