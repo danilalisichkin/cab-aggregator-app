@@ -15,6 +15,8 @@ public final class PromoStatTestUtil {
 
     public static final UUID OTHER_USER_ID = UUID.fromString("d3b2f3c0-1a1e-4a3f-b6dc-6c5a7f8e0f3a");
 
+    public static final Long NOT_EXISTING_ID = 3L;
+
     public static PromoStat buildDefaultPromoStat() {
         return PromoStat.builder()
                 .id(ID)
@@ -34,5 +36,11 @@ public final class PromoStatTestUtil {
         return new PromoStatAddingDto(
                 USER_ID,
                 PromoCodeTestUtil.VALUE);
+    }
+
+    public static PromoStatAddingDto buildPromoStatAddingDto(String promoCode) {
+        return new PromoStatAddingDto(
+                USER_ID,
+                promoCode);
     }
 }
