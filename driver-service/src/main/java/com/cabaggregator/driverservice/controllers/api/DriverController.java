@@ -10,7 +10,6 @@ import com.cabaggregator.driverservice.core.enums.sort.DriverSortField;
 import com.cabaggregator.driverservice.service.DriverService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -69,7 +68,7 @@ public class DriverController implements DriverControllerDocumentation {
 
     @Override
     @PostMapping
-    public ResponseEntity<DriverDto> saveDriver(@RequestBody @Valid DriverAddingDto driverAddingDTO) {
+    public ResponseEntity<DriverDto> createDriver(@RequestBody @Valid DriverAddingDto driverAddingDTO) {
         log.info("Saving driver with phone={}", driverAddingDTO.phoneNumber());
 
         DriverDto driver = driverService.saveDriver(driverAddingDTO);
@@ -92,29 +91,13 @@ public class DriverController implements DriverControllerDocumentation {
 
     @Override
     @PatchMapping("/{id}/car")
-    public ResponseEntity<DriverDto> updateDriverCar(
+    public ResponseEntity<DriverDto> setDriverCar(
             @PathVariable UUID id,
             @RequestBody @NotNull Long carId) {
 
         log.info("Updating car of driver with id={}", id);
 
         DriverDto driver = driverService.updateDriverCarId(id, carId);
-
-        return ResponseEntity.status(HttpStatus.OK).body(driver);
-    }
-
-    @Override
-    @PatchMapping("/{id}/rating")
-    public ResponseEntity<DriverDto> updateDriverRating(
-            @PathVariable UUID id,
-            @RequestBody @NotNull
-            @Min(value = 0, message = ValidationErrors.INVALID_NUMBER_MIN_VALUE)
-            @Max(value = 5, message = ValidationErrors.INVALID_NUMBER_MAX_VALUE)
-            Double rating) {
-
-        log.info("Updating rating of driver with id={}", id);
-
-        DriverDto driver = driverService.updateDriverRating(id, rating);
 
         return ResponseEntity.status(HttpStatus.OK).body(driver);
     }

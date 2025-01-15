@@ -86,17 +86,6 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     @Transactional
-    public DriverDto updateDriverRating(UUID id, Double rating) {
-        Driver driverToUpdate = getDriverEntityById(id);
-
-        driverToUpdate.setRating(rating);
-
-        return driverMapper.entityToDto(
-                driverRepository.save(driverToUpdate));
-    }
-
-    @Override
-    @Transactional
     public DriverDto updateDriverCarId(UUID id, Long carId) {
         Driver driverToUpdate = getDriverEntityById(id);
         driverValidator.validateDriverCarUniqueness(carId);

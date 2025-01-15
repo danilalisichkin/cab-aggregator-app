@@ -51,7 +51,7 @@ class DriverMapperTest {
         mapper.updateEntityFromDto(driverUpdatingDto, actual);
 
         assertThat(actual).isNotNull();
-        assertThat(actual.getId()).isEqualTo(DriverTestUtil.DRIVER_ID);
+        assertThat(actual.getId()).isEqualTo(DriverTestUtil.ID);
         assertThat(actual.getPhoneNumber()).isEqualTo(DriverTestUtil.UPDATED_PHONE_NUMBER);
         assertThat(actual.getEmail()).isEqualTo(DriverTestUtil.UPDATED_EMAIL);
         assertThat(actual.getFirstName()).isEqualTo(DriverTestUtil.UPDATED_FIRST_NAME);

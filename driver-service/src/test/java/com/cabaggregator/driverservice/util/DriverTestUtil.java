@@ -11,13 +11,14 @@ import java.util.UUID;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DriverTestUtil {
-    public static final UUID DRIVER_ID = UUID.fromString("4665e57c-884a-433d-8fd2-55078f29eab9");
+    public static final UUID ID = UUID.fromString("4665e57c-884a-433d-8fd2-55078f29eab9");
     public static final String PHONE_NUMBER = "375291234567";
     public static final String EMAIL = "test@mail.com";
     public static final String FIRST_NAME = "Adam";
     public static final String LAST_NAME = "Smith";
     public static final Double RATING = 5.0;
-    public static final Long CAR_ID = CarTestUtil.CAR_ID;
+
+    public static final String OTHER_PHONE_NUMBER = "375292233445";
 
     public static final String UPDATED_PHONE_NUMBER = "375159988776";
     public static final String UPDATED_EMAIL = "new@mail.com";
@@ -32,7 +33,7 @@ public final class DriverTestUtil {
 
     public static Driver buildDefaultDriver() {
         return Driver.builder()
-                .id(DRIVER_ID)
+                .id(ID)
                 .phoneNumber(PHONE_NUMBER)
                 .email(EMAIL)
                 .firstName(FIRST_NAME)
@@ -44,13 +45,24 @@ public final class DriverTestUtil {
 
     public static DriverDto buildDriverDto() {
         return new DriverDto(
-                DRIVER_ID,
+                ID,
                 PHONE_NUMBER,
                 EMAIL,
                 FIRST_NAME,
                 LAST_NAME,
                 RATING,
-                CAR_ID);
+                CarTestUtil.ID);
+    }
+
+    public static DriverDto buildUpdatedDriverDto() {
+        return new DriverDto(
+                ID,
+                UPDATED_PHONE_NUMBER,
+                UPDATED_EMAIL,
+                UPDATED_FIRST_NAME,
+                UPDATED_LAST_NAME,
+                UPDATED_RATING,
+                CarTestUtil.ID);
     }
 
     public static DriverUpdatingDto buildDriverUpdatingDto() {
@@ -62,9 +74,18 @@ public final class DriverTestUtil {
                 UPDATED_RATING);
     }
 
+    public static DriverUpdatingDto buildConflictDriverUpdatingDto() {
+        return new DriverUpdatingDto(
+                OTHER_PHONE_NUMBER,
+                UPDATED_EMAIL,
+                UPDATED_FIRST_NAME,
+                UPDATED_LAST_NAME,
+                UPDATED_RATING);
+    }
+
     public static DriverAddingDto buildDriverAddingDto() {
         return new DriverAddingDto(
-                DRIVER_ID,
+                ID,
                 PHONE_NUMBER,
                 EMAIL,
                 FIRST_NAME,

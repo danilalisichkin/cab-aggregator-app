@@ -1,6 +1,6 @@
 package com.cabaggregator.driverservice.integration.repository;
 
-import com.cabaggregator.driverservice.config.AbstractIntegrationTest;
+import com.cabaggregator.driverservice.config.AbstractPostgresIntegrationTest;
 import com.cabaggregator.driverservice.repository.CarRepository;
 import com.cabaggregator.driverservice.util.CarTestUtil;
 import org.junit.jupiter.api.Tag;
@@ -15,10 +15,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Tag("integration")
 @DataJpaTest
 @Sql(scripts = {
-        "classpath:/postgresql/import_cars.sql"},
+        "classpath:/sql.repository/import_cars.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class CarRepositoryTest extends AbstractIntegrationTest {
+class CarRepositoryTest extends AbstractPostgresIntegrationTest {
     @Autowired
     private CarRepository carRepository;
 

@@ -272,51 +272,9 @@ class DriverServiceImplTest {
     }
 
     @Test
-    void updateDriverRating_ShouldThrowResourceNotFoundException_WhenDriverNotFound() {
-        UUID driverId = DriverTestUtil.NOT_EXISTING_ID;
-        Double rating = DriverTestUtil.UPDATED_RATING;
-
-        when(driverRepository.findById(driverId))
-                .thenReturn(Optional.empty());
-
-        assertThatThrownBy(
-                () -> driverService.updateDriverRating(driverId, rating))
-                .isInstanceOf(ResourceNotFoundException.class);
-
-        verify(driverRepository).findById(driverId);
-        verifyNoMoreInteractions(driverRepository);
-        verifyNoInteractions(driverMapper);
-    }
-
-    @Test
-    void updateDriverRating_ShouldUpdateDriverRating_WhenDriverFound() {
-        Driver driver = DriverTestUtil.buildDefaultDriver();
-        UUID driverId = driver.getId();
-        Double newRating = DriverTestUtil.UPDATED_RATING;
-        DriverDto driverDto = DriverTestUtil.buildDriverDto();
-
-        when(driverRepository.findById(driverId))
-                .thenReturn(Optional.of(driver));
-        when(driverRepository.save(any(Driver.class)))
-                .thenReturn(driver);
-        when(driverMapper.entityToDto(any(Driver.class)))
-                .thenReturn(driverDto);
-
-        DriverDto actual = driverService.updateDriverRating(driverId, newRating);
-
-        assertThat(actual)
-                .isNotNull()
-                .isEqualTo(driverDto);
-
-        verify(driverRepository).findById(driverId);
-        verify(driverRepository).save(any(Driver.class));
-        verify(driverMapper).entityToDto(any(Driver.class));
-    }
-
-    @Test
     void updateDriverCarId_ShouldThrowResourceNotFoundException_WhenDriverNotFound() {
         UUID driverId = DriverTestUtil.NOT_EXISTING_ID;
-        Long carId = CarTestUtil.CAR_ID;
+        Long carId = CarTestUtil.ID;
 
         when(driverRepository.findById(driverId))
                 .thenReturn(Optional.empty());
@@ -332,8 +290,8 @@ class DriverServiceImplTest {
 
     @Test
     void updateDriverCarId_ShouldThrowDataUniquenessException_WhenCarIdNotUnique() {
-        UUID driverId = DriverTestUtil.DRIVER_ID;
-        Long carId = CarTestUtil.CAR_ID;
+        UUID driverId = DriverTestUtil.ID;
+        Long carId = CarTestUtil.ID;
         Driver driver = DriverTestUtil.buildDefaultDriver();
 
         when(driverRepository.findById(driverId))
@@ -353,8 +311,8 @@ class DriverServiceImplTest {
 
     @Test
     void updateDriverCarId_ShouldThrowResourceNotFoundException_WhenCarNotFound() {
-        UUID driverId = DriverTestUtil.DRIVER_ID;
-        Long carId = CarTestUtil.NOT_EXISTING_CAR_ID;
+        UUID driverId = DriverTestUtil.ID;
+        Long carId = CarTestUtil.NOT_EXISTING_ID;
         Driver driver = DriverTestUtil.buildDefaultDriver();
 
         when(driverRepository.findById(driverId))
@@ -376,8 +334,8 @@ class DriverServiceImplTest {
 
     @Test
     void updateDriverCarId_ShouldUpdateCarId_WhenDriverAndCarFound() {
-        UUID driverId = DriverTestUtil.DRIVER_ID;
-        Long carId = CarTestUtil.CAR_ID;
+        UUID driverId = DriverTestUtil.ID;
+        Long carId = CarTestUtil.ID;
         Driver driver = DriverTestUtil.buildDefaultDriver();
         Car car = CarTestUtil.buildDefaultCar();
         DriverDto driverDto = DriverTestUtil.buildDriverDto();
@@ -407,7 +365,7 @@ class DriverServiceImplTest {
 
     @Test
     void deleteDriverById_ShouldDeleteDriver_WhenDriverFound() {
-        UUID driverId = DriverTestUtil.DRIVER_ID;
+        UUID driverId = DriverTestUtil.ID;
 
         doNothing().when(driverValidator).validateExistenceOfDriverWithId(driverId);
         doNothing().when(driverRepository).deleteById(driverId);
@@ -422,7 +380,7 @@ class DriverServiceImplTest {
 
     @Test
     void deleteDriverById_ShouldThrowResourceNotFoundException_WhenDriverNotFound() {
-        UUID driverId = DriverTestUtil.DRIVER_ID;
+        UUID driverId = DriverTestUtil.ID;
 
         doThrow(new ResourceNotFoundException("error"))
                 .when(driverValidator).validateExistenceOfDriverWithId(driverId);

@@ -32,7 +32,7 @@ class DriverValidatorTest {
 
     @Test
     void validateIdUniqueness_ShouldThrowDataUniquenessConflictException_WhenIdNotUnique() {
-        UUID driverId = DriverTestUtil.DRIVER_ID;
+        UUID driverId = DriverTestUtil.ID;
 
         when(driverRepository.existsById(driverId))
                 .thenReturn(true);
@@ -116,7 +116,7 @@ class DriverValidatorTest {
 
     @Test
     void validateDriverCarUniqueness_ShouldThrowDataUniquenessConflictException_WhenCarIsNotUnique() {
-        Long carId = CarTestUtil.CAR_ID;
+        Long carId = CarTestUtil.ID;
 
         when(driverRepository.existsByCarId(carId))
                 .thenReturn(true);
@@ -130,7 +130,7 @@ class DriverValidatorTest {
 
     @Test
     void validateDriverCarUniqueness_ShouldNotThrowAnyException_WhenCarIsUnique() {
-        Long carId = CarTestUtil.CAR_ID;
+        Long carId = CarTestUtil.ID;
 
         when(driverRepository.existsByCarId(carId))
                 .thenReturn(false);
@@ -158,7 +158,7 @@ class DriverValidatorTest {
 
     @Test
     void validateExistenceOfDriverWithId_ShouldNotThrowAnyException_WhenDriverFound() {
-        UUID driverId = DriverTestUtil.DRIVER_ID;
+        UUID driverId = DriverTestUtil.ID;
 
         when(driverRepository.existsById(driverId))
                 .thenReturn(true);

@@ -57,7 +57,7 @@ class CarValidatorTest {
 
     @Test
     void validateExistenceOfCarWithId_ShouldThrowResourceNotFoundException_WhenCarWithIdNotFound() {
-        Long carId = CarTestUtil.NOT_EXISTING_CAR_ID;
+        Long carId = CarTestUtil.NOT_EXISTING_ID;
 
         when(carRepository.existsById(carId))
                 .thenReturn(false);
@@ -71,7 +71,7 @@ class CarValidatorTest {
 
     @Test
     void validateExistenceOfCarWithId_ShouldNotThrowAnyException_WhenCarWithIdFound() {
-        Long carId = CarTestUtil.CAR_ID;
+        Long carId = CarTestUtil.ID;
 
         when(carRepository.existsById(carId))
                 .thenReturn(true);
