@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.0</version>
+        <version>3.3.4</version>
         <relativePath/>
     </parent>
 
@@ -21,6 +21,7 @@
         <stripe.version>28.1.0</stripe.version>
         <jpa.metamodel.version>6.6.4.Final</jpa.metamodel.version>
         <jakarta.xml.bind.version>4.0.2</jakarta.xml.bind.version>
+        <springdoc.version>2.6.0</springdoc.version>
     </properties>
 
     <dependencies>
@@ -39,6 +40,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate.orm</groupId>
