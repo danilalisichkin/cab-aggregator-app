@@ -11,6 +11,8 @@ spring:
       uri: mongodb://${DB_HOSTPORT:localhost:27017}/${DB_NAME:rating_database}
       username: ${DB_USERNAME:mongo}
       password: ${DB_PASSWORD:root}
+      replica-set-name: ${DB_REPLICA_SET_NAME:rs1}
+      database: ${DB_NAME:rating_database}
 mongock:
   migration-scan-package: com.cabaggregator.ratingservice.migrations
   enabled: true
