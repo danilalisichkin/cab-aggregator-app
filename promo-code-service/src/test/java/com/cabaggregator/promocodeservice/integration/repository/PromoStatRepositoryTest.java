@@ -1,6 +1,6 @@
 package com.cabaggregator.promocodeservice.integration.repository;
 
-import com.cabaggregator.promocodeservice.config.AbstractIntegrationTest;
+import com.cabaggregator.promocodeservice.config.AbstractPostgresIntegrationTest;
 import com.cabaggregator.promocodeservice.entity.PromoCode;
 import com.cabaggregator.promocodeservice.entity.PromoStat;
 import com.cabaggregator.promocodeservice.repository.PromoStatRepository;
@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         "classpath:/sql.repository/import_promo_stats.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class PromoStatRepositoryTest extends AbstractIntegrationTest {
+class PromoStatRepositoryTest extends AbstractPostgresIntegrationTest {
     @Autowired
     private PromoStatRepository promoStatRepository;
 
