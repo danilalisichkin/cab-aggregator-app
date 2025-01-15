@@ -16,6 +16,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -42,6 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Tag("integration")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
@@ -170,12 +172,6 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
                         .content(json))
                 .andExpect(status().isCreated())
                 .andExpect(content().json(expectedJson));
-//                .andExpect(jsonPath("$.licensePlate").value(addingDto.licensePlate()))
-//                .andExpect(jsonPath("$.make").value(addingDto.make()))
-//                .andExpect(jsonPath("$.model").value(addingDto.model()))
-//                .andExpect(jsonPath("$.color").value(addingDto.color()))
-//                .andExpect(jsonPath("$.details.releaseDate").value(addingDto.details().releaseDate()))
-//                .andExpect(jsonPath("$.details.seatCapacity").value(addingDto.details().seatCapacity()));
 
         List<Car> cars = carRepository.findAll();
         assertThat(cars).hasSize(expectedCarCount);
