@@ -1,5 +1,6 @@
 package com.cabaggregator.paymentservice.controller.api;
 
+import com.cabaggregator.paymentservice.controller.doc.PaymentControllerDoc;
 import com.cabaggregator.paymentservice.core.dto.payment.PaymentDto;
 import com.cabaggregator.paymentservice.core.dto.payment.PaymentRequest;
 import com.cabaggregator.paymentservice.core.dto.payment.PaymentResponse;
@@ -23,7 +24,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/payments")
-public class PaymentController {
+public class PaymentController implements PaymentControllerDoc {
 
     private final PaymentService paymentService;
 
@@ -31,7 +32,7 @@ public class PaymentController {
     public ResponseEntity<PaymentResponse> createPayment(@RequestBody @Valid PaymentRequest paymentRequest) {
         PaymentResponse paymentResponse = paymentService.createPayment(paymentRequest);
 
-        return ResponseEntity.status(HttpStatus.OK).body(paymentResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(paymentResponse);
     }
 
     @GetMapping("/ride/{rideId}")

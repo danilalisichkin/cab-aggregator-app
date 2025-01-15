@@ -1,6 +1,7 @@
 package com.cabaggregator.paymentservice.service.impl;
 
 import com.cabaggregator.paymentservice.client.RideServiceApiClient;
+import com.cabaggregator.paymentservice.client.enums.RidePaymentStatus;
 import com.cabaggregator.paymentservice.core.constant.ApplicationMessages;
 import com.cabaggregator.paymentservice.core.constant.StringTemplates;
 import com.cabaggregator.paymentservice.core.dto.payment.PaymentDto;
@@ -81,7 +82,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         ObjectId rideId = new ObjectId(paymentContext.getContextId());
 
-        rideServiceApiClient.setRidePaymentStatus(rideId, true);
+        rideServiceApiClient.setRidePaymentStatus(rideId, RidePaymentStatus.PAID);
     }
 
     private PaymentIntent createPaymentForRide(PaymentRequest paymentRequest) {
