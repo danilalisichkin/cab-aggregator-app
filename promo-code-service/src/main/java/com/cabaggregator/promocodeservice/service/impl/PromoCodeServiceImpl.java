@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +53,7 @@ public class PromoCodeServiceImpl implements PromoCodeService {
     }
 
     @Override
+    @Transactional
     public PromoCodeDto savePromoCode(PromoCodeAddingDto addingDto) {
         promoCodeValidator.validatePromoCodeUniqueness(addingDto.value());
         promoCodeValidator.validateEndDate(addingDto.endDate());
@@ -63,6 +65,7 @@ public class PromoCodeServiceImpl implements PromoCodeService {
     }
 
     @Override
+    @Transactional
     public PromoCodeDto updatePromoCode(String code, PromoCodeUpdatingDto updatingDto) {
         promoCodeValidator.validateEndDate(updatingDto.endDate());
 
