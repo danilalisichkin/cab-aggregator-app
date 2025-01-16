@@ -1,25 +1,33 @@
 package com.cabaggregator.ratingservice.security.util;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.UUID;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class SecurityUtil {
+@Component
+public final class SecurityUtil {
     private static Authentication getAuthentication() {
-        return SecurityContextHolder.getContext().getAuthentication();
+        return SecurityContextHolder
+                .getContext()
+                .getAuthentication();
     }
 
-    public static UUID getUserIdFromSecurityContext() {
-        return (UUID) getAuthentication().getPrincipal();
+    /**
+     * Extracts user id from Authentication object.
+     **/
+    public UUID getUserIdFromSecurityContext() {
+        return (UUID) getAuthentication()
+                .getPrincipal();
     }
 
-    public static List<String> getUserAuthoritiesFromSecurityContext() {
+    /**
+     * Extracts user authorities from Authentication object.
+     **/
+    public List<String> getUserAuthoritiesFromSecurityContext() {
         return getAuthentication()
                 .getAuthorities()
                 .stream()

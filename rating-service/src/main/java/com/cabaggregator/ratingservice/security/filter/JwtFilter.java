@@ -16,6 +16,10 @@ import java.util.UUID;
 
 public class JwtFilter extends OncePerRequestFilter {
 
+    /**
+     * This filter sets authentication object to SpringSecurityContext.
+     * This allows to claim current user credentials in any place of code.
+     **/
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {

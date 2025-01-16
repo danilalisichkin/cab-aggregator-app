@@ -3,7 +3,6 @@ package com.cabaggregator.ratingservice.security.config;
 import com.cabaggregator.ratingservice.security.filter.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
@@ -15,6 +14,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class WebSecurityConfig {
 
+    /**
+     * This config adds spring security to application.
+     * No request authorization provided because it will be configured on api-gateway in the future.
+     **/
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -22,11 +25,6 @@ public class WebSecurityConfig {
                 .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(c -> c
-                        .requestMatchers(
-                                HttpMethod.POST,
-                                "/api/v1/rates/passenger",
-                                "/api/v1/rates/driver"
-                        ).permitAll()
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/swagger-resources/**",

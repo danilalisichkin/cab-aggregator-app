@@ -9,12 +9,15 @@ import com.cabaggregator.ratingservice.core.enums.sort.DriverRateSortField;
 import com.cabaggregator.ratingservice.core.mapper.DriverRateMapper;
 import com.cabaggregator.ratingservice.core.mapper.PageMapper;
 import com.cabaggregator.ratingservice.entity.DriverRate;
+import com.cabaggregator.ratingservice.exception.ForbiddenException;
 import com.cabaggregator.ratingservice.exception.ResourceNotFoundException;
 import com.cabaggregator.ratingservice.repository.DriverRateRepository;
+import com.cabaggregator.ratingservice.security.enums.UserRole;
+import com.cabaggregator.ratingservice.security.util.SecurityUtil;
 import com.cabaggregator.ratingservice.service.DriverRateService;
 import com.cabaggregator.ratingservice.util.PageRequestBuilder;
+import com.cabaggregator.ratingservice.util.UserRoleExtractor;
 import com.cabaggregator.ratingservice.validator.DriverRateValidator;
-import com.cabaggregator.ratingservice.validator.UserRoleValidator;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
@@ -29,6 +32,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DriverRateServiceImpl implements DriverRateService {
 
+    private final SecurityUtil securityUtil;
+
+    private final UserRoleExtractor userRoleExtractor;
+
     private final DriverRateRepository driverRateRepository;
 
     private final DriverRateMapper driverRateMapper;
@@ -37,8 +44,10 @@ public class DriverRateServiceImpl implements DriverRateService {
 
     private final DriverRateValidator driverRateValidator;
 
-    private final UserRoleValidator userRoleValidator;
-
+    /**
+     * Returns computed rating of Driver.
+     * Rating is aggregated average rate value.
+     **/
     @Override
     public Double getDriverRating(UUID driverId) {
         return driverRateRepository
@@ -47,29 +56,38 @@ public class DriverRateServiceImpl implements DriverRateService {
                         ApplicationMessages.DRIVER_RATING_NOT_FOUND));
     }
 
+    /**
+     * Returns page of Driver rates.
+     * Used by Driver or Admin.
+     **/
     @Override
     public PageDto<DriverRateDto> getPageOfDriverRates(
             UUID driverId, Integer offset, Integer limit, DriverRateSortField sortBy, Sort.Direction sortOrder) {
 
-        userRoleValidator.validateUserIsDriverOrAdmin(driverId);
+        validateUserIsRequestedDriverOrAdmin(driverId);
 
-        PageRequest pageRequest =
-                PageRequestBuilder.buildPageRequest(offset, limit, sortBy.getValue(), sortOrder);
-
+        PageRequest pageRequest = PageRequestBuilder.buildPageRequest(offset, limit, sortBy.getValue(), sortOrder);
         Page<DriverRate> driverRates = driverRateRepository.findAllByDriverId(driverId, pageRequest);
 
         return pageMapper.pageToPageDto(
                 driverRateMapper.entityPageToDtoPage(driverRates));
     }
 
+    /**
+     * Returns specified Driver rate.
+     * Used by Driver or Admin.
+     **/
     @Override
     public DriverRateDto getDriverRate(UUID driverId, ObjectId rideId) {
-        userRoleValidator.validateUserIsDriverOrAdmin(driverId);
+        validateUserIsRequestedDriverOrAdmin(driverId);
 
         return driverRateMapper.entityToDto(
                 getDriverRateEntity(driverId, rideId));
     }
 
+    /**
+     * Creates new Driver rate with blank rating and feedback options.
+     **/
     @Override
     @Transactional
     public DriverRateDto saveDriverRate(DriverRateAddingDto addingDto) {
@@ -81,11 +99,17 @@ public class DriverRateServiceImpl implements DriverRateService {
                 driverRateRepository.save(newDriverRate));
     }
 
+    /**
+     * Sets Driver rating and feedback options for specified ride.
+     * Used by Passenger.
+     **/
     @Override
     @Transactional
     public DriverRateDto setDriverRate(UUID driverId, ObjectId rideId, DriverRateSettingDto settingDto) {
         DriverRate driverRateToUpdate = getDriverRateEntity(driverId, rideId);
-        driverRateValidator.validatePassengerParticipation(driverRateToUpdate);
+
+        UUID userId = securityUtil.getUserIdFromSecurityContext();
+        driverRateValidator.validatePassengerParticipation(driverRateToUpdate, userId);
         driverRateValidator.validateDriverRateSetting(driverRateToUpdate);
 
         driverRateMapper.updateEntityFromDto(settingDto, driverRateToUpdate);
@@ -94,6 +118,21 @@ public class DriverRateServiceImpl implements DriverRateService {
                 driverRateRepository.save(driverRateToUpdate));
     }
 
+    /**
+     * Validates that current user is requested Driver (resource owner) or Admin.
+     **/
+    private void validateUserIsRequestedDriverOrAdmin(UUID driverId) {
+        UUID userId = securityUtil.getUserIdFromSecurityContext();
+        UserRole userRole = userRoleExtractor.extractCurrentUserRole();
+
+        if (!userId.equals(driverId) && userRole.equals(UserRole.DRIVER)) {
+            throw new ForbiddenException(ApplicationMessages.CANT_GET_RATES_OF_OTHER_USER);
+        }
+    }
+
+    /**
+     * Returns existing Driver rate or throws exception if it doesn't exist.
+     **/
     private DriverRate getDriverRateEntity(UUID driverId, ObjectId rideId) {
         return driverRateRepository
                 .findByDriverIdAndRideId(driverId, rideId)

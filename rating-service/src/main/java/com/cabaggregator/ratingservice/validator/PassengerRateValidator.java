@@ -6,7 +6,6 @@ import com.cabaggregator.ratingservice.exception.BadRequestException;
 import com.cabaggregator.ratingservice.exception.DataUniquenessConflictException;
 import com.cabaggregator.ratingservice.exception.ForbiddenException;
 import com.cabaggregator.ratingservice.repository.PassengerRateRepository;
-import com.cabaggregator.ratingservice.security.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
@@ -32,10 +31,8 @@ public class PassengerRateValidator {
         }
     }
 
-    public void validateDriverParticipation(PassengerRate passengerRate) {
-        UUID currentUserId = SecurityUtil.getUserIdFromSecurityContext();
-
-        if (!passengerRate.getDriverId().equals(currentUserId)) {
+    public void validateDriverParticipation(PassengerRate passengerRate, UUID driverId) {
+        if (!passengerRate.getDriverId().equals(driverId)) {
             throw new ForbiddenException(ApplicationMessages.USER_NOT_RIDE_PARTICIPANT);
         }
     }
