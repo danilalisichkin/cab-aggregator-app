@@ -1,7 +1,6 @@
 package com.cabaggregator.driverservice.service.impl;
 
 import com.cabaggregator.driverservice.core.constant.ApplicationMessages;
-import com.cabaggregator.driverservice.core.constant.DefaultValues;
 import com.cabaggregator.driverservice.core.dto.driver.DriverAddingDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverDto;
 import com.cabaggregator.driverservice.core.dto.driver.DriverUpdatingDto;
@@ -61,7 +60,6 @@ public class DriverServiceImpl implements DriverService {
         driverValidator.validateEmailUniqueness(driverDto.email());
 
         Driver driver = driverMapper.dtoToEntity(driverDto);
-        driver.setRating(DefaultValues.DRIVER_RATING);
 
         return driverMapper.entityToDto(
                 driverRepository.save(driver));

@@ -36,9 +36,6 @@ public class Passenger {
     @Column(nullable = false)
     private String lastName;
 
-    @Column(nullable = false)
-    private Double rating;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -48,12 +45,11 @@ public class Passenger {
                 Objects.equals(phoneNumber, passenger.phoneNumber) &&
                 Objects.equals(email, passenger.email) &&
                 Objects.equals(firstName, passenger.firstName) &&
-                Objects.equals(lastName, passenger.lastName) &&
-                Objects.equals(rating, passenger.rating);
+                Objects.equals(lastName, passenger.lastName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, phoneNumber, email, firstName, lastName, rating);
+        return Objects.hash(id, phoneNumber, email, firstName, lastName);
     }
 }

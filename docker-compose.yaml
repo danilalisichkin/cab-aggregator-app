@@ -78,3 +78,5 @@ services:
 volumes:
   ride-database1_data:
   ride-database2_data:
+  rating-database1_data:
+  rating-database2_data:

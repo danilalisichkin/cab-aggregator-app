@@ -40,6 +40,14 @@ public class PassengerRateServiceImpl implements PassengerRateService {
     private final UserRoleValidator userRoleValidator;
 
     @Override
+    public Double getPassengerRating(UUID passengerId) {
+        return passengerRateRepository
+                .findAverageRateByPassengerId(passengerId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        ApplicationMessages.PASSENGER_RATING_NOT_FOUND));
+    }
+
+    @Override
     public PageDto<PassengerRateDto> getPageOfPassengerRates(
             UUID passengerId, Integer offset, Integer limit, PassengerRateSortField sortBy, Sort.Direction sortOrder) {
 

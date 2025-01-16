@@ -11,7 +11,6 @@ public record DriverDto(
         String email,
         String firstName,
         String lastName,
-        Double rating,
         Long carId
 ) {
 }

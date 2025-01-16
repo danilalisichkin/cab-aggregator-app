@@ -29,6 +29,19 @@ import java.util.UUID;
 public interface DriverRateControllerDoc {
 
     @Operation(
+            summary = "Get average rating",
+            description = "Allows to get driver rating")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful response"),
+            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters or missing required fields"),
+            @ApiResponse(responseCode = "404", description = "Not found: driver was never rated and has no rating")
+    })
+    ResponseEntity<Double> getDriverRating(
+            @Parameter(
+                    description = "Driver identifier")
+            @PathVariable UUID driverId);
+
+    @Operation(
             summary = "Get page",
             description = "Allows to get page of existing driver rates")
     @ApiResponses(value = {

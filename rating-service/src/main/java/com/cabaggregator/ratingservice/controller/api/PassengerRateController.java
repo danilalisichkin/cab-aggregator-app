@@ -35,6 +35,15 @@ public class PassengerRateController implements PassengerRateControllerDoc {
 
     private final PassengerRateService passengerRateService;
 
+    @Override
+    @GetMapping("/{passengerId}/average")
+    public ResponseEntity<Double> getPassengerRating(@PathVariable UUID passengerId) {
+        Double rating = passengerRateService.getPassengerRating(passengerId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(rating);
+    }
+
+    @Override
     @GetMapping("/{passengerId}")
     public ResponseEntity<PageDto<PassengerRateDto>> getPageOfPassengerRates(
             @PathVariable UUID passengerId,
@@ -49,6 +58,7 @@ public class PassengerRateController implements PassengerRateControllerDoc {
         return ResponseEntity.status(HttpStatus.OK).body(rates);
     }
 
+    @Override
     @GetMapping("/{passengerId}/ride/{rideId}")
     public ResponseEntity<PassengerRateDto> getPassengerRate(
             @PathVariable UUID passengerId,
@@ -59,6 +69,7 @@ public class PassengerRateController implements PassengerRateControllerDoc {
         return ResponseEntity.status(HttpStatus.OK).body(rate);
     }
 
+    @Override
     @PostMapping
     public ResponseEntity<PassengerRateDto> savePassengerRate(
             @RequestBody @Valid PassengerRateAddingDto addingDto) {
@@ -68,6 +79,7 @@ public class PassengerRateController implements PassengerRateControllerDoc {
         return ResponseEntity.status(HttpStatus.CREATED).body(rate);
     }
 
+    @Override
     @PutMapping("/{passengerId}/ride/{rideId}")
     public ResponseEntity<PassengerRateDto> setPassengerRate(
             @PathVariable UUID passengerId,

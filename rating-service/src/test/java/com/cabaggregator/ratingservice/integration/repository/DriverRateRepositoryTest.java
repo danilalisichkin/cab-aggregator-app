@@ -38,7 +38,7 @@ class DriverRateRepositoryTest extends AbstractIntegrationTest {
     void findAllByDriverId_ShouldReturnPageOfDriverRates_WhenDriverRateWithDriverIdExists() {
         int pageNumber = 0;
         int pageSize = 10;
-        int expectedContentSize = 1;
+        int expectedContentSize = 2;
         DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
 
         Page<DriverRate> actual =
@@ -101,5 +101,22 @@ class DriverRateRepositoryTest extends AbstractIntegrationTest {
                 DriverRateTestUtil.NOT_EXISTING_DRIVER_ID, DriverRateTestUtil.NOT_EXISTING_RIDE_ID);
 
         assertThat(actual).isFalse();
+    }
+
+    @Test
+    void findAverageRateByDriverId_ShouldReturnAverageRating_WhenDriverRateWithDriverIdExists() {
+        Optional<Double> actual = driverRateRepository.findAverageRateByDriverId(DriverRateTestUtil.DRIVER_ID);
+
+        assertThat(actual)
+                .isPresent()
+                .contains(DriverRateTestUtil.AVERAGE_RATING);
+    }
+
+    @Test
+    void findAverageRateByDriverId_ShouldReturnEmptyOptional_WhenDriverRateWithDriverIdDoesNotExist() {
+        Optional<Double> actual =
+                driverRateRepository.findAverageRateByDriverId(DriverRateTestUtil.NOT_EXISTING_DRIVER_ID);
+
+        assertThat(actual).isEmpty();
     }
 }

@@ -5,9 +5,7 @@ import com.cabaggregator.passengerservice.core.constant.ValidationRegex;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
 @Schema(description = "Entry to update existing passenger")
@@ -28,10 +26,6 @@ public record PassengerUpdatingDto(
 
         @NotEmpty
         @Size(max = 50, message = ValidationErrors.INVALID_STRING_MAX_LENGTH)
-        String lastName,
-
-        @NotNull
-        @PositiveOrZero
-        Double rating
+        String lastName
 ) {
 }
