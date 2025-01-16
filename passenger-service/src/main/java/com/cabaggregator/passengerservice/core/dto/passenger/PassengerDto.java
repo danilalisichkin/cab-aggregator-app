@@ -10,7 +10,6 @@ public record PassengerDto(
         String phoneNumber,
         String email,
         String firstName,
-        String lastName,
-        Double rating
+        String lastName
 ) {
 }

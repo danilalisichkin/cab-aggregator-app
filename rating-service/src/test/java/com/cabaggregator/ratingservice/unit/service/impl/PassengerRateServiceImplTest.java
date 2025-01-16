@@ -67,6 +67,35 @@ class PassengerRateServiceImplTest {
     private UserRoleValidator userRoleValidator;
 
     @Test
+    void getPassengerRating_ShouldReturnAveragePassengerRating_WhenPassengerWasEverRated() {
+        UUID passengerId = PassengerRateTestUtil.PASSENGER_ID;
+        Double rating = PassengerRateTestUtil.AVERAGE_RATING;
+
+        when(passengerRateRepository.findAverageRateByPassengerId(passengerId))
+                .thenReturn(Optional.of(rating));
+
+        Double actual = passengerRateService.getPassengerRating(passengerId);
+
+        assertThat(actual).isEqualTo(rating);
+
+        verify(passengerRateRepository).findAverageRateByPassengerId(passengerId);
+    }
+
+    @Test
+    void getPassengerRating_ShouldThrowResourceNotFoundException_WhenPassengerWasNeverRated() {
+        UUID passengerId = PassengerRateTestUtil.PASSENGER_ID;
+
+        when(passengerRateRepository.findAverageRateByPassengerId(passengerId))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(
+                () -> passengerRateService.getPassengerRating(passengerId))
+                .isInstanceOf(ResourceNotFoundException.class);
+
+        verify(passengerRateRepository).findAverageRateByPassengerId(passengerId);
+    }
+
+    @Test
     void getPageOfPassengerRates_ShouldReturnPageDto_WhenCalledWithValidParameters() {
         Integer offset = 0, limit = 10;
         PassengerRateSortField sortBy = PassengerRateSortField.ID;

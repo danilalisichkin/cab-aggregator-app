@@ -38,7 +38,7 @@ class PassengerRateRepositoryTest extends AbstractIntegrationTest {
     void findAllByPassengerId_ShouldReturnPageOfDriverRates_WhenPassengerRateWithPassengerIdExists() {
         int pageNumber = 0;
         int pageSize = 10;
-        int expectedContentSize = 1;
+        int expectedContentSize = 2;
         PassengerRate passengerRate = PassengerRateTestUtil.buildDefaultPassengerRate();
 
         Page<PassengerRate> actual =
@@ -101,5 +101,23 @@ class PassengerRateRepositoryTest extends AbstractIntegrationTest {
                 PassengerRateTestUtil.NOT_EXISTING_PASSENGER_ID, PassengerRateTestUtil.NOT_EXISTING_RIDE_ID);
 
         assertThat(actual).isFalse();
+    }
+
+    @Test
+    void findAverageRateByPassengerId_ShouldReturnAverageRating_WhenPassengerRateWithPassengerIdExists() {
+        Optional<Double> actual =
+                passengerRateRepository.findAverageRateByPassengerId(PassengerRateTestUtil.PASSENGER_ID);
+
+        assertThat(actual)
+                .isPresent()
+                .contains(PassengerRateTestUtil.AVERAGE_RATING);
+    }
+
+    @Test
+    void findAverageRateByPassengerId_ShouldReturnEmptyOptional_WhenPassengerRateWithPassengerIdDoesNotExist() {
+        Optional<Double> actual =
+                passengerRateRepository.findAverageRateByPassengerId(PassengerRateTestUtil.NOT_EXISTING_PASSENGER_ID);
+
+        assertThat(actual).isEmpty();
     }
 }

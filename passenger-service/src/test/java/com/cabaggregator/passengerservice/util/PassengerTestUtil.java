@@ -16,7 +16,6 @@ public final class PassengerTestUtil {
     public static final String EMAIL = "test@mail.com";
     public static final String FIRST_NAME = "Adam";
     public static final String LAST_NAME = "Smith";
-    public static final Double RATING = 5.0;
 
     public static final String OTHER_PHONE_NUMBER = "375291122334";
 
@@ -37,7 +36,6 @@ public final class PassengerTestUtil {
                 .email(EMAIL)
                 .firstName(FIRST_NAME)
                 .lastName(LAST_NAME)
-                .rating(RATING)
                 .build();
     }
 
@@ -47,8 +45,7 @@ public final class PassengerTestUtil {
                 PHONE_NUMBER,
                 EMAIL,
                 FIRST_NAME,
-                LAST_NAME,
-                RATING);
+                LAST_NAME);
     }
 
     public static PassengerDto buildUpdatedPassengerDto() {
@@ -57,8 +54,7 @@ public final class PassengerTestUtil {
                 UPDATED_PHONE_NUMBER,
                 UPDATED_EMAIL,
                 UPDATED_FIRST_NAME,
-                UPDATED_LAST_NAME,
-                UPDATED_RATING);
+                UPDATED_LAST_NAME);
     }
 
     public static PassengerUpdatingDto buildPassengerUpdatingDto() {
@@ -66,8 +62,7 @@ public final class PassengerTestUtil {
                 UPDATED_PHONE_NUMBER,
                 UPDATED_EMAIL,
                 UPDATED_FIRST_NAME,
-                UPDATED_LAST_NAME,
-                UPDATED_RATING);
+                UPDATED_LAST_NAME);
     }
 
     public static PassengerUpdatingDto buildConflictPassengerUpdatingDto() {
@@ -75,8 +70,7 @@ public final class PassengerTestUtil {
                 OTHER_PHONE_NUMBER,
                 UPDATED_EMAIL,
                 UPDATED_FIRST_NAME,
-                UPDATED_LAST_NAME,
-                UPDATED_RATING);
+                UPDATED_LAST_NAME);
     }
 
     public static PassengerAddingDto buildPassengerAddingDto() {

@@ -35,6 +35,15 @@ public class DriverRateController implements DriverRateControllerDoc {
 
     private final DriverRateService driverRateService;
 
+    @Override
+    @GetMapping("/{driverId}/average")
+    public ResponseEntity<Double> getDriverRating(@PathVariable UUID driverId) {
+        Double rating = driverRateService.getDriverRating(driverId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(rating);
+    }
+
+    @Override
     @GetMapping("/{driverId}")
     public ResponseEntity<PageDto<DriverRateDto>> getPageOfDriverRates(
             @PathVariable UUID driverId,
@@ -49,6 +58,7 @@ public class DriverRateController implements DriverRateControllerDoc {
         return ResponseEntity.status(HttpStatus.OK).body(rates);
     }
 
+    @Override
     @GetMapping("/{driverId}/ride/{rideId}")
     public ResponseEntity<DriverRateDto> getDriverRate(
             @PathVariable UUID driverId,
@@ -59,6 +69,7 @@ public class DriverRateController implements DriverRateControllerDoc {
         return ResponseEntity.status(HttpStatus.OK).body(rate);
     }
 
+    @Override
     @PostMapping
     public ResponseEntity<DriverRateDto> saveDriverRate(
             @RequestBody @Valid DriverRateAddingDto addingDto) {
@@ -68,6 +79,7 @@ public class DriverRateController implements DriverRateControllerDoc {
         return ResponseEntity.status(HttpStatus.CREATED).body(rate);
     }
 
+    @Override
     @PutMapping("/{driverId}/ride/{rideId}")
     public ResponseEntity<DriverRateDto> setDriverRate(
             @PathVariable UUID driverId,

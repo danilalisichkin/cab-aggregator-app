@@ -56,7 +56,6 @@ class DriverMapperTest {
         assertThat(actual.getEmail()).isEqualTo(DriverTestUtil.UPDATED_EMAIL);
         assertThat(actual.getFirstName()).isEqualTo(DriverTestUtil.UPDATED_FIRST_NAME);
         assertThat(actual.getLastName()).isEqualTo(DriverTestUtil.UPDATED_LAST_NAME);
-        assertThat(actual.getRating()).isEqualTo(DriverTestUtil.UPDATED_RATING);
     }
 
     @Test
@@ -81,7 +80,6 @@ class DriverMapperTest {
         assertThat(actual.getEmail()).isEqualTo(driver.getEmail());
         assertThat(actual.getFirstName()).isEqualTo(driver.getFirstName());
         assertThat(actual.getLastName()).isEqualTo(driver.getLastName());
-        assertThat(actual.getRating()).isNull();
         assertThat(actual.getCar()).isNull();
     }
 
