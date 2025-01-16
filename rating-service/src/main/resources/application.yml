@@ -34,6 +34,6 @@ app:
   kafka:
     topics:
       rate:
-        name: ${KAFKA_TOPIC_RATE_NAME:rate-topic}
+        name: rating.creation.v1
 server:
   port: ${SERVER_PORT:8086}

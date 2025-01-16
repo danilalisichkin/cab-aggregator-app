@@ -23,9 +23,9 @@ app:
   kafka:
     topics:
       rate:
-        name: ${KAFKA_TOPIC_RATE_NAME:rate-topic}
-        partitions: ${KAFKA_TOPIC_RATE_PARTITIONS:1}
-        replicas: ${KAFKA_TOPIC_RATE_REPLICAS:1}
+        name: rating.creation.v1
+        partitions: 1
+        replicas: 1
 services:
   open-route:
     name: open-route-api
