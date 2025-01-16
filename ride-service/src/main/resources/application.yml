@@ -33,5 +33,9 @@ services:
   promo-stat:
     name: promo-code-service
     path: /api/v1/promo-stats
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/}
 server:
   port: ${SERVER_PORT:8084}

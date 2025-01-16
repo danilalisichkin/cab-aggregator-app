@@ -38,6 +38,10 @@ app:
         name: ${KAFKA_TOPIC_DRIVER_NAME:driver-topic}
         partitions: ${KAFKA_TOPIC_DRIVER_PARTITIONS:1}
         replicas: ${KAFKA_TOPIC_DRIVER_REPLICAS:1}
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/}
 server:
   port: ${SERVER_PORT:8081}
   forward-headers-strategy: framework
