@@ -20,6 +20,12 @@ mongock:
 app:
   open-route:
     api-key: ${OPENROUTE_API_KEY}
+  kafka:
+    topics:
+      rate:
+        name: rating.creation.v1
+        partitions: 1
+        replicas: 1
 services:
   open-route:
     name: open-route-api
