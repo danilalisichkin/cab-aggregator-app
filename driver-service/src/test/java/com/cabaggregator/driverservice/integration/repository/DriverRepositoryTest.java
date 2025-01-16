@@ -1,7 +1,8 @@
 package com.cabaggregator.driverservice.integration.repository;
 
-import com.cabaggregator.driverservice.config.AbstractIntegrationTest;
+import com.cabaggregator.driverservice.config.AbstractPostgresIntegrationTest;
 import com.cabaggregator.driverservice.repository.DriverRepository;
+import com.cabaggregator.driverservice.util.CarTestUtil;
 import com.cabaggregator.driverservice.util.DriverTestUtil;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -15,11 +16,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Tag("integration")
 @DataJpaTest
 @Sql(scripts = {
-        "classpath:/postgresql/import_cars.sql",
-        "classpath:/postgresql/import_drivers.sql"},
+        "classpath:/sql.repository/import_cars.sql",
+        "classpath:/sql.repository/import_drivers.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class DriverRepositoryTest extends AbstractIntegrationTest {
+class DriverRepositoryTest extends AbstractPostgresIntegrationTest {
     @Autowired
     private DriverRepository driverRepository;
 
@@ -53,7 +54,7 @@ class DriverRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void existsByCarId_ShouldReturnTrue_WhenDriverWithCarIdExists() {
-        boolean actual = driverRepository.existsByCarId(DriverTestUtil.CAR_ID);
+        boolean actual = driverRepository.existsByCarId(CarTestUtil.ID);
 
         assertThat(actual).isTrue();
     }

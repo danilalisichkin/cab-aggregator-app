@@ -76,7 +76,7 @@ public class CarController implements CarControllerDocumentation {
 
     @Override
     @PostMapping
-    public ResponseEntity<CarDto> saveCar(@RequestBody @Valid CarAddingDto carAddingDto) {
+    public ResponseEntity<CarDto> createCar(@RequestBody @Valid CarAddingDto carAddingDto) {
         log.info("Saving car with licence plate={}", carAddingDto.licensePlate());
 
         CarDto car = carService.saveCar(carAddingDto);

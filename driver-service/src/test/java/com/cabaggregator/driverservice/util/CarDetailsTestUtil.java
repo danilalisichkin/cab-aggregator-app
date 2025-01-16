@@ -30,6 +30,12 @@ public final class CarDetailsTestUtil {
                 SEAT_CAPACITY);
     }
 
+    public static CarDetailsDto buildUpdateCarDetailsDto() {
+        return new CarDetailsDto(
+                UPDATED_RELEASE_DATE,
+                UPDATED_SEAT_CAPACITY);
+    }
+
     public static CarDetailsSettingDto buildCarDetailsSettingDto() {
         return new CarDetailsSettingDto(
                 UPDATED_RELEASE_DATE,

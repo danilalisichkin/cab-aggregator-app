@@ -42,7 +42,7 @@ class CarDetailsServiceImplTest {
 
     @Test
     void updateCarDetails_ShouldThrowResourceNotFound_WhenCarDetailsNotFound() {
-        Long id = CarTestUtil.NOT_EXISTING_CAR_ID;
+        Long id = CarTestUtil.NOT_EXISTING_ID;
         CarDetailsSettingDto carDetailsSettingDto = CarDetailsTestUtil.buildCarDetailsSettingDto();
 
         when(carDetailsRepository.findById(id))
@@ -59,7 +59,7 @@ class CarDetailsServiceImplTest {
 
     @Test
     void updateCarDetails_ShouldUpdateCarDetails_WhenTheyFound() {
-        Long id = CarTestUtil.CAR_ID;
+        Long id = CarTestUtil.ID;
         CarDetailsSettingDto carDetailsSettingDto = CarDetailsTestUtil.buildCarDetailsSettingDto();
         CarDetails carDetails = CarDetailsTestUtil.buildDefaultCarDetails();
         CarDetailsDto carDetailsDto = CarDetailsTestUtil.buildCarDetailsDto();

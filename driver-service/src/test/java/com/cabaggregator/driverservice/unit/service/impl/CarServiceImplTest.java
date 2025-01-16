@@ -248,7 +248,7 @@ class CarServiceImplTest {
     @Test
     void updateCar_ShouldThrowResourceNotFoundException_WhenCarNotFound() {
         CarUpdatingDto carUpdatingDto = CarTestUtil.buildCarUpdatingDto();
-        Long carId = CarTestUtil.NOT_EXISTING_CAR_ID;
+        Long carId = CarTestUtil.NOT_EXISTING_ID;
 
         when(carRepository.findById(carId))
                 .thenReturn(Optional.empty());
@@ -320,7 +320,7 @@ class CarServiceImplTest {
 
     @Test
     void updateCarDetails_ShouldThrowValidationErrorException_WhenCarReleaseDateNotValid() {
-        Long carId = CarTestUtil.CAR_ID;
+        Long carId = CarTestUtil.ID;
         CarDetailsSettingDto carDetailsDto = CarDetailsTestUtil.buildCarDetailsSettingDto();
 
         doThrow(new ValidationErrorException("error"))
@@ -336,7 +336,7 @@ class CarServiceImplTest {
 
     @Test
     void updateCarDetails_ShouldThrowResourceNotFoundException_WhenCarNotFound() {
-        Long carId = CarTestUtil.NOT_EXISTING_CAR_ID;
+        Long carId = CarTestUtil.NOT_EXISTING_ID;
         CarDetailsSettingDto carDetailsDto = CarDetailsTestUtil.buildCarDetailsSettingDto();
 
         doNothing().when(carDetailsValidator).validateReleaseDate(carDetailsDto.releaseDate());
@@ -354,7 +354,7 @@ class CarServiceImplTest {
 
     @Test
     void updateCarDetails_ShouldUpdateCarDetails_WhenCarFoundAndReleaseDateIsValid() {
-        Long carId = CarTestUtil.CAR_ID;
+        Long carId = CarTestUtil.ID;
         CarDetailsSettingDto carDetailsSettingDto = CarDetailsTestUtil.buildCarDetailsSettingDto();
         Car car = CarTestUtil.buildDefaultCar();
         CarDetailsDto carDetailsDto = CarDetailsTestUtil.buildCarDetailsDto();
@@ -383,7 +383,7 @@ class CarServiceImplTest {
 
     @Test
     void deleteCarById_ShouldThrowResourceNotFoundException_WhenCarNotFound() {
-        Long carId = CarTestUtil.NOT_EXISTING_CAR_ID;
+        Long carId = CarTestUtil.NOT_EXISTING_ID;
 
         doThrow(new ResourceNotFoundException("error")).when(carValidator).validateExistenceOfCarWithId(carId);
 
@@ -397,7 +397,7 @@ class CarServiceImplTest {
 
     @Test
     void deleteCarById_ShouldNotThrowException_WhenCarFound() {
-        Long carId = CarTestUtil.CAR_ID;
+        Long carId = CarTestUtil.ID;
 
         doNothing().when(carValidator).validateExistenceOfCarWithId(carId);
 
