@@ -17,6 +17,7 @@ public final class PassengerRateTestUtil {
     public static final UUID DRIVER_ID = UUID.fromString("4665e57c-884a-433d-8fd2-55078f29eab9");
     public static final UUID PASSENGER_ID = UUID.fromString("1000e57c-114a-433d-6ac2-55048a29eab9");
     public static final Integer RATE = 4;
+    public static final Double AVERAGE_RATING = 3.5;
 
     public static final UUID OTHER_DRIVER_ID = UUID.fromString("b1f4e8b3-3b36-43c5-bc8e-7e7e3d2c1c27");
 

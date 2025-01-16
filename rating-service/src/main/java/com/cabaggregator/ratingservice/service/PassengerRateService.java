@@ -12,6 +12,8 @@ import java.util.UUID;
 
 public interface PassengerRateService {
 
+    Double getPassengerRating(UUID passengerId);
+
     PageDto<PassengerRateDto> getPageOfPassengerRates(
             UUID passengerId, Integer offset, Integer limit, PassengerRateSortField sortBy, Sort.Direction sortOrder);
 

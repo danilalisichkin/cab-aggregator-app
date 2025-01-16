@@ -26,91 +26,110 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Tag(name = "Car API Controller", description = "Provides CRUD operations with cars and their details")
 public interface CarControllerDocumentation {
 
-    @Operation(summary = "Get page", description = "Allows to get page of existing cars")
+    @Operation(
+            summary = "Get page",
+            description = "Allows to get page of existing cars")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful response")
+            @ApiResponse(responseCode = "200", description = "Successful response"),
+            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters or missing required fields")
     })
     ResponseEntity<PageDto<CarDto>> getPageOfCars(
-            @Parameter(name = "offset", description = "The starting point of the page", required = true)
             @RequestParam(defaultValue = "0") @PositiveOrZero Integer offset,
-
-            @Parameter(name = "limit", description = "The number of cars to return", required = true)
             @RequestParam(defaultValue = "10") @Positive
             @Max(value = 20, message = ValidationErrors.INVALID_NUMBER_MAX_VALUE) Integer limit,
-
-            @Parameter(name = "sort field", description = "Sorting criteria for the cars")
             @RequestParam(defaultValue = "id") CarSortField sortBy,
-
-            @Parameter(name = "sort order", description = "Sorting criteria for the cars")
             @RequestParam(defaultValue = "ASC") Sort.Direction sortOrder);
 
-    @Operation(summary = "Get car", description = "Allows to get existing car by its ID")
+    @Operation(
+            summary = "Get car",
+            description = "Allows to get existing car by its ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful response"),
-            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters"),
-            @ApiResponse(responseCode = "400", description = "Bad request: missing required fields"),
-            @ApiResponse(responseCode = "404", description = "Car not found: car with ID does not exist")
+            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters or missing required fields"),
+            @ApiResponse(responseCode = "404", description = "Not found: car does not exist")
     })
     ResponseEntity<CarDto> getCar(
-            @Parameter(name = "id", description = "ID of the car", required = true)
+            @Parameter(
+                    description = "Car identifier")
             @PathVariable Long id);
 
-    @Operation(summary = "Get full car", description = "Allows to get existing car with details by its ID")
+    @Operation(
+            summary = "Get full car",
+            description = "Allows to get existing car with details by its ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful response"),
-            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters"),
-            @ApiResponse(responseCode = "400", description = "Bad request: missing required fields"),
-            @ApiResponse(responseCode = "404", description = "Car not found: car with ID does not exist")
+            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters or missing required fields"),
+            @ApiResponse(responseCode = "404", description = "Not found: car does not exist")
     })
     ResponseEntity<CarFullDto> getFullCar(
-            @Parameter(name = "id", description = "ID of the car", required = true)
+            @Parameter(
+                    description = "Car identifier")
             @PathVariable Long id);
 
-    @Operation(summary = "Add/save car", description = "Allows to add/save new car")
+    @Operation(
+            summary = "Create car",
+            description = "Allows to create a new car")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Successful response"),
-            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters"),
-            @ApiResponse(responseCode = "400", description = "Bad request: missing required fields"),
-            @ApiResponse(responseCode = "400", description = "Bad request: invalid car release date provided"),
-            @ApiResponse(responseCode = "409", description = "Conflict: license plate already belongs to another car")
+            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters or missing required fields"),
+            @ApiResponse(responseCode = "409",
+                    description = "Conflict: provided unique data already belongs to other car")
     })
-    ResponseEntity<CarDto> saveCar(
+    ResponseEntity<CarDto> createCar(
+            @Parameter(
+                    name = "Required data",
+                    description = "Data that is required to create a new car",
+                    required = true)
             @RequestBody @Valid CarAddingDto carAddingDto);
 
-    @Operation(summary = "Update car", description = "Allows to update existing car by its ID")
+    @Operation(
+            summary = "Update car",
+            description = "Allows to update existing car by its ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful response"),
-            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters"),
-            @ApiResponse(responseCode = "400", description = "Bad request: missing required fields"),
-            @ApiResponse(responseCode = "404", description = "Car not found: car with ID does not exist"),
-            @ApiResponse(responseCode = "409", description = "Conflict: license plate already belongs to another car")
+            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters or missing required fields"),
+            @ApiResponse(responseCode = "404", description = "Not found: car does not exist"),
+            @ApiResponse(responseCode = "409",
+                    description = "Conflict: provided unique data already belongs to other car"),
     })
     ResponseEntity<CarDto> updateCar(
-            @Parameter(name = "id", description = "ID of the car to be updated", required = true)
+            @Parameter(
+                    description = "Car identifier")
             @PathVariable Long id,
+            @Parameter(
+                    name = "Required data",
+                    description = "Data of car that will be updated",
+                    required = true)
             @RequestBody @Valid CarUpdatingDto carDto);
 
-    @Operation(summary = "Update car details", description = "Allows to update details of existing car by its ID")
+    @Operation(
+            summary = "Update car details",
+            description = "Allows to update details of existing car by its ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful response"),
-            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters"),
-            @ApiResponse(responseCode = "400", description = "Bad request: missing required fields"),
-            @ApiResponse(responseCode = "400", description = "Bad request: invalid car release date provided"),
-            @ApiResponse(responseCode = "404", description = "Car not found: car with ID does not exist")
+            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters or missing required fields"),
+            @ApiResponse(responseCode = "404", description = "Not found: car does not exist")
     })
     ResponseEntity<CarFullDto> updateCarDetails(
-            @Parameter(name = "id", description = "ID of the car to update details", required = true)
+            @Parameter(
+                    description = "Car identifier")
             @PathVariable Long id,
+            @Parameter(
+                    name = "Required data",
+                    description = "Data of car details that will be connected with car",
+                    required = true)
             @RequestBody @Valid CarDetailsSettingDto carDetailsDto);
 
-    @Operation(summary = "Delete car", description = "Allows to delete existing car with details by its ID")
+    @Operation(
+            summary = "Delete car",
+            description = "Allows to delete existing car with details by its ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Successful response"),
-            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters"),
-            @ApiResponse(responseCode = "400", description = "Bad request: missing required fields"),
-            @ApiResponse(responseCode = "404", description = "Car not found: car with ID does not exist")
+            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters or missing required fields"),
+            @ApiResponse(responseCode = "404", description = "Not found: car does not exist"),
     })
     ResponseEntity<Void> deleteCar(
-            @Parameter(name = "id", description = "ID of the car to be deleted", required = true)
+            @Parameter(
+                    description = "Car identifier")
             @PathVariable Long id);
 }

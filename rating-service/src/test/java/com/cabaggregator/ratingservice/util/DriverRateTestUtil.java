@@ -21,6 +21,7 @@ public final class DriverRateTestUtil {
     public static final Integer RATE = 5;
     public static final Set<FeedbackOption> FEEDBACK_OPTIONS =
             Set.of(FeedbackOption.COMFORTABLE_RIDE, FeedbackOption.GOOD_MUSIC);
+    public static final Double AVERAGE_RATING = 4.5;
 
     public static final UUID OTHER_PASSENGER_ID = UUID.fromString("f47ac10b-58cc-4372-a567-0e02b2c3d479");
 

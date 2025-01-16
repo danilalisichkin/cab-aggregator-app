@@ -2,6 +2,7 @@ package com.cabaggregator.paymentservice.core.dto.payment.account;
 
 import com.cabaggregator.paymentservice.core.constant.ValidationErrors;
 import com.cabaggregator.paymentservice.core.constant.ValidationRegex;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -10,6 +11,7 @@ import jakarta.validation.constraints.Size;
 
 import java.util.UUID;
 
+@Schema(description = "Entry to create new payment account")
 public record PaymentAccountAddingDto(
         @NotNull
         UUID id,

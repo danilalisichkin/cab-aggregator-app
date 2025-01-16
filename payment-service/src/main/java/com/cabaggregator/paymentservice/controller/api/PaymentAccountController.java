@@ -1,5 +1,6 @@
 package com.cabaggregator.paymentservice.controller.api;
 
+import com.cabaggregator.paymentservice.controller.doc.PaymentAccountControllerDoc;
 import com.cabaggregator.paymentservice.core.constant.ValidationErrors;
 import com.cabaggregator.paymentservice.core.dto.page.PageDto;
 import com.cabaggregator.paymentservice.core.dto.payment.account.PaymentAccountAddingDto;
@@ -32,7 +33,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/payment-accounts")
-public class PaymentAccountController {
+public class PaymentAccountController implements PaymentAccountControllerDoc {
 
     private final PaymentAccountService paymentAccountService;
 

@@ -37,9 +37,6 @@ public class Driver {
     @Column(nullable = false)
     private String lastName;
 
-    @Column(nullable = false)
-    private Double rating;
-
     @OneToOne
     @JoinColumn(name = "car_id")
     private Car car;

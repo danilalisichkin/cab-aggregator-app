@@ -26,6 +26,30 @@ services:
     volumes:
       - ride-database2_data:/data/db
 
+  rating-database1:
+    build:
+      context: .
+    container_name: rating-database1
+    image: mongo:7.0
+    restart: always
+    command: mongod --replSet rs1 --bind_ip_all
+    ports:
+      - "27019:27018"
+    volumes:
+      - rating-database1_data:/data/db
+
+  rating-database2:
+    build:
+      context: .
+    container_name: rating-database2
+    image: mongo:7.0
+    restart: always
+    command: mongod --replSet rs1 --bind_ip_all
+    ports:
+      - "27020:27018"
+    volumes:
+      - rating-database2_data:/data/db
+
   zookeeper:
     image: zookeeper:3.7.0
     container_name: zookeeper
@@ -54,3 +78,5 @@ services:
 volumes:
   ride-database1_data:
   ride-database2_data:
+  rating-database1_data:
+  rating-database2_data:

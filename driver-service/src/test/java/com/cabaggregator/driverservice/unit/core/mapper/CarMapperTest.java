@@ -77,7 +77,7 @@ class CarMapperTest {
         mapper.updateEntityFromDto(carUpdatingDto, actual);
 
         assertThat(actual).isNotNull();
-        assertThat(actual.getId()).isEqualTo(CarTestUtil.CAR_ID);
+        assertThat(actual.getId()).isEqualTo(CarTestUtil.ID);
         assertThat(actual.getLicensePlate()).isEqualTo(CarTestUtil.UPDATED_LICENSE_PLATE);
         assertThat(actual.getMake()).isEqualTo(CarTestUtil.UPDATED_MAKE);
         assertThat(actual.getModel()).isEqualTo(CarTestUtil.UPDATED_MODEL);

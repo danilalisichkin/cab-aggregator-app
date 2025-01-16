@@ -12,6 +12,8 @@ import java.util.UUID;
 
 public interface DriverRateService {
 
+    Double getDriverRating(UUID driverId);
+
     PageDto<DriverRateDto> getPageOfDriverRates(
             UUID driverId, Integer offset, Integer limit, DriverRateSortField sortBy, Sort.Direction sortOrder);
 

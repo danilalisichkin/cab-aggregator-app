@@ -52,14 +52,11 @@ class PassengerMapperTest {
         assertThat(actual.getEmail()).isEqualTo(PassengerTestUtil.UPDATED_EMAIL);
         assertThat(actual.getFirstName()).isEqualTo(PassengerTestUtil.UPDATED_FIRST_NAME);
         assertThat(actual.getLastName()).isEqualTo(PassengerTestUtil.UPDATED_LAST_NAME);
-        assertThat(actual.getRating()).isEqualTo(PassengerTestUtil.UPDATED_RATING);
     }
 
     @Test
     void dtoToEntity_ShouldConvertDtoToEntity_WhenDtoIsNotNull() {
-        Passenger passenger = PassengerTestUtil.buildDefaultPassenger().toBuilder()
-                .rating(null)
-                .build();
+        Passenger passenger = PassengerTestUtil.buildDefaultPassenger();
         PassengerAddingDto passengerAddingDto = PassengerTestUtil.buildPassengerAddingDto();
 
         Passenger actual = mapper.dtoToEntity(passengerAddingDto);

@@ -29,6 +29,19 @@ import java.util.UUID;
 public interface PassengerRateControllerDoc {
 
     @Operation(
+            summary = "Get average rating",
+            description = "Allows to get passenger rating")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful response"),
+            @ApiResponse(responseCode = "400", description = "Bad request: invalid parameters or missing required fields"),
+            @ApiResponse(responseCode = "404", description = "Not found: passenger was never rated and has no rating")
+    })
+    ResponseEntity<Double> getPassengerRating(
+            @Parameter(
+                    description = "Passenger identifier")
+            @PathVariable UUID passengerId);
+
+    @Operation(
             summary = "Get page",
             description = "Allows to get page of existing passenger rates")
     @ApiResponses(value = {

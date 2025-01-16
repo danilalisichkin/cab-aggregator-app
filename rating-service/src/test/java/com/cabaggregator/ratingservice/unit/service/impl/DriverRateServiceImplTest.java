@@ -67,6 +67,35 @@ class DriverRateServiceImplTest {
     private UserRoleValidator userRoleValidator;
 
     @Test
+    void getDriverRating_ShouldReturnAverageDriverRating_WhenDriverWasEverRated() {
+        UUID driverId = DriverRateTestUtil.DRIVER_ID;
+        Double rating = DriverRateTestUtil.AVERAGE_RATING;
+
+        when(driverRateRepository.findAverageRateByDriverId(driverId))
+                .thenReturn(Optional.of(rating));
+
+        Double actual = driverRateService.getDriverRating(driverId);
+
+        assertThat(actual).isEqualTo(rating);
+
+        verify(driverRateRepository).findAverageRateByDriverId(driverId);
+    }
+
+    @Test
+    void getDriverRating_ShouldThrowResourceNotFoundException_WhenDriverWasNeverRated() {
+        UUID driverId = DriverRateTestUtil.DRIVER_ID;
+
+        when(driverRateRepository.findAverageRateByDriverId(driverId))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(
+                () -> driverRateService.getDriverRating(driverId))
+                .isInstanceOf(ResourceNotFoundException.class);
+
+        verify(driverRateRepository).findAverageRateByDriverId(driverId);
+    }
+
+    @Test
     void getPageOfDriverRates_ShouldReturnPageDto_WhenCalledWithValidParameters() {
         Integer offset = 0, limit = 10;
         DriverRateSortField sortBy = DriverRateSortField.ID;

@@ -40,6 +40,14 @@ public class DriverRateServiceImpl implements DriverRateService {
     private final UserRoleValidator userRoleValidator;
 
     @Override
+    public Double getDriverRating(UUID driverId) {
+        return driverRateRepository
+                .findAverageRateByDriverId(driverId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        ApplicationMessages.DRIVER_RATING_NOT_FOUND));
+    }
+
+    @Override
     public PageDto<DriverRateDto> getPageOfDriverRates(
             UUID driverId, Integer offset, Integer limit, DriverRateSortField sortBy, Sort.Direction sortOrder) {
 

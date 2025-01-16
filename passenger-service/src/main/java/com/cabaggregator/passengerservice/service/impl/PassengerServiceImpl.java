@@ -1,7 +1,6 @@
 package com.cabaggregator.passengerservice.service.impl;
 
 import com.cabaggregator.passengerservice.core.constant.ApplicationMessages;
-import com.cabaggregator.passengerservice.core.constant.DefaultValues;
 import com.cabaggregator.passengerservice.core.dto.page.PageDto;
 import com.cabaggregator.passengerservice.core.dto.passenger.PassengerAddingDto;
 import com.cabaggregator.passengerservice.core.dto.passenger.PassengerDto;
@@ -59,7 +58,6 @@ public class PassengerServiceImpl implements PassengerService {
         passengerValidator.validateEmailUniqueness(passengerDto.email());
 
         Passenger passenger = passengerMapper.dtoToEntity(passengerDto);
-        passenger.setRating(DefaultValues.DEFAULT_RATING);
 
         return passengerMapper.entityToDto(
                 passengerRepository.save(passenger));

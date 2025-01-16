@@ -1,5 +1,6 @@
 package com.cabaggregator.paymentservice.controller.api;
 
+import com.cabaggregator.paymentservice.controller.doc.StripeWebhookControllerDoc;
 import com.cabaggregator.paymentservice.core.constant.ValidationErrors;
 import com.cabaggregator.paymentservice.service.StripeWebhookService;
 import com.cabaggregator.paymentservice.stripe.StripeHttpHeaders;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/stripe/webhooks")
-public class StripeWebhookController {
+public class StripeWebhookController implements StripeWebhookControllerDoc {
 
     private final StripeWebhookService stripeWebhookService;
 
