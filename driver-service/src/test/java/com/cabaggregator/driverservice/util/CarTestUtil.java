@@ -63,6 +63,12 @@ public final class CarTestUtil {
                 CarDetailsTestUtil.buildCarDetailsDto());
     }
 
+    public static CarFullDto buildUpdatedCarFullDto() {
+        return new CarFullDto(
+                buildCarDto(),
+                CarDetailsTestUtil.buildUpdateCarDetailsDto());
+    }
+
     public static CarUpdatingDto buildCarUpdatingDto() {
         return new CarUpdatingDto(
                 UPDATED_LICENSE_PLATE,

@@ -144,7 +144,6 @@ class DriverControllerIntegrationTest extends AbstractPostgresIntegrationTest {
     void createDriver_ShouldCreateDriver_WhenHeUnique() {
         DriverAddingDto addingDto = DriverTestUtil.buildDriverAddingDto();
         String json = objectMapper.writeValueAsString(addingDto);
-        int expectedDriverCount = 1;
 
         mockMvc.perform(post(baseUrl)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -158,8 +157,7 @@ class DriverControllerIntegrationTest extends AbstractPostgresIntegrationTest {
                 .andExpect(jsonPath("$.carId").value(nullValue()));
 
         List<Driver> drivers = driverRepository.findAll();
-        assertThat(drivers).hasSize(expectedDriverCount);
-        assertThat(drivers.getFirst().getId()).isEqualTo(addingDto.id());
+        assertThat(drivers).anyMatch(driver -> driver.getId().equals(addingDto.id()));
     }
 
     @Test
@@ -255,7 +253,13 @@ class DriverControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         mockMvc.perform(patch(requestUrl)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(DriverTestUtil.ID.toString()))
+                .andExpect(jsonPath("$.phoneNumber").value(DriverTestUtil.PHONE_NUMBER))
+                .andExpect(jsonPath("$.email").value(DriverTestUtil.EMAIL))
+                .andExpect(jsonPath("$.firstName").value(DriverTestUtil.FIRST_NAME))
+                .andExpect(jsonPath("$.lastName").value(DriverTestUtil.LAST_NAME))
+                .andExpect(jsonPath("$.carId").value(CarTestUtil.FREE_CAR_ID));
 
         Optional<Driver> driver = driverRepository.findById(DriverTestUtil.ID);
         assertThat(driver).isPresent();

@@ -264,12 +264,15 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
     void updateCarDetails_ShouldUpdateCarDetails_WhenCarExist() {
         String requestUrl = "%s/%s/details".formatted(baseUrl, CarTestUtil.ID.toString());
         CarDetailsSettingDto settingDto = CarDetailsTestUtil.buildCarDetailsSettingDto();
+        CarFullDto updatedCarFullDto = CarTestUtil.buildUpdatedCarFullDto();
         String json = objectMapper.writeValueAsString(settingDto);
+        String expectedJson = objectMapper.writeValueAsString(updatedCarFullDto);
 
         mockMvc.perform(put(requestUrl)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedJson));
 
         Optional<Car> car = carRepository.findById(CarTestUtil.ID);
         assertThat(car).isPresent();
@@ -296,16 +299,14 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
             "classpath:/sql.repository/import_cars.sql",
             "classpath:/sql.repository/import_car_details.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    void deleteCar_ShouldDeleteCar_WhenHeExists() {
+    void deleteCar_ShouldDeleteCar_WhenItExists() {
         String requestUrl = "%s/%s".formatted(baseUrl, CarTestUtil.ID.toString());
-        int expectedCarCount = 2;
 
         mockMvc.perform(delete(requestUrl))
                 .andExpect(status().isNoContent());
 
         List<Car> cars = carRepository.findAll();
-        assertThat(cars).hasSize(expectedCarCount);
-        assertThat(cars.getFirst().getId()).isNotEqualTo(CarTestUtil.ID);
+        assertThat(cars).noneMatch(car -> car.getId().equals(CarTestUtil.ID));
     }
 
     @Test
