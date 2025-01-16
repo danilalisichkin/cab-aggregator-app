@@ -6,6 +6,8 @@ import com.cabaggregator.rideservice.core.enums.RideLifecyclePhase;
 import com.cabaggregator.rideservice.core.enums.RideStatus;
 import com.cabaggregator.rideservice.entity.Ride;
 import com.cabaggregator.rideservice.exception.BadRequestException;
+import com.cabaggregator.rideservice.kafka.dto.RateAddingDto;
+import com.cabaggregator.rideservice.kafka.producer.RateProducer;
 import com.cabaggregator.rideservice.security.util.SecurityUtil;
 import com.cabaggregator.rideservice.strategy.RideLifecycleHandler;
 import com.cabaggregator.rideservice.validator.RideValidator;
@@ -23,6 +25,8 @@ public class CompletingRideHandler implements RideLifecycleHandler {
 
     private final SecurityUtil securityUtil;
 
+    private final RateProducer rateProducer;
+
     @Override
     public void handle(Ride ride) {
         UUID userId = securityUtil.getUserIdFromSecurityContext();
@@ -33,11 +37,17 @@ public class CompletingRideHandler implements RideLifecycleHandler {
             throw new BadRequestException(ApplicationMessages.CANT_COMPLETE_RIDE_WHEN_IT_NOT_PAID);
         }
 
-        // TODO: create rates, send money to driver using kafka
+        // TODO: send money to driver using kafka
         // will be implemented in next pr's
 
         ride.setEndTime(LocalDateTime.now());
         ride.setStatus(RideStatus.COMPLETED);
+
+        rateProducer.sendMessage(
+                new RateAddingDto(
+                        ride.getId(),
+                        ride.getDriverId(),
+                        ride.getPassengerId()));
     }
 
     @Override

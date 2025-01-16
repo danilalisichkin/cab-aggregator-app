@@ -13,8 +13,27 @@ spring:
       password: ${DB_PASSWORD:root}
       replica-set-name: ${DB_REPLICA_SET_NAME:rs1}
       database: ${DB_NAME:rating_database}
+  kafka:
+    consumer:
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+      group-id: rate-creation-group
+      properties:
+        spring.json:
+          value.default.type: java.util.Map
+          trusted.packages: '*'
+          use.type.headers: false
+        spring.deserializer:
+          key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+          value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
 mongock:
   migration-scan-package: com.cabaggregator.ratingservice.migrations
   enabled: true
+app:
+  kafka:
+    topics:
+      rate:
+        name: ${KAFKA_TOPIC_RATE_NAME:rate-topic}
 server:
   port: ${SERVER_PORT:8086}
