@@ -26,8 +26,15 @@ public final class FeedbackOptionConverter {
         @Override
         public FeedbackOption deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
                 throws IOException {
-            int id = jsonParser.getIntValue();
-            return FeedbackOption.values()[id];
+
+            String value = jsonParser.getText();
+
+            try {
+                return FeedbackOption.valueOf(value);
+            } catch (IllegalArgumentException e) {
+                int id = Integer.parseInt(value);
+                return FeedbackOption.values()[id];
+            }
         }
     }
 }

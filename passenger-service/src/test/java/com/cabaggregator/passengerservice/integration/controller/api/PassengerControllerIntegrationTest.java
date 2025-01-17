@@ -8,6 +8,7 @@ import com.cabaggregator.passengerservice.entity.Passenger;
 import com.cabaggregator.passengerservice.repository.PassengerRepository;
 import com.cabaggregator.passengerservice.util.PassengerTestUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
@@ -50,7 +51,12 @@ class PassengerControllerIntegrationTest extends AbstractPostgresIntegrationTest
     @LocalServerPort
     private int port;
 
-    private final String baseUrl = "%s:%s/%s".formatted(LOCAL_HOST, port, PASSENGERS_BASE_URL);
+    private String baseUrl;
+
+    @PostConstruct
+    void initBaseUrl() {
+        this.baseUrl = "%s:%s/%s".formatted(LOCAL_HOST, port, PASSENGERS_BASE_URL);
+    }
 
     @AfterEach
     void clearPassengers() {
@@ -60,7 +66,7 @@ class PassengerControllerIntegrationTest extends AbstractPostgresIntegrationTest
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_passengers.sql"},
+            "classpath:/postgresql/import_passengers.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void getPageOfPassengers_ShouldReturnPassengers_WhenTheyExist() {
         int expectedPage = 0;
@@ -103,7 +109,7 @@ class PassengerControllerIntegrationTest extends AbstractPostgresIntegrationTest
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_passengers.sql"},
+            "classpath:/postgresql/import_passengers.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void getPassenger_ShouldReturnPassenger_WhenHeExists() {
         String requestUrl = "%s/%s".formatted(baseUrl, PassengerTestUtil.ID.toString());
@@ -147,7 +153,7 @@ class PassengerControllerIntegrationTest extends AbstractPostgresIntegrationTest
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_passengers.sql"},
+            "classpath:/postgresql/import_passengers.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void createPassenger_ShouldReturnConflictStatus_WhenPassengerNotUnique() {
         PassengerAddingDto addingDto = PassengerTestUtil.buildPassengerAddingDto();
@@ -166,7 +172,7 @@ class PassengerControllerIntegrationTest extends AbstractPostgresIntegrationTest
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_passengers.sql"},
+            "classpath:/postgresql/import_passengers.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void updatePassenger_ShouldUpdatePassenger_WhenHeExists() {
         String requestUrl = "%s/%s".formatted(baseUrl, PassengerTestUtil.ID.toString());
@@ -204,7 +210,7 @@ class PassengerControllerIntegrationTest extends AbstractPostgresIntegrationTest
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_passengers.sql"},
+            "classpath:/postgresql/import_passengers.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void updatePassenger_ShouldReturnConflictStatus_WhenUpdatableDataIsNotUnique() {
         String requestUrl = "%s/%s".formatted(baseUrl, PassengerTestUtil.ID.toString());
@@ -220,7 +226,7 @@ class PassengerControllerIntegrationTest extends AbstractPostgresIntegrationTest
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_passengers.sql"},
+            "classpath:/postgresql/import_passengers.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void deletePassenger_ShouldDeletePassenger_WhenHeExists() {
         String requestUrl = "%s/%s".formatted(baseUrl, PassengerTestUtil.ID.toString());

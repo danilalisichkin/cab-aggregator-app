@@ -14,12 +14,13 @@ import java.util.UUID;
 public final class PassengerRateTestUtil {
     public static final ObjectId ID = new ObjectId("5f49a10a5c1c0d1b3d54d7a4");
     public static final ObjectId RIDE_ID = new ObjectId("507f1f77bcf86cd799439011");
-    public static final UUID DRIVER_ID = UUID.fromString("4665e57c-884a-433d-8fd2-55078f29eab9");
-    public static final UUID PASSENGER_ID = UUID.fromString("1000e57c-114a-433d-6ac2-55048a29eab9");
+    public static final UUID DRIVER_ID = UUID.fromString("984b2c9d-8307-48ac-b5e3-e26d8fcb6c24");
+    public static final UUID PASSENGER_ID = UUID.fromString("784aa16e-3d6d-4d28-b48e-2d4a0a4f49a6");
     public static final Integer RATE = 4;
     public static final Double AVERAGE_RATING = 3.5;
 
-    public static final UUID OTHER_DRIVER_ID = UUID.fromString("b1f4e8b3-3b36-43c5-bc8e-7e7e3d2c1c27");
+    public static final UUID OTHER_DRIVER_ID = UUID.fromString("15253953-8087-4983-b2c9-f2a9c2af1f31");
+    public static final ObjectId OTHER_RIDE_ID = new ObjectId("30c8c7f7ece3c4a6c6c4e861");
 
     public static final ObjectId NOT_EXISTING_RIDE_ID = new ObjectId("000000000000000000000000");
     public static final UUID NOT_EXISTING_PASSENGER_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");

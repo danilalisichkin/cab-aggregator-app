@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PaymentTestUtil {
     public static final Long UNIT_AMOUNT = 500L;
-    public static final LocalDateTime CREATED_AT = LocalDateTime.now();
+    public static final LocalDateTime CREATED_AT = LocalDateTime.parse("2025-02-01T11:44:00");
 
     public static Payment buildDefaultPayment() {
         return Payment.builder()

@@ -8,6 +8,7 @@ import com.cabaggregator.promocodeservice.entity.PromoCode;
 import com.cabaggregator.promocodeservice.repository.PromoCodeRepository;
 import com.cabaggregator.promocodeservice.util.PromoCodeTestUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
@@ -52,7 +53,12 @@ class PromoCodeControllerIntegrationTest extends AbstractPostgresIntegrationTest
     @LocalServerPort
     private int port;
 
-    private final String baseUrl = "%s:%s/%s".formatted(LOCAL_HOST, port, PROMO_CODES_BASE_URL);
+    private String baseUrl;
+
+    @PostConstruct
+    void initBaseUrl() {
+        this.baseUrl = "%s:%s/%s".formatted(LOCAL_HOST, port, PROMO_CODES_BASE_URL);
+    }
 
     @AfterEach
     void clearPromoCodes() {
@@ -62,7 +68,7 @@ class PromoCodeControllerIntegrationTest extends AbstractPostgresIntegrationTest
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_promo_codes.sql"},
+            "classpath:/postgresql/import_promo_codes.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void getPageOfPromoCodes_ShouldReturnPromoCodes_WhenTheyExist() {
         int expectedPage = 0;
@@ -105,7 +111,7 @@ class PromoCodeControllerIntegrationTest extends AbstractPostgresIntegrationTest
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_promo_codes.sql"},
+            "classpath:/postgresql/import_promo_codes.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void getPromoCode_ShouldReturnPromoCode_WhenItExists() {
         String requestUrl = "%s/%s".formatted(baseUrl, PromoCodeTestUtil.VALUE);
@@ -149,7 +155,7 @@ class PromoCodeControllerIntegrationTest extends AbstractPostgresIntegrationTest
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_promo_codes.sql"},
+            "classpath:/postgresql/import_promo_codes.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void createPromoCode_ShouldReturnConflictStatus_WhenPromoCodeNotUnique() {
         PromoCodeAddingDto addingDto = PromoCodeTestUtil.buildPromoCodeAddingDto();
@@ -183,7 +189,7 @@ class PromoCodeControllerIntegrationTest extends AbstractPostgresIntegrationTest
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_promo_codes.sql"},
+            "classpath:/postgresql/import_promo_codes.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void updatePromoCode_ShouldUpdatePromoCode_WhenItExists() {
         String requestUrl = "%s/%s".formatted(baseUrl, PromoCodeTestUtil.VALUE);
