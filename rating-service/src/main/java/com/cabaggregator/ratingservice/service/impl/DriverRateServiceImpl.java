@@ -9,12 +9,15 @@ import com.cabaggregator.ratingservice.core.enums.sort.DriverRateSortField;
 import com.cabaggregator.ratingservice.core.mapper.DriverRateMapper;
 import com.cabaggregator.ratingservice.core.mapper.PageMapper;
 import com.cabaggregator.ratingservice.entity.DriverRate;
+import com.cabaggregator.ratingservice.exception.ForbiddenException;
 import com.cabaggregator.ratingservice.exception.ResourceNotFoundException;
 import com.cabaggregator.ratingservice.repository.DriverRateRepository;
+import com.cabaggregator.ratingservice.security.enums.UserRole;
+import com.cabaggregator.ratingservice.security.util.SecurityUtil;
 import com.cabaggregator.ratingservice.service.DriverRateService;
 import com.cabaggregator.ratingservice.util.PageRequestBuilder;
+import com.cabaggregator.ratingservice.util.UserRoleExtractor;
 import com.cabaggregator.ratingservice.validator.DriverRateValidator;
-import com.cabaggregator.ratingservice.validator.UserRoleValidator;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
@@ -29,6 +32,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DriverRateServiceImpl implements DriverRateService {
 
+    private final SecurityUtil securityUtil;
+
+    private final UserRoleExtractor userRoleExtractor;
+
     private final DriverRateRepository driverRateRepository;
 
     private final DriverRateMapper driverRateMapper;
@@ -37,8 +44,14 @@ public class DriverRateServiceImpl implements DriverRateService {
 
     private final DriverRateValidator driverRateValidator;
 
-    private final UserRoleValidator userRoleValidator;
-
+    /**
+     * Returns the computed rating of a Driver.
+     * The rating is the aggregated average rate value based on Driver ratings.
+     *
+     * @param driverId The UUID of the Driver whose rating is being retrieved.
+     * @return The computed average rating of the Driver.
+     * @throws ResourceNotFoundException if no rating is found for the specified Driver.
+     */
     @Override
     public Double getDriverRating(UUID driverId) {
         return driverRateRepository
@@ -47,29 +60,57 @@ public class DriverRateServiceImpl implements DriverRateService {
                         ApplicationMessages.DRIVER_RATING_NOT_FOUND));
     }
 
+    /**
+     * Returns a paginated list of Driver ratings.
+     * This method is accessible by the Driver or an Admin.
+     *
+     * @param driverId The UUID of the driver whose ratings are being retrieved.
+     * @param offset The page number for pagination (0-based).
+     * @param limit The maximum number of ratings per page.
+     * @param sortBy The field by which to sort the ratings.
+     * @param sortOrder The direction of sorting (ascending or descending).
+     * @return A PageDto containing a list of DriverRateDto objects representing the ratings.
+     * @throws ForbiddenException if Driver tries to retrieve other Driver's rates.
+     */
     @Override
     public PageDto<DriverRateDto> getPageOfDriverRates(
             UUID driverId, Integer offset, Integer limit, DriverRateSortField sortBy, Sort.Direction sortOrder) {
 
-        userRoleValidator.validateUserIsDriverOrAdmin(driverId);
+        validateUserIsRequestedDriverOrAdmin(driverId);
 
-        PageRequest pageRequest =
-                PageRequestBuilder.buildPageRequest(offset, limit, sortBy.getValue(), sortOrder);
-
+        PageRequest pageRequest = PageRequestBuilder.buildPageRequest(offset, limit, sortBy.getValue(), sortOrder);
         Page<DriverRate> driverRates = driverRateRepository.findAllByDriverId(driverId, pageRequest);
 
         return pageMapper.pageToPageDto(
                 driverRateMapper.entityPageToDtoPage(driverRates));
     }
 
+    /**
+     * Returns a specific Driver's rate for a given ride.
+     * This method is accessible by the Driver or an Admin.
+     *
+     * @param driverId The UUID of the Driver whose rating is being retrieved.
+     * @param rideId The ObjectId of the ride for which the rating is being fetched.
+     * @return A DriverRateDto representing the rating of the driver for the specific ride.
+     * @throws ResourceNotFoundException if no rating is found for the specified Driver and ride combination.
+     * @throws ForbiddenException if Driver tries to retrieve other Driver's rates.
+     */
     @Override
     public DriverRateDto getDriverRate(UUID driverId, ObjectId rideId) {
-        userRoleValidator.validateUserIsDriverOrAdmin(driverId);
+        validateUserIsRequestedDriverOrAdmin(driverId);
 
         return driverRateMapper.entityToDto(
                 getDriverRateEntity(driverId, rideId));
     }
 
+    /**
+     * Creates a new Driver rating with default values for rating and feedback.
+     *
+     * @param addingDto The DriverRateAddingDto containing the data for creating the new rating.
+     * @return A DriverRateDto representing the newly created Driver rating.
+     * @throws com.cabaggregator.ratingservice.exception.DataUniquenessConflictException
+     * if the provided rating record has been already created.
+     */
     @Override
     @Transactional
     public DriverRateDto saveDriverRate(DriverRateAddingDto addingDto) {
@@ -81,11 +122,24 @@ public class DriverRateServiceImpl implements DriverRateService {
                 driverRateRepository.save(newDriverRate));
     }
 
+    /**
+     * Sets a driver rating and feedback for a specified ride.
+     * This method is used by the Passenger.
+     *
+     * @param driverId The UUID of the Driver being rated.
+     * @param rideId The ObjectId of the ride for which the rating is being set.
+     * @param settingDto The DriverRateSettingDto containing the rating and feedback data to be set.
+     * @return A DriverRateDto representing the updated Driver rating.
+     * @throws ForbiddenException if the user is not participant of the ride.
+     * @throws ResourceNotFoundException if the rating for the specified Driver and ride does not exist.
+     */
     @Override
     @Transactional
     public DriverRateDto setDriverRate(UUID driverId, ObjectId rideId, DriverRateSettingDto settingDto) {
         DriverRate driverRateToUpdate = getDriverRateEntity(driverId, rideId);
-        driverRateValidator.validatePassengerParticipation(driverRateToUpdate);
+
+        UUID userId = securityUtil.getUserIdFromSecurityContext();
+        driverRateValidator.validatePassengerParticipation(driverRateToUpdate, userId);
         driverRateValidator.validateDriverRateSetting(driverRateToUpdate);
 
         driverRateMapper.updateEntityFromDto(settingDto, driverRateToUpdate);
@@ -94,6 +148,30 @@ public class DriverRateServiceImpl implements DriverRateService {
                 driverRateRepository.save(driverRateToUpdate));
     }
 
+    /**
+     * Validates that the current user is either the requested Driver (resource owner) or an Admin.
+     *
+     * @param driverId The UUID of the Driver being accessed.
+     * @throws ForbiddenException if the user is not authorized to access the ratings of the specified Driver.
+     */
+    private void validateUserIsRequestedDriverOrAdmin(UUID driverId) {
+        UUID userId = securityUtil.getUserIdFromSecurityContext();
+        UserRole userRole = userRoleExtractor.extractCurrentUserRole();
+
+        if (!userId.equals(driverId) && userRole.equals(UserRole.DRIVER)) {
+            throw new ForbiddenException(ApplicationMessages.CANT_GET_RATES_OF_OTHER_USER);
+        }
+    }
+
+    /**
+     * Returns the existing Driver rate for a specified Driver and ride.
+     * Throws an exception if the rate does not exist.
+     *
+     * @param driverId The UUID of the Driver whose rate is being retrieved.
+     * @param rideId The ObjectId of the ride for which the rate is being retrieved.
+     * @return A DriverRate entity representing the rate for the specified Driver and ride.
+     * @throws ResourceNotFoundException if no rating is found for the specified Driver and ride combination.
+     */
     private DriverRate getDriverRateEntity(UUID driverId, ObjectId rideId) {
         return driverRateRepository
                 .findByDriverIdAndRideId(driverId, rideId)

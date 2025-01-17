@@ -5,7 +5,6 @@ import com.cabaggregator.ratingservice.exception.BadRequestException;
 import com.cabaggregator.ratingservice.exception.DataUniquenessConflictException;
 import com.cabaggregator.ratingservice.exception.ForbiddenException;
 import com.cabaggregator.ratingservice.repository.DriverRateRepository;
-import com.cabaggregator.ratingservice.security.util.SecurityUtil;
 import com.cabaggregator.ratingservice.util.DriverRateTestUtil;
 import com.cabaggregator.ratingservice.validator.DriverRateValidator;
 import org.junit.jupiter.api.Tag;
@@ -13,12 +12,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -89,34 +88,24 @@ class DriverRateValidatorTest {
     @Test
     void validatePassengerParticipation_ShouldThrowForbiddenException_WhenUserIsNotRideParticipant() {
         DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
+        UUID passengerId = DriverRateTestUtil.OTHER_PASSENGER_ID;
 
-        try (MockedStatic<SecurityUtil> mockedStatic = mockStatic(SecurityUtil.class)) {
-            mockedStatic.when(SecurityUtil::getUserIdFromSecurityContext)
-                    .thenReturn(DriverRateTestUtil.OTHER_PASSENGER_ID);
+        assertThatThrownBy(
+                () -> driverRateValidator.validatePassengerParticipation(driverRate, passengerId))
+                .isInstanceOf(ForbiddenException.class);
 
-            assertThatThrownBy(
-                    () -> driverRateValidator.validatePassengerParticipation(driverRate))
-                    .isInstanceOf(ForbiddenException.class);
-
-            mockedStatic.verify(SecurityUtil::getUserIdFromSecurityContext);
-            verifyNoInteractions(driverRateRepository);
-        }
+        verifyNoInteractions(driverRateRepository);
     }
 
     @Test
     void validatePassengerParticipation_ShouldNotThrowException_WhenUserIsRideParticipant() {
         DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
+        UUID passengerId = driverRate.getPassengerId();
 
-        try (MockedStatic<SecurityUtil> mockedStatic = mockStatic(SecurityUtil.class)) {
-            mockedStatic.when(SecurityUtil::getUserIdFromSecurityContext)
-                    .thenReturn(driverRate.getPassengerId());
+        assertThatCode(
+                () -> driverRateValidator.validatePassengerParticipation(driverRate, passengerId))
+                .doesNotThrowAnyException();
 
-            assertThatCode(
-                    () -> driverRateValidator.validatePassengerParticipation(driverRate))
-                    .doesNotThrowAnyException();
-
-            mockedStatic.verify(SecurityUtil::getUserIdFromSecurityContext);
-            verifyNoInteractions(driverRateRepository);
-        }
+        verifyNoInteractions(driverRateRepository);
     }
 }
