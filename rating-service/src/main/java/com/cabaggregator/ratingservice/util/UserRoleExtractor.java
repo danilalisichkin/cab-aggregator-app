@@ -11,10 +11,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-/**
- * Extracts business user role from security context.
- * Used to control access to a resource that can be accessed by users with different roles.
- **/
 @Component
 @RequiredArgsConstructor
 public class UserRoleExtractor {

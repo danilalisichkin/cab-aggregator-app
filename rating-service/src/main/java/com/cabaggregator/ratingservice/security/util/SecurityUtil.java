@@ -16,17 +16,11 @@ public final class SecurityUtil {
                 .getAuthentication();
     }
 
-    /**
-     * Extracts user id from Authentication object.
-     **/
     public UUID getUserIdFromSecurityContext() {
         return (UUID) getAuthentication()
                 .getPrincipal();
     }
 
-    /**
-     * Extracts user authorities from Authentication object.
-     **/
     public List<String> getUserAuthoritiesFromSecurityContext() {
         return getAuthentication()
                 .getAuthorities()

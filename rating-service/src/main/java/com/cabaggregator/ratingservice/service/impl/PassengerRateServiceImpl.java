@@ -45,9 +45,13 @@ public class PassengerRateServiceImpl implements PassengerRateService {
     private final PassengerRateValidator passengerRateValidator;
 
     /**
-     * Returns computed rating of Passenger.
-     * Rating is aggregated average rate value.
-     **/
+     * Returns the computed rating of a Passenger.
+     * The rating is the aggregated average rate value based on Passenger ratings.
+     *
+     * @param passengerId The UUID of the Passenger whose rating is being retrieved.
+     * @return The computed average rating of the Passenger.
+     * @throws ResourceNotFoundException if no rating is found for the specified Passenger.
+     */
     @Override
     public Double getPassengerRating(UUID passengerId) {
         return passengerRateRepository
@@ -57,9 +61,17 @@ public class PassengerRateServiceImpl implements PassengerRateService {
     }
 
     /**
-     * Returns page of Passenger rates.
-     * Used by Passenger or Admin.
-     **/
+     * Returns a paginated list of Passenger ratings.
+     * This method is accessible by the Passenger or an Admin.
+     *
+     * @param passengerId The UUID of the passenger whose ratings are being retrieved.
+     * @param offset The page number for pagination (0-based).
+     * @param limit The maximum number of ratings per page.
+     * @param sortBy The field by which to sort the ratings.
+     * @param sortOrder The direction of sorting (ascending or descending).
+     * @return A PageDto containing a list of PassengerRateDto objects representing the ratings.
+     * @throws ForbiddenException if Passenger tries to retrieve other Passenger's rates.
+     */
     @Override
     public PageDto<PassengerRateDto> getPageOfPassengerRates(
             UUID passengerId, Integer offset, Integer limit, PassengerRateSortField sortBy, Sort.Direction sortOrder) {
@@ -74,9 +86,15 @@ public class PassengerRateServiceImpl implements PassengerRateService {
     }
 
     /**
-     * Returns specified Passenger rate.
-     * Used by Passenger or Admin.
-     **/
+     * Returns a specific Passenger's rate for a given ride.
+     * This method is accessible by the Passenger or an Admin.
+     *
+     * @param passengerId The UUID of the Passenger whose rating is being retrieved.
+     * @param rideId The ObjectId of the ride for which the rating is being fetched.
+     * @return A PassengerRateDto representing the rating of the passenger for the specific ride.
+     * @throws ResourceNotFoundException if no rating is found for the specified Passenger and ride combination.
+     * @throws ForbiddenException if Passenger tries to retrieve other Passenger's rates.
+     */
     @Override
     public PassengerRateDto getPassengerRate(UUID passengerId, ObjectId rideId) {
         validateUserIsRequestedPassengerOrAdmin(passengerId);
@@ -86,8 +104,13 @@ public class PassengerRateServiceImpl implements PassengerRateService {
     }
 
     /**
-     * Creates new Passenger rate with blank rating.
-     **/
+     * Creates a new Passenger rating with default values for rating.
+     *
+     * @param addingDto The PassengerRateAddingDto containing the data for creating the new rating.
+     * @return A PassengerRateDto representing the newly created Passenger rating.
+     * @throws com.cabaggregator.ratingservice.exception.DataUniquenessConflictException
+     * if the provided rating record has been already created.
+     */
     @Override
     @Transactional
     public PassengerRateDto savePassengerRate(PassengerRateAddingDto addingDto) {
@@ -100,9 +123,16 @@ public class PassengerRateServiceImpl implements PassengerRateService {
     }
 
     /**
-     * Sets Passenger rating for specified ride.
-     * Used by Driver.
-     **/
+     * Sets a passenger rating for a specified ride.
+     * This method is used by the Driver.
+     *
+     * @param passengerId The UUID of the Passenger being rated.
+     * @param rideId The ObjectId of the ride for which the rating is being set.
+     * @param settingDto The PassengerRateSettingDto containing the rating data to be set.
+     * @return A PassengerRateDto representing the updated Passenger rating.
+     * @throws ForbiddenException if the user is not participant of the ride.
+     * @throws ResourceNotFoundException if the rating for the specified Passenger and ride does not exist.
+     */
     @Override
     @Transactional
     public PassengerRateDto setPassengerRate(UUID passengerId, ObjectId rideId, PassengerRateSettingDto settingDto) {
@@ -119,8 +149,11 @@ public class PassengerRateServiceImpl implements PassengerRateService {
     }
 
     /**
-     * Validates that current user is requested Passenger (resource owner) or Admin.
-     **/
+     * Validates that the current user is either the requested Passenger (resource owner) or an Admin.
+     *
+     * @param passengerId The UUID of the Passenger being accessed.
+     * @throws ForbiddenException if the user is not authorized to access the ratings of the specified Passenger.
+     */
     private void validateUserIsRequestedPassengerOrAdmin(UUID passengerId) {
         UUID userId = securityUtil.getUserIdFromSecurityContext();
         UserRole userRole = userRoleExtractor.extractCurrentUserRole();
@@ -131,8 +164,14 @@ public class PassengerRateServiceImpl implements PassengerRateService {
     }
 
     /**
-     * Returns existing Passenger rate or throws exception if it doesn't exist.
-     **/
+     * Returns the existing Passenger rate for a specified Passenger and ride.
+     * Throws an exception if the rate does not exist.
+     *
+     * @param passengerId The UUID of the Passenger whose rate is being retrieved.
+     * @param rideId The ObjectId of the ride for which the rate is being retrieved.
+     * @return A PassengerRate entity representing the rate for the specified Passenger and ride.
+     * @throws ResourceNotFoundException if no rating is found for the specified Passenger and ride combination.
+     */
     private PassengerRate getPassengerRateEntity(UUID passengerId, ObjectId rideId) {
         return passengerRateRepository
                 .findByPassengerIdAndRideId(passengerId, rideId)

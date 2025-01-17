@@ -26,9 +26,6 @@ public final class JwtClaimsExtractor {
         }
     }
 
-    /**
-     * Extracts user id from JWT.
-     **/
     public static String extractUserId(String token) {
         try {
             return getClaims(token)
@@ -38,9 +35,6 @@ public final class JwtClaimsExtractor {
         }
     }
 
-    /**
-     * Extracts user roles as GrantedAuthorities from JWT.
-     **/
     public static List<GrantedAuthority> extractUserRoles(String token) {
         Map<String, Object> realmAccess;
 

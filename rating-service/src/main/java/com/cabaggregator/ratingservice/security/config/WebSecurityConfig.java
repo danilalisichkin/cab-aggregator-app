@@ -15,9 +15,21 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
     /**
-     * This config adds spring security to application.
-     * No request authorization provided because it will be configured on api-gateway in the future.
-     **/
+     * Configures the security settings for the application, including the JWT-based authentication filter.
+     *
+     * <p>This configuration disables CSRF protection and configures the application to be stateless by setting the
+     * session creation policy to {@code SessionCreationPolicy.STATELESS}. It also specifies which HTTP endpoints
+     * should be publicly accessible (e.g., Swagger UI, API documentation), while requiring authentication for all
+     * other endpoints.</p>
+     *
+     * <p>The method adds a custom {@link JwtFilter} before the {@link UsernamePasswordAuthenticationFilter}
+     * to handle JWT token extraction and user authentication. Additionally, it sets up a security filter chain
+     * to control access to the application.</p>
+     *
+     * @param http The {@link HttpSecurity} object used to configure the security settings for the application.
+     * @return A {@link SecurityFilterChain} that defines the security rules for the application.
+     * @throws Exception If any error occurs while configuring HTTP security.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
