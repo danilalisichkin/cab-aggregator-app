@@ -5,8 +5,8 @@ import com.cabaggregator.rideservice.core.dto.ride.RideAddingDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideUpdatingDto;
 import com.cabaggregator.rideservice.core.enums.PaymentMethod;
-import com.cabaggregator.rideservice.core.enums.PaymentStatus;
 import com.cabaggregator.rideservice.core.enums.RideFare;
+import com.cabaggregator.rideservice.core.enums.RidePaymentStatus;
 import com.cabaggregator.rideservice.core.enums.RideStatus;
 import com.cabaggregator.rideservice.entity.Ride;
 import lombok.AccessLevel;
@@ -25,7 +25,7 @@ public final class RideTestUtil {
     public static final RideFare FARE = RideFare.COMFORT;
     public static final RideStatus STATUS = RideStatus.COMPLETED;
     public static final PaymentMethod PAYMENT_METHOD = PaymentMethod.CARD;
-    public static final PaymentStatus PAYMENT_STATUS = PaymentStatus.PAID;
+    public static final RidePaymentStatus PAYMENT_STATUS = RidePaymentStatus.PAID;
 
     public static final LocalDateTime ORDER_TIME = LocalDateTime.parse("2024-12-01T11:30:00");
     public static final LocalDateTime START_TIME = LocalDateTime.parse("2024-12-01T11:35:00");
