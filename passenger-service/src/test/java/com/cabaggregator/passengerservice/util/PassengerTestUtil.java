@@ -17,6 +17,7 @@ public final class PassengerTestUtil {
     public static final String FIRST_NAME = "Frank";
     public static final String LAST_NAME = "Ocean";
 
+    public static final UUID OTHER_ID = UUID.fromString("30208072-8cfc-4289-aa9b-f5984ae2b807");
     public static final String OTHER_PHONE_NUMBER = "375293344556";
 
     public static final UUID NOT_EXISTING_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");

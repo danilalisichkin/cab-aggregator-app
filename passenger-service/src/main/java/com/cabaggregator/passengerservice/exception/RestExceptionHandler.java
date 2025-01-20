@@ -103,6 +103,15 @@ public class RestExceptionHandler {
                         messageBuilder.buildLocalizedMessage(e.getErrorCauseKey())));
     }
 
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ErrorResponse> handleForbiddenException(ForbiddenException e) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(new ErrorResponse(
+                        messageBuilder.buildLocalizedMessage(e.getMessageKey()),
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.FORBIDDEN)));
+    }
+
     @ExceptionHandler(DataUniquenessConflictException.class)
     public ResponseEntity<ErrorResponse> handleDataIUniquenessConflictException(ParameterizedException e) {
         return ResponseEntity
