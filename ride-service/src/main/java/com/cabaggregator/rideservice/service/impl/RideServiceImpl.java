@@ -7,7 +7,7 @@ import com.cabaggregator.rideservice.core.dto.price.PriceRecalculationDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideAddingDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideDto;
 import com.cabaggregator.rideservice.core.dto.route.RouteSummary;
-import com.cabaggregator.rideservice.core.enums.PaymentStatus;
+import com.cabaggregator.rideservice.core.enums.RidePaymentStatus;
 import com.cabaggregator.rideservice.core.enums.RideStatus;
 import com.cabaggregator.rideservice.core.enums.sort.RideSortField;
 import com.cabaggregator.rideservice.entity.Ride;
@@ -146,7 +146,7 @@ public class RideServiceImpl implements RideService {
     private Ride initDefaultRide(RideAddingDto addingDto, UUID userId) {
         Ride ride = rideMapper.dtoToEntity(addingDto);
         ride.setPassengerId(userId);
-        ride.setPaymentStatus(PaymentStatus.PENDING);
+        ride.setPaymentStatus(RidePaymentStatus.PENDING);
         ride.setStatus(RideStatus.PREPARED);
 
         return ride;

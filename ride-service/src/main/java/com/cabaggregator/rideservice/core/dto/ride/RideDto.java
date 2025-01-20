@@ -2,8 +2,8 @@ package com.cabaggregator.rideservice.core.dto.ride;
 
 import com.cabaggregator.rideservice.core.dto.Address;
 import com.cabaggregator.rideservice.core.enums.PaymentMethod;
-import com.cabaggregator.rideservice.core.enums.PaymentStatus;
 import com.cabaggregator.rideservice.core.enums.RideFare;
+import com.cabaggregator.rideservice.core.enums.RidePaymentStatus;
 import com.cabaggregator.rideservice.core.enums.RideStatus;
 import org.bson.types.ObjectId;
 
@@ -25,7 +25,7 @@ public record RideDto(
 
         PaymentMethod paymentMethod,
 
-        PaymentStatus paymentStatus,
+        RidePaymentStatus paymentStatus,
 
         Address pickUpAddress,
 

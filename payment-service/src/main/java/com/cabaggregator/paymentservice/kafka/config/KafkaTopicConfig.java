@@ -1,4 +1,4 @@
-package com.cabaggregator.rideservice.kafka.config;
+package com.cabaggregator.paymentservice.kafka.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,9 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @AllArgsConstructor
 @ConfigurationProperties(prefix = "app.kafka.topics")
 public class KafkaTopicConfig {
-    private final Topic rate = new Topic();
-    private final Topic payment = new Topic();
-    private final Topic payout = new Topic();
+    private final Topic paymentStatus = new Topic();
 
     @Getter
     @Setter

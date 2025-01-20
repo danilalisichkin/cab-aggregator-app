@@ -3,7 +3,7 @@ package com.cabaggregator.rideservice.service.impl;
 import com.cabaggregator.rideservice.core.constant.ApplicationMessages;
 import com.cabaggregator.rideservice.core.dto.ride.RideDto;
 import com.cabaggregator.rideservice.core.enums.PaymentMethod;
-import com.cabaggregator.rideservice.core.enums.PaymentStatus;
+import com.cabaggregator.rideservice.core.enums.RidePaymentStatus;
 import com.cabaggregator.rideservice.entity.Ride;
 import com.cabaggregator.rideservice.exception.ForbiddenException;
 import com.cabaggregator.rideservice.exception.ResourceNotFoundException;
@@ -37,7 +37,7 @@ public class RidePaymentServiceImpl implements RidePaymentService {
      **/
     @Override
     @Transactional
-    public RideDto changeRidePaymentStatus(UUID driverId, ObjectId id, PaymentStatus paymentStatus) {
+    public RideDto changeRidePaymentStatus(UUID driverId, ObjectId id, RidePaymentStatus paymentStatus) {
         Ride rideToUpdate = getRideEntity(id);
 
         UUID userId = securityUtil.getUserIdFromSecurityContext();
@@ -47,10 +47,30 @@ public class RidePaymentServiceImpl implements RidePaymentService {
         rideValidator.validateDriverParticipation(rideToUpdate, userId);
 
         boolean isRequiredPaymentWithCash = PaymentMethod.CASH.equals(rideToUpdate.getPaymentMethod());
-        if (isRequiredPaymentWithCash && paymentStatus.equals(PaymentStatus.PAID_IN_CASH)) {
+        if (isRequiredPaymentWithCash && paymentStatus.equals(RidePaymentStatus.PAID_IN_CASH)) {
             rideToUpdate.setPaymentStatus(paymentStatus);
         } else {
             throw new ForbiddenException(ApplicationMessages.CANT_CHANGE_PAYMENT_STATUS_WHEN_PAID_WITH_CARD);
+        }
+
+        return rideMapper.entityToDto(
+                rideRepository.save(rideToUpdate));
+    }
+
+    /**
+     * Updates the ride payment status.
+     * Used by payment service to manage actual status of payment.
+     **/
+    @Override
+    @Transactional
+    public RideDto changeRidePaymentStatus(ObjectId id, RidePaymentStatus paymentStatus) {
+        Ride rideToUpdate = getRideEntity(id);
+
+        boolean isRequiredPaymentWithCard = PaymentMethod.CARD.equals(rideToUpdate.getPaymentMethod());
+        if (isRequiredPaymentWithCard) {
+            rideToUpdate.setPaymentStatus(paymentStatus);
+        } else {
+            throw new ForbiddenException(ApplicationMessages.CANT_CHANGE_PAYMENT_STATUS_WHEN_PAID_WITH_CASH);
         }
 
         return rideMapper.entityToDto(

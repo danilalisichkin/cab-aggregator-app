@@ -1,4 +1,4 @@
-package com.cabaggregator.rideservice.kafka.config;
+package com.cabaggregator.paymentservice.kafka.config;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -13,20 +13,11 @@ public class KafkaConfig {
     private final KafkaTopicConfig kafkaTopicConfig;
 
     @Bean
-    public NewTopic rateTopic() {
-        var passengerRatesTopic = kafkaTopicConfig.getRate();
+    public NewTopic paymentStatusTopic() {
+        var passengerRatesTopic = kafkaTopicConfig.getPaymentStatus();
         return new NewTopic(
                 passengerRatesTopic.getName(),
                 passengerRatesTopic.getPartitions(),
                 passengerRatesTopic.getReplicas());
-    }
-
-    @Bean
-    public NewTopic paymentTopic() {
-        var paymentTopic = kafkaTopicConfig.getPayment();
-        return new NewTopic(
-                paymentTopic.getName(),
-                paymentTopic.getPartitions(),
-                paymentTopic.getReplicas());
     }
 }

@@ -6,7 +6,6 @@ import com.cabaggregator.rideservice.core.dto.ride.RideAddingDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideDto;
 import com.cabaggregator.rideservice.core.enums.RideStatus;
 import com.cabaggregator.rideservice.core.enums.sort.RideSortField;
-import com.cabaggregator.rideservice.service.RidePaymentService;
 import com.cabaggregator.rideservice.service.RideService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -34,8 +33,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class RideController {
 
     private final RideService rideService;
-
-    private final RidePaymentService ridePaymentService;
 
     @GetMapping
     public ResponseEntity<PageDto<RideDto>> getPageOfRides(

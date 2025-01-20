@@ -20,6 +20,29 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
+  kafka:
+    consumer:
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+      group-id: payment-creation-group
+      properties:
+        spring.json:
+          value.default.type: java.util.Map
+          trusted.packages: '*'
+          use.type.headers: false
+        spring.deserializer:
+          key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+          value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+app:
+  kafka:
+    topics:
+      payment:
+        name: payment.creation.v1
+      payment-status:
+        name: payment-status.changing.v1
+        partitions: 1
+        replicas: 1
 stripe:
   secret-key: ${STRIPE_SECRET_KEY}
   endpoint-secret: ${STRIPE_ENDPOINT_SECRET}
