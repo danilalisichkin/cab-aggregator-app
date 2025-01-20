@@ -9,12 +9,16 @@ import com.cabaggregator.passengerservice.core.mapper.PageMapper;
 import com.cabaggregator.passengerservice.core.mapper.PassengerMapper;
 import com.cabaggregator.passengerservice.entity.Passenger;
 import com.cabaggregator.passengerservice.exception.DataUniquenessConflictException;
+import com.cabaggregator.passengerservice.exception.ForbiddenException;
 import com.cabaggregator.passengerservice.exception.ResourceNotFoundException;
 import com.cabaggregator.passengerservice.repository.PassengerRepository;
+import com.cabaggregator.passengerservice.security.enums.UserRole;
+import com.cabaggregator.passengerservice.security.util.SecurityUtil;
 import com.cabaggregator.passengerservice.service.impl.PassengerServiceImpl;
 import com.cabaggregator.passengerservice.util.PageRequestBuilder;
 import com.cabaggregator.passengerservice.util.PaginationTestUtil;
 import com.cabaggregator.passengerservice.util.PassengerTestUtil;
+import com.cabaggregator.passengerservice.util.UserRoleExtractor;
 import com.cabaggregator.passengerservice.validator.PassengerValidator;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -28,10 +32,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mockStatic;
@@ -57,6 +61,12 @@ class PassengerServiceImplTest {
 
     @Mock
     private PassengerValidator passengerValidator;
+
+    @Mock
+    private SecurityUtil securityUtil;
+
+    @Mock
+    private UserRoleExtractor userRoleExtractor;
 
     @Test
     void getPageOfPassengers_ShouldReturnPageDto_WhenCalledWithValidParameters() {
@@ -100,7 +110,12 @@ class PassengerServiceImplTest {
     void getPassengerById_ShouldReturnPassenger_WhenPassengerFound() {
         Passenger passenger = PassengerTestUtil.buildDefaultPassenger();
         PassengerDto passengerDto = PassengerTestUtil.buildPassengerDto();
+        UUID userId = passenger.getId();
 
+        when(securityUtil.getUserIdFromSecurityContext())
+                .thenReturn(userId);
+        when(userRoleExtractor.extractCurrentUserRole())
+                .thenReturn(UserRole.PASSENGER);
         when(passengerRepository.findById(passenger.getId()))
                 .thenReturn(Optional.of(passenger));
         when(passengerMapper.entityToDto(passenger))
@@ -112,21 +127,48 @@ class PassengerServiceImplTest {
                 .isNotNull()
                 .isEqualTo(passengerDto);
 
+        verify(securityUtil).getUserIdFromSecurityContext();
+        verify(userRoleExtractor).extractCurrentUserRole();
         verify(passengerRepository).findById(passenger.getId());
         verify(passengerMapper).entityToDto(passenger);
     }
 
     @Test
-    void getPassengerById_ShouldThrowResourceNotFoundException_WhenPassengerNotFound() {
-        Passenger passenger = PassengerTestUtil.buildDefaultPassenger();
+    void getPassengerById_ShouldThrowForbiddenException_WhenUserTriesAccessOtherUserProfile() {
+        UUID passengerId = PassengerTestUtil.OTHER_ID;
 
-        when(passengerRepository.findById(passenger.getId()))
+        when(securityUtil.getUserIdFromSecurityContext())
+                .thenReturn(passengerId);
+        when(userRoleExtractor.extractCurrentUserRole())
+                .thenReturn(UserRole.PASSENGER);
+
+        assertThatThrownBy(
+                () -> passengerService.getPassengerById(PassengerTestUtil.ID))
+                .isInstanceOf(ForbiddenException.class);
+
+        verify(securityUtil).getUserIdFromSecurityContext();
+        verify(userRoleExtractor).extractCurrentUserRole();
+        verifyNoInteractions(passengerRepository, pageMapper);
+    }
+
+    @Test
+    void getPassengerById_ShouldThrowResourceNotFoundException_WhenPassengerNotFound() {
+        UUID passengerId = PassengerTestUtil.ID;
+
+        when(securityUtil.getUserIdFromSecurityContext())
+                .thenReturn(passengerId);
+        when(userRoleExtractor.extractCurrentUserRole())
+                .thenReturn(UserRole.PASSENGER);
+        when(passengerRepository.findById(passengerId))
                 .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> passengerService.getPassengerById(passenger.getId()))
+        assertThatThrownBy(
+                () -> passengerService.getPassengerById(passengerId))
                 .isInstanceOf(ResourceNotFoundException.class);
 
-        verify(passengerRepository).findById(passenger.getId());
+        verify(securityUtil).getUserIdFromSecurityContext();
+        verify(userRoleExtractor).extractCurrentUserRole();
+        verify(passengerRepository).findById(passengerId);
         verifyNoInteractions(passengerMapper);
     }
 
@@ -136,6 +178,10 @@ class PassengerServiceImplTest {
         PassengerDto passengerDto = PassengerTestUtil.buildPassengerDto();
         PassengerUpdatingDto passengerUpdatingDto = PassengerTestUtil.buildPassengerUpdatingDto();
 
+        when(securityUtil.getUserIdFromSecurityContext())
+                .thenReturn(passenger.getId());
+        when(userRoleExtractor.extractCurrentUserRole())
+                .thenReturn(UserRole.PASSENGER);
         when(passengerRepository.findById(passenger.getId()))
                 .thenReturn(Optional.of(passenger));
         doNothing().when(passengerMapper).updateEntityFromDto(passengerUpdatingDto, passenger);
@@ -146,12 +192,14 @@ class PassengerServiceImplTest {
         when(passengerMapper.entityToDto(passenger))
                 .thenReturn(passengerDto);
 
-        PassengerDto result = passengerService.updatePassenger(passenger.getId(), passengerUpdatingDto);
+        PassengerDto actual = passengerService.updatePassenger(passenger.getId(), passengerUpdatingDto);
 
-        assertThat(result)
+        assertThat(actual)
                 .isNotNull()
                 .isEqualTo(passengerDto);
 
+        verify(securityUtil).getUserIdFromSecurityContext();
+        verify(userRoleExtractor).extractCurrentUserRole();
         verify(passengerRepository).findById(passenger.getId());
         verify(passengerValidator).validatePhoneUniqueness(passengerUpdatingDto.phoneNumber());
         verify(passengerValidator).validateEmailUniqueness(passengerUpdatingDto.email());
@@ -162,16 +210,47 @@ class PassengerServiceImplTest {
     }
 
     @Test
+    void updatePassenger_ShouldThrowForbiddenException_WhenUserTriesAccessOtherUserProfile() {
+        PassengerUpdatingDto passengerUpdatingDto = PassengerTestUtil.buildPassengerUpdatingDto();
+        UUID passengerId = PassengerTestUtil.ID;
+        UUID userId = PassengerTestUtil.OTHER_ID;
+
+        when(securityUtil.getUserIdFromSecurityContext())
+                .thenReturn(userId);
+        when(userRoleExtractor.extractCurrentUserRole())
+                .thenReturn(UserRole.PASSENGER);
+
+        assertThatThrownBy(
+                () -> passengerService.updatePassenger(passengerId, passengerUpdatingDto))
+                .isInstanceOf(ForbiddenException.class);
+
+        verify(securityUtil).getUserIdFromSecurityContext();
+        verify(userRoleExtractor).extractCurrentUserRole();
+        verifyNoMoreInteractions(passengerRepository);
+        verifyNoInteractions(passengerRepository, passengerValidator, passengerMapper);
+    }
+
+    @Test
     void updatePassenger_ShouldThrowResourceNotFoundException_WhenPassengerNotFound() {
         PassengerUpdatingDto passengerUpdatingDto = PassengerTestUtil.buildPassengerUpdatingDto();
+        UUID passengerId = PassengerTestUtil.NOT_EXISTING_ID;
 
-        when(passengerRepository.findById(PassengerTestUtil.NOT_EXISTING_ID))
+        when(securityUtil.getUserIdFromSecurityContext())
+                .thenReturn(passengerId);
+        when(userRoleExtractor.extractCurrentUserRole())
+                .thenReturn(UserRole.PASSENGER);
+        when(userRoleExtractor.extractCurrentUserRole())
+                .thenReturn(UserRole.PASSENGER);
+        when(passengerRepository.findById(passengerId))
                 .thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class,
-                () -> passengerService.updatePassenger(PassengerTestUtil.NOT_EXISTING_ID, passengerUpdatingDto));
+        assertThatThrownBy(
+                () -> passengerService.updatePassenger(passengerId, passengerUpdatingDto))
+                .isInstanceOf(ResourceNotFoundException.class);
 
-        verify(passengerRepository).findById(PassengerTestUtil.NOT_EXISTING_ID);
+        verify(securityUtil).getUserIdFromSecurityContext();
+        verify(userRoleExtractor).extractCurrentUserRole();
+        verify(passengerRepository).findById(passengerId);
         verifyNoMoreInteractions(passengerRepository);
         verifyNoInteractions(passengerValidator, passengerMapper);
     }
