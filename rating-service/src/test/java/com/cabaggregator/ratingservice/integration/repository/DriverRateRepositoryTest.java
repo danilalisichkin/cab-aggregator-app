@@ -1,6 +1,6 @@
 package com.cabaggregator.ratingservice.integration.repository;
 
-import com.cabaggregator.ratingservice.config.AbstractIntegrationTest;
+import com.cabaggregator.ratingservice.config.AbstractMongoIntegrationTest;
 import com.cabaggregator.ratingservice.entity.DriverRate;
 import com.cabaggregator.ratingservice.repository.DriverRateRepository;
 import com.cabaggregator.ratingservice.util.DriverRateTestUtil;
@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("integration")
 @DataMongoTest
-class DriverRateRepositoryTest extends AbstractIntegrationTest {
+class DriverRateRepositoryTest extends AbstractMongoIntegrationTest {
     @Autowired
     private DriverRateRepository driverRateRepository;
 

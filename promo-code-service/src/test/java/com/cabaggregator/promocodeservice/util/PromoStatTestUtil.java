@@ -11,7 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PromoStatTestUtil {
     public static final Long ID = 1L;
-    public static final UUID USER_ID = UUID.fromString("1000e57c-114a-433d-6ac2-55048a29eab9");
+    public static final UUID USER_ID = UUID.fromString("784aa16e-3d6d-4d28-b48e-2d4a0a4f49a6");
 
     public static final UUID OTHER_USER_ID = UUID.fromString("d3b2f3c0-1a1e-4a3f-b6dc-6c5a7f8e0f3a");
 

@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PayoutAccountTestUtil {
-    public static final UUID ID = UUID.fromString("4665e57c-884a-433d-8fd2-55078f29eab9");
+    public static final UUID ID = UUID.fromString("984b2c9d-8307-48ac-b5e3-e26d8fcb6c24");
     public static final LocalDateTime CREATED_AT = LocalDateTime.parse("2024-12-01T12:00:00");
     public static final Boolean ACTIVE = true;
 

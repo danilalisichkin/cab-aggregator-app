@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Tag("integration")
 @DataJpaTest
 @Sql(scripts = {
-        "classpath:/sql.repository/import_passengers.sql"},
+        "classpath:/postgresql/import_passengers.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class PassengerRepositoryTest extends AbstractPostgresIntegrationTest {
