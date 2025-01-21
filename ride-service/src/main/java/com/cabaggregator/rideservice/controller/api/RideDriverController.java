@@ -3,7 +3,7 @@ package com.cabaggregator.rideservice.controller.api;
 import com.cabaggregator.rideservice.core.constant.ValidationErrors;
 import com.cabaggregator.rideservice.core.dto.page.PageDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideDto;
-import com.cabaggregator.rideservice.core.enums.PaymentStatus;
+import com.cabaggregator.rideservice.core.enums.RidePaymentStatus;
 import com.cabaggregator.rideservice.core.enums.RideStatus;
 import com.cabaggregator.rideservice.core.enums.sort.RideSortField;
 import com.cabaggregator.rideservice.service.RideDriverService;
@@ -69,7 +69,7 @@ public class RideDriverController {
     public ResponseEntity<RideDto> changeRidePaymentStatus(
             @PathVariable UUID driverId,
             @PathVariable ObjectId id,
-            @RequestBody @NotNull PaymentStatus paymentStatus) {
+            @RequestBody @NotNull RidePaymentStatus paymentStatus) {
 
         RideDto ride = ridePaymentService.changeRidePaymentStatus(driverId, id, paymentStatus);
 
