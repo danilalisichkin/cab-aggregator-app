@@ -7,6 +7,7 @@ import com.cabaggregator.driverservice.core.dto.driver.DriverUpdatingDto;
 import com.cabaggregator.driverservice.entity.Driver;
 import com.cabaggregator.driverservice.repository.CarRepository;
 import com.cabaggregator.driverservice.repository.DriverRepository;
+import com.cabaggregator.driverservice.util.AuthTestUtil;
 import com.cabaggregator.driverservice.util.CarTestUtil;
 import com.cabaggregator.driverservice.util.DriverTestUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -56,6 +57,9 @@ class DriverControllerIntegrationTest extends AbstractPostgresIntegrationTest {
     private CarRepository carRepository;
 
     @Autowired
+    private AuthTestUtil authTestUtil;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     @LocalServerPort
@@ -88,6 +92,7 @@ class DriverControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         int expectedContentSize = 2;
 
         mockMvc.perform(get(baseUrl)
+                        .header("Authorization", authTestUtil.getAdminBearerToken())
                         .param("offset", "0")
                         .param("limit", "10")
                         .param("sortBy", "ID")
@@ -108,6 +113,7 @@ class DriverControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         int expectedContentSize = 0;
 
         mockMvc.perform(get(baseUrl)
+                        .header("Authorization", authTestUtil.getAdminBearerToken())
                         .param("offset", "0")
                         .param("limit", "10")
                         .param("sortBy", "ID")
@@ -131,9 +137,25 @@ class DriverControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         DriverDto driverDto = DriverTestUtil.buildDriverDto();
         String expectedJson = objectMapper.writeValueAsString(driverDto);
 
-        mockMvc.perform(get(requestUrl))
+        mockMvc.perform(get(requestUrl)
+                        .header("Authorization", authTestUtil.getAdminBearerToken()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedJson));
+    }
+
+    @Test
+    @SneakyThrows
+    @Sql(scripts = {
+            "classpath:/postgresql/import_cars.sql",
+            "classpath:/postgresql/import_car_details.sql",
+            "classpath:/postgresql/import_drivers.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void getDriver_ShouldReturnForbiddenStatus_WhenUserIsNotRequestedDriver() {
+        String requestUrl = "%s/%s".formatted(baseUrl, DriverTestUtil.OTHER_ID.toString());
+
+        mockMvc.perform(get(requestUrl)
+                        .header("Authorization", authTestUtil.getDriverBearerToken()))
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -141,7 +163,8 @@ class DriverControllerIntegrationTest extends AbstractPostgresIntegrationTest {
     void getDriver_ShouldReturnNotFoundStatus_WhenDriverDoesNotExist() {
         String requestUrl = "%s/%s".formatted(baseUrl, DriverTestUtil.NOT_EXISTING_ID.toString());
 
-        mockMvc.perform(get(requestUrl))
+        mockMvc.perform(get(requestUrl)
+                        .header("Authorization", authTestUtil.getAdminBearerToken()))
                 .andExpect(status().isNotFound());
     }
 
@@ -152,6 +175,7 @@ class DriverControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         String json = objectMapper.writeValueAsString(addingDto);
 
         mockMvc.perform(post(baseUrl)
+                        .header("Authorization", authTestUtil.getAdminBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isCreated())
@@ -179,6 +203,7 @@ class DriverControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         int expectedDriverCount = 2;
 
         mockMvc.perform(post(baseUrl)
+                        .header("Authorization", authTestUtil.getAdminBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isConflict());
@@ -202,6 +227,7 @@ class DriverControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         String expectedJson = objectMapper.writeValueAsString(updatedPassengerDto);
 
         mockMvc.perform(put(requestUrl)
+                        .header("Authorization", authTestUtil.getDriverBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isOk())
@@ -222,9 +248,29 @@ class DriverControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         String json = objectMapper.writeValueAsString(updatingDto);
 
         mockMvc.perform(put(requestUrl)
+                        .header("Authorization", authTestUtil.getAdminBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @SneakyThrows
+    @Sql(scripts = {
+            "classpath:/postgresql/import_cars.sql",
+            "classpath:/postgresql/import_car_details.sql",
+            "classpath:/postgresql/import_drivers.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void updateDriver_ShouldReturnForbiddenStatus_WhenUserIsNotRequestedDriver() {
+        String requestUrl = "%s/%s".formatted(baseUrl, DriverTestUtil.OTHER_ID.toString());
+        DriverUpdatingDto updatingDto = DriverTestUtil.buildDriverUpdatingDto();
+        String json = objectMapper.writeValueAsString(updatingDto);
+
+        mockMvc.perform(put(requestUrl)
+                        .header("Authorization", authTestUtil.getDriverBearerToken())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -240,6 +286,7 @@ class DriverControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         String json = objectMapper.writeValueAsString(updatingDto);
 
         mockMvc.perform(put(requestUrl)
+                        .header("Authorization", authTestUtil.getDriverBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isConflict());
@@ -257,6 +304,7 @@ class DriverControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         String json = objectMapper.writeValueAsString(CarTestUtil.FREE_CAR_ID);
 
         mockMvc.perform(patch(requestUrl)
+                        .header("Authorization", authTestUtil.getDriverBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isOk())
@@ -279,9 +327,28 @@ class DriverControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         String json = objectMapper.writeValueAsString(CarTestUtil.ID);
 
         mockMvc.perform(patch(requestUrl)
+                        .header("Authorization", authTestUtil.getAdminBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @SneakyThrows
+    @Sql(scripts = {
+            "classpath:/postgresql/import_cars.sql",
+            "classpath:/postgresql/import_car_details.sql",
+            "classpath:/postgresql/import_drivers.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void setDriverCar_ShouldReturnForbiddenStatus_WhenUserIsNotRequestedDriver() {
+        String requestUrl = "%s/%s/car".formatted(baseUrl, DriverTestUtil.OTHER_ID.toString());
+        String json = objectMapper.writeValueAsString(CarTestUtil.ID);
+
+        mockMvc.perform(patch(requestUrl)
+                        .header("Authorization", authTestUtil.getDriverBearerToken())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -296,6 +363,7 @@ class DriverControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         String json = objectMapper.writeValueAsString(CarTestUtil.NOT_EXISTING_ID);
 
         mockMvc.perform(patch(requestUrl)
+                        .header("Authorization", authTestUtil.getDriverBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isNotFound());
@@ -313,6 +381,7 @@ class DriverControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         String json = objectMapper.writeValueAsString(CarTestUtil.OTHER_CAR_ID);
 
         mockMvc.perform(patch(requestUrl)
+                        .header("Authorization", authTestUtil.getDriverBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isConflict());
@@ -329,7 +398,8 @@ class DriverControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         String requestUrl = "%s/%s".formatted(baseUrl, DriverTestUtil.ID.toString());
         int expectedDriverCount = 1;
 
-        mockMvc.perform(delete(requestUrl))
+        mockMvc.perform(delete(requestUrl)
+                        .header("Authorization", authTestUtil.getDriverBearerToken()))
                 .andExpect(status().isNoContent());
 
         List<Driver> drivers = driverRepository.findAll();
@@ -342,7 +412,8 @@ class DriverControllerIntegrationTest extends AbstractPostgresIntegrationTest {
     void deleteDriver_ShouldReturnNotFoundStatus_WhenDriverDoesNotExist() {
         String requestUrl = "%s/%s".formatted(baseUrl, DriverTestUtil.NOT_EXISTING_ID.toString());
 
-        mockMvc.perform(delete(requestUrl))
+        mockMvc.perform(delete(requestUrl)
+                        .header("Authorization", authTestUtil.getDriverBearerToken()))
                 .andExpect(status().isNotFound());
     }
 }

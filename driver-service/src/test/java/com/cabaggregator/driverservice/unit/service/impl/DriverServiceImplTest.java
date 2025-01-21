@@ -129,16 +129,16 @@ class DriverServiceImplTest {
 
     @Test
     void getDriverById_ShouldThrowResourceNotFoundException_WhenDriverNotFound() {
-        Driver driver = DriverTestUtil.buildDefaultDriver();
+        UUID driverId = DriverTestUtil.NOT_EXISTING_ID;
 
-        when(driverRepository.findById(driver.getId()))
+        when(driverRepository.findById(driverId))
                 .thenReturn(Optional.empty());
 
         assertThatThrownBy(
-                () -> driverService.getDriverById(driver.getId()))
+                () -> driverService.getDriverById(driverId))
                 .isInstanceOf(ResourceNotFoundException.class);
 
-        verify(driverRepository).findById(driver.getId());
+        verify(driverRepository).findById(driverId);
         verifyNoInteractions(driverMapper);
     }
 
@@ -233,9 +233,9 @@ class DriverServiceImplTest {
 
         when(driverRepository.findById(driver.getId()))
                 .thenReturn(Optional.of(driver));
-        doNothing().when(driverMapper).updateEntityFromDto(driverUpdatingDto, driver);
         doNothing().when(driverValidator).validatePhoneUniqueness(driverUpdatingDto.phoneNumber());
         doNothing().when(driverValidator).validateEmailUniqueness(driverUpdatingDto.email());
+        doNothing().when(driverMapper).updateEntityFromDto(driverUpdatingDto, driver);
         when(driverRepository.save(driver))
                 .thenReturn(driver);
         when(driverMapper.entityToDto(driver))
@@ -315,6 +315,8 @@ class DriverServiceImplTest {
         Long carId = CarTestUtil.NOT_EXISTING_ID;
         Driver driver = DriverTestUtil.buildDefaultDriver();
 
+        when(driverRepository.findById(driverId))
+                .thenReturn(Optional.of(driver));
         when(driverRepository.findById(driverId))
                 .thenReturn(Optional.of(driver));
         doNothing().when(driverValidator).validateDriverCarUniqueness(carId);

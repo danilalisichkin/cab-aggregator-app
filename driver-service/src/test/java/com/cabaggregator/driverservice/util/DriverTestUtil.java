@@ -17,6 +17,7 @@ public final class DriverTestUtil {
     public static final String FIRST_NAME = "Adam";
     public static final String LAST_NAME = "Smith";
 
+    public static final UUID OTHER_ID = UUID.fromString("15253953-8087-4983-b2c9-f2a9c2af1f31");
     public static final String OTHER_PHONE_NUMBER = "375294455667";
 
     public static final String UPDATED_PHONE_NUMBER = "375159988776";
