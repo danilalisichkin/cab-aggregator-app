@@ -27,13 +27,17 @@ spring:
         spring.deserializer:
           key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
           value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
-mongock:
-  migration-scan-package: com.cabaggregator.ratingservice.migrations
-  enabled: true
 app:
   kafka:
     topics:
       rate:
-        name: rating.creation.v1
+        name: rating.creation.v1          
+mongock:
+  migration-scan-package: com.cabaggregator.ratingservice.migrations
+  enabled: true
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/}
 server:
   port: ${SERVER_PORT:8086}
