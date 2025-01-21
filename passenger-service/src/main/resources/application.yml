@@ -41,7 +41,7 @@ app:
   kafka:
     topics:
       passenger:
-        name: ${KAFKA_TOPIC_PASSENGER_NAME:passenger-topic}\
+        name: passenger.creation.v1
 eureka:
   client:
     serviceUrl:

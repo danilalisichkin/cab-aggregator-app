@@ -11,6 +11,7 @@ import com.cabaggregator.driverservice.repository.CarRepository;
 import com.cabaggregator.driverservice.util.CarDetailsTestUtil;
 import com.cabaggregator.driverservice.util.CarTestUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
@@ -57,7 +58,12 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
     @LocalServerPort
     private int port;
 
-    private final String baseUrl = "%s:%s/%s".formatted(LOCAL_HOST, port, CARS_BASE_URL);
+    private String baseUrl;
+
+    @PostConstruct
+    void initBaseUrl() {
+        this.baseUrl = "%s:%s/%s".formatted(LOCAL_HOST, port, CARS_BASE_URL);
+    }
 
     @AfterEach
     void clearCars() {
@@ -67,8 +73,8 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_cars.sql",
-            "classpath:/sql.repository/import_car_details.sql"},
+            "classpath:/postgresql/import_cars.sql",
+            "classpath:/postgresql/import_car_details.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void getPageOfCars_ShouldReturnCars_WhenTheyExist() {
         int expectedPage = 0;
@@ -111,8 +117,8 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_cars.sql",
-            "classpath:/sql.repository/import_car_details.sql"},
+            "classpath:/postgresql/import_cars.sql",
+            "classpath:/postgresql/import_car_details.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void getCar_ShouldReturnCar_WhenItExists() {
         String requestUrl = "%s/%s".formatted(baseUrl, CarTestUtil.ID.toString());
@@ -136,8 +142,8 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_cars.sql",
-            "classpath:/sql.repository/import_car_details.sql"},
+            "classpath:/postgresql/import_cars.sql",
+            "classpath:/postgresql/import_car_details.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void getFullCar_ShouldReturnFullCar_WhenItExists() {
         String requestUrl = "%s/%s/full".formatted(baseUrl, CarTestUtil.ID.toString());
@@ -181,8 +187,8 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_cars.sql",
-            "classpath:/sql.repository/import_car_details.sql"},
+            "classpath:/postgresql/import_cars.sql",
+            "classpath:/postgresql/import_car_details.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void createCar_ShouldReturnConflictStatus_WhenCarNotUnique() {
         CarAddingDto addingDto = CarTestUtil.buildCarAddingDto();
@@ -201,8 +207,8 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_cars.sql",
-            "classpath:/sql.repository/import_car_details.sql"},
+            "classpath:/postgresql/import_cars.sql",
+            "classpath:/postgresql/import_car_details.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void updateCar_ShouldUpdateCar_WhenItExists() {
         String requestUrl = "%s/%s".formatted(baseUrl, CarTestUtil.ID.toString());
@@ -241,8 +247,8 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_cars.sql",
-            "classpath:/sql.repository/import_car_details.sql"},
+            "classpath:/postgresql/import_cars.sql",
+            "classpath:/postgresql/import_car_details.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void updateCar_ShouldReturnConflictStatus_WhenUpdatableDataIsNotUnique() {
         String requestUrl = "%s/%s".formatted(baseUrl, CarTestUtil.ID.toString());
@@ -258,8 +264,8 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_cars.sql",
-            "classpath:/sql.repository/import_car_details.sql"},
+            "classpath:/postgresql/import_cars.sql",
+            "classpath:/postgresql/import_car_details.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void updateCarDetails_ShouldUpdateCarDetails_WhenCarExist() {
         String requestUrl = "%s/%s/details".formatted(baseUrl, CarTestUtil.ID.toString());
@@ -296,8 +302,8 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_cars.sql",
-            "classpath:/sql.repository/import_car_details.sql"},
+            "classpath:/postgresql/import_cars.sql",
+            "classpath:/postgresql/import_car_details.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void deleteCar_ShouldDeleteCar_WhenItExists() {
         String requestUrl = "%s/%s".formatted(baseUrl, CarTestUtil.ID.toString());

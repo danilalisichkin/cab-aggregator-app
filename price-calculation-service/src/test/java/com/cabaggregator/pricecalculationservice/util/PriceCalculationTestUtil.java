@@ -8,7 +8,7 @@ import org.bson.types.ObjectId;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PriceCalculationTestUtil {
-    public static final ObjectId RIDE_ID = new ObjectId("51421f252431c66184541011");
+    public static final ObjectId RIDE_ID = new ObjectId("507f1f77bcf86cd799439011");
     public static final Long DISTANCE = 18556L;
     public static final Long DURATION = 1317L;
     public static final Long PRICE = 2894L;

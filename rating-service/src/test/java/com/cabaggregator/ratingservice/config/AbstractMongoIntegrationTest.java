@@ -8,7 +8,7 @@ import org.testcontainers.containers.MongoDBContainer;
 
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"mongock.enabled=false"})
-public abstract class AbstractIntegrationTest {
+public abstract class AbstractMongoIntegrationTest {
     static final MongoDBContainer mongoDBContainer =
             new MongoDBContainer("mongo:7.0").withExposedPorts(27017);
 

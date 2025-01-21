@@ -2,7 +2,7 @@ package com.cabaggregator.rideservice.unit.service.impl;
 
 import com.cabaggregator.rideservice.core.dto.ride.RideDto;
 import com.cabaggregator.rideservice.core.enums.PaymentMethod;
-import com.cabaggregator.rideservice.core.enums.PaymentStatus;
+import com.cabaggregator.rideservice.core.enums.RidePaymentStatus;
 import com.cabaggregator.rideservice.entity.Ride;
 import com.cabaggregator.rideservice.exception.ForbiddenException;
 import com.cabaggregator.rideservice.exception.ResourceNotFoundException;
@@ -54,7 +54,7 @@ class RidePaymentServiceImplTest {
     void changeRidePaymentStatus_ShouldThrowResourceNotFoundException_WhenRideIsNotFound() {
         ObjectId rideId = RideTestUtil.NOT_EXISTING_ID;
         UUID driverId = RideTestUtil.DRIVER_ID;
-        PaymentStatus paymentStatus = PaymentStatus.PAID;
+        RidePaymentStatus paymentStatus = RidePaymentStatus.PAID;
 
         when(rideRepository.findById(rideId))
                 .thenReturn(Optional.empty());
@@ -73,7 +73,7 @@ class RidePaymentServiceImplTest {
         Ride ride = RideTestUtil.buildDefaultRide();
         ObjectId rideId = ride.getId();
         UUID driverId = ride.getDriverId();
-        PaymentStatus paymentStatus = PaymentStatus.PAID;
+        RidePaymentStatus paymentStatus = RidePaymentStatus.PAID;
         UUID userId = RideTestUtil.NOT_EXISTING_DRIVER_ID;
 
         when(rideRepository.findById(rideId))
@@ -97,7 +97,7 @@ class RidePaymentServiceImplTest {
         ObjectId rideId = ride.getId();
         UUID driverId = RideTestUtil.NOT_EXISTING_DRIVER_ID;
         UUID userId = RideTestUtil.NOT_EXISTING_DRIVER_ID;
-        PaymentStatus paymentStatus = PaymentStatus.PAID;
+        RidePaymentStatus paymentStatus = RidePaymentStatus.PAID;
 
         when(rideRepository.findById(rideId))
                 .thenReturn(Optional.of(ride));
@@ -121,7 +121,7 @@ class RidePaymentServiceImplTest {
         Ride ride = RideTestUtil.buildDefaultRide().toBuilder().build();
         ObjectId rideId = ride.getId();
         UUID driverId = ride.getDriverId();
-        PaymentStatus paymentStatus = PaymentStatus.DECLINED;
+        RidePaymentStatus paymentStatus = RidePaymentStatus.DECLINED;
         UUID userId = ride.getDriverId();
 
         when(rideRepository.findById(rideId))
@@ -149,7 +149,7 @@ class RidePaymentServiceImplTest {
         RideDto rideDto = RideTestUtil.buildRideDto();
         ObjectId rideId = ride.getId();
         UUID driverId = ride.getDriverId();
-        PaymentStatus paymentStatus = PaymentStatus.PAID_IN_CASH;
+        RidePaymentStatus paymentStatus = RidePaymentStatus.PAID_IN_CASH;
         UUID userId = ride.getDriverId();
 
         when(rideRepository.findById(rideId))

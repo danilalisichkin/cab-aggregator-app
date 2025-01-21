@@ -16,14 +16,15 @@ import java.util.UUID;
 public final class DriverRateTestUtil {
     public static final ObjectId ID = new ObjectId("5f47a08a5c1c0d1b2d56d7a5");
     public static final ObjectId RIDE_ID = new ObjectId("507f1f77bcf86cd799439011");
-    public static final UUID DRIVER_ID = UUID.fromString("4665e57c-884a-433d-8fd2-55078f29eab9");
-    public static final UUID PASSENGER_ID = UUID.fromString("1000e57c-114a-433d-6ac2-55048a29eab9");
+    public static final UUID DRIVER_ID = UUID.fromString("984b2c9d-8307-48ac-b5e3-e26d8fcb6c24");
+    public static final UUID PASSENGER_ID = UUID.fromString("784aa16e-3d6d-4d28-b48e-2d4a0a4f49a6");
     public static final Integer RATE = 5;
     public static final Set<FeedbackOption> FEEDBACK_OPTIONS =
             Set.of(FeedbackOption.COMFORTABLE_RIDE, FeedbackOption.GOOD_MUSIC);
     public static final Double AVERAGE_RATING = 4.5;
 
-    public static final UUID OTHER_PASSENGER_ID = UUID.fromString("f47ac10b-58cc-4372-a567-0e02b2c3d479");
+    public static final UUID OTHER_PASSENGER_ID = UUID.fromString("30208072-8cfc-4289-aa9b-f5984ae2b807");
+    public static final ObjectId OTHER_RIDE_ID = new ObjectId("30c8c7f7ece3c4a6c6c4e861");
 
     public static final ObjectId NOT_EXISTING_RIDE_ID = new ObjectId("000000000000000000000000");
     public static final UUID NOT_EXISTING_DRIVER_ID = UUID.fromString("11111111-1111-1111-1111-111111111111");

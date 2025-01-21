@@ -20,8 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Tag("integration")
 @DataJpaTest
 @Sql(scripts = {
-        "classpath:/sql.repository/import_promo_codes.sql",
-        "classpath:/sql.repository/import_promo_stats.sql"},
+        "classpath:/postgresql/import_promo_codes.sql",
+        "classpath:/postgresql/import_promo_stats.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class PromoStatRepositoryTest extends AbstractPostgresIntegrationTest {

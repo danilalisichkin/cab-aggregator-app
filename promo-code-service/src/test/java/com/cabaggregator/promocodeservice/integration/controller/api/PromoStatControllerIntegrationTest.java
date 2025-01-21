@@ -10,6 +10,7 @@ import com.cabaggregator.promocodeservice.repository.PromoStatRepository;
 import com.cabaggregator.promocodeservice.util.PromoCodeTestUtil;
 import com.cabaggregator.promocodeservice.util.PromoStatTestUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
@@ -56,7 +57,12 @@ class PromoStatControllerIntegrationTest extends AbstractPostgresIntegrationTest
     @LocalServerPort
     private int port;
 
-    private final String baseUrl = "%s:%s/%s".formatted(LOCAL_HOST, port, PROMO_STATS_BASE_URL);
+    private String baseUrl;
+
+    @PostConstruct
+    void initBaseUrl() {
+        this.baseUrl = "%s:%s/%s".formatted(LOCAL_HOST, port, PROMO_STATS_BASE_URL);
+    }
 
     @AfterEach
     void clearPromoCodesAndStats() {
@@ -67,8 +73,8 @@ class PromoStatControllerIntegrationTest extends AbstractPostgresIntegrationTest
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_promo_codes.sql",
-            "classpath:/sql.repository/import_promo_stats.sql"},
+            "classpath:/postgresql/import_promo_codes.sql",
+            "classpath:/postgresql/import_promo_stats.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void getPageOfPromoStats_ShouldReturnPromoStats_WhenTheyExist() {
         int expectedPage = 0;
@@ -111,8 +117,8 @@ class PromoStatControllerIntegrationTest extends AbstractPostgresIntegrationTest
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_promo_codes.sql",
-            "classpath:/sql.repository/import_promo_stats.sql"},
+            "classpath:/postgresql/import_promo_codes.sql",
+            "classpath:/postgresql/import_promo_stats.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void getPromoStat_ShouldReturnPromoStat_WhenItExists() {
         String requestUrl = "%s/%s".formatted(baseUrl, PromoStatTestUtil.ID);
@@ -136,7 +142,7 @@ class PromoStatControllerIntegrationTest extends AbstractPostgresIntegrationTest
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_promo_codes.sql"},
+            "classpath:/postgresql/import_promo_codes.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void createPromoStat_ShouldCreatePromoStat_WhenPromoCodeNotAppliedYet() {
         PromoStatAddingDto addingDto = PromoStatTestUtil.buildPromoStatAddingDto();
@@ -165,8 +171,8 @@ class PromoStatControllerIntegrationTest extends AbstractPostgresIntegrationTest
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_promo_codes.sql",
-            "classpath:/sql.repository/import_promo_stats.sql"},
+            "classpath:/postgresql/import_promo_codes.sql",
+            "classpath:/postgresql/import_promo_stats.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void createPromoStat_ShouldReturnBadRequestStatus_WhenPromoCodeAlreadyApplied() {
         PromoStatAddingDto addingDto = PromoStatTestUtil.buildPromoStatAddingDto();
@@ -185,7 +191,7 @@ class PromoStatControllerIntegrationTest extends AbstractPostgresIntegrationTest
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_promo_codes.sql"},
+            "classpath:/postgresql/import_promo_codes.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void createPromoStat_ShouldReturnNotFoundStatus_WhenPromoCodeDoesNotExist() {
         PromoStatAddingDto addingDto = PromoStatTestUtil.buildPromoStatAddingDto(PromoCodeTestUtil.NOT_EXISTING_CODE);
@@ -203,7 +209,7 @@ class PromoStatControllerIntegrationTest extends AbstractPostgresIntegrationTest
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_expired_promo_codes.sql"},
+            "classpath:/postgresql/import_expired_promo_codes.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void createPromoStat_ShouldReturnBadRequestStatus_WhenPromoCodeExpired() {
         PromoStatAddingDto addingDto = PromoStatTestUtil.buildPromoStatAddingDto(PromoCodeTestUtil.EXPIRED_CODE);
@@ -221,7 +227,7 @@ class PromoStatControllerIntegrationTest extends AbstractPostgresIntegrationTest
     @Test
     @SneakyThrows
     @Sql(scripts = {
-            "classpath:/sql.repository/import_reached_limit_promo_codes.sql"},
+            "classpath:/postgresql/import_reached_limit_promo_codes.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void createPromoStat_ShouldReturnBadRequestStatus_WhenPromoCodeReachedLimit() {
         PromoStatAddingDto addingDto = PromoStatTestUtil.buildPromoStatAddingDto(PromoCodeTestUtil.REACHED_LIMIT_CODE);

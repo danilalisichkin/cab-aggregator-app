@@ -1,9 +1,9 @@
 [
   {
-    "id": "60c72b2f9b1e8c001c8d5a3f",
-    "passengerId": "1000e57c-114a-433d-6ac2-55048a29eab9",
-    "driverId": "4665e57c-884a-433d-8fd2-55078f29eab9",
-    "promoCode": "PROMO2024",
+    "id": "507f1f77bcf86cd799439011",
+    "passengerId": "784aa16e-3d6d-4d28-b48e-2d4a0a4f49a6",
+    "driverId": "984b2c9d-8307-48ac-b5e3-e26d8fcb6c24",
+    "promoCode": "PROMO2025",
     "fare": "COMFORT",
     "status": "COMPLETED",
     "paymentMethod": "CARD",
@@ -18,15 +18,15 @@
       "coordinates": [-118.358467, 34.063621]
     },
     "price": 1200,
-    "orderTime": "2024-12-01T11:30:00",
-    "startTime": "2024-12-01T11:35:00",
-    "endTime": "2024-12-01T11:45:00",
+    "orderTime": "2025-02-01T11:30:00",
+    "startTime": "2025-02-01T11:35:00",
+    "endTime": "2025-02-01T11:45:00",
     "estimatedDuration": 720
   },
   {
-    "id": "60c72b3f9b1e8c001c8d5a40",
-    "passengerId": "2000f67c-224b-533e-7bc3-66058b39fab0",
-    "driverId": "5776f68d-995b-533e-9fe3-66189c49fab1",
+    "id": "64c8c7f9d6e3b5d6c6c4e9f3",
+    "passengerId": "784aa16e-3d6d-4d28-b48e-2d4a0a4f49a6",
+    "driverId": "984b2c9d-8307-48ac-b5e3-e26d8fcb6c24",
     "promoCode": null,
     "fare": "ECONOMY",
     "status": "REQUESTED",
@@ -46,5 +46,29 @@
     "startTime": null,
     "endTime": null,
     "estimatedDuration": 1800
+  },
+  {
+    "id": "30c8c7f7ece3c4a6c6c4e861",
+    "passengerId": "30208072-8cfc-4289-aa9b-f5984ae2b807",
+    "driverId": "15253953-8087-4983-b2c9-f2a9c2af1f31",
+    "promoCode": "WINTER2025",
+    "fare": "ECONOMY",
+    "status": "IN_PROGRESS",
+    "paymentStatus": "DECLINED",
+    "paymentMethod": "CARD",
+    "distance": 2600,
+    "pickUpAddress": {
+      "fullAddress": "400 E Olive Ave, Starbucks, CA 91503",
+      "coordinates": [-112.309928, 33.182796]
+    },
+    "dropOffAddress": {
+      "fullAddress": "Big Cinema, CA 91608",
+      "coordinates": [-113.333371, 34.123334]
+    },
+    "price": 1800,
+    "orderTime": "2025-05-02T10:50:00",
+    "startTime": "2025-05-02T10:55:00",
+    "endTime": null,
+    "estimatedDuration": 400
   }
 ]

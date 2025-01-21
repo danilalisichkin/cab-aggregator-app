@@ -31,13 +31,13 @@ app:
   kafka:
     topics:
       passenger:
-        name: ${KAFKA_TOPIC_PASSENGER_NAME:passenger-topic}
-        partitions: ${KAFKA_TOPIC_PASSENGER_PARTITIONS:1}
-        replicas: ${KAFKA_TOPIC_PASSENGER_REPLICAS:1}
+        name: passenger.creation.v1
+        partitions: 1
+        replicas: 1
       driver:
-        name: ${KAFKA_TOPIC_DRIVER_NAME:driver-topic}
-        partitions: ${KAFKA_TOPIC_DRIVER_PARTITIONS:1}
-        replicas: ${KAFKA_TOPIC_DRIVER_REPLICAS:1}
+        name: driver.creation.v1
+        partitions: 1
+        replicas: 1
 eureka:
   client:
     serviceUrl:

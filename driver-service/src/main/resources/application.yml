@@ -38,7 +38,7 @@ app:
   kafka:
     topics:
       driver:
-        name: ${KAFKA_TOPIC_DRIVER_NAME:driver-topic}
+        name: driver.creation.v1
 eureka:
   client:
     serviceUrl:

@@ -22,6 +22,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Immutable;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -54,4 +55,22 @@ public class BalanceOperation {
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BalanceOperation that = (BalanceOperation) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(payoutAccount, that.payoutAccount) &&
+                Objects.equals(amount, that.amount) &&
+                type == that.type &&
+                Objects.equals(transcript, that.transcript) &&
+                Objects.equals(createdAt, that.createdAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, payoutAccount, amount, type, transcript, createdAt);
+    }
 }
