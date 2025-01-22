@@ -20,4 +20,13 @@ public class KafkaConfig {
                 passengerRatesTopic.getPartitions(),
                 passengerRatesTopic.getReplicas());
     }
+
+    @Bean
+    public NewTopic paymentTopic() {
+        var paymentTopic = kafkaTopicConfig.getPayment();
+        return new NewTopic(
+                paymentTopic.getName(),
+                paymentTopic.getPartitions(),
+                paymentTopic.getReplicas());
+    }
 }

@@ -38,6 +38,10 @@ app:
         name: driver.creation.v1
         partitions: 1
         replicas: 1
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/}
 server:
   port: ${SERVER_PORT:8081}
   forward-headers-strategy: framework

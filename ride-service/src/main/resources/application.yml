@@ -14,18 +14,49 @@ spring:
       password: ${DB_PASSWORD:root}
       replica-set-name: ${DB_REPLICA_SET_NAME:rs0}
       database: ${DB_NAME:ride_database}
-mongock:
-  migration-scan-package: com.cabaggregator.rideservice.migrations
-  enabled: true
+  kafka:
+    consumer:
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+      group-id: payment-changing-group
+      properties:
+        spring.json:
+          value.default.type: java.util.Map
+          trusted.packages: '*'
+          use.type.headers: false
+        spring.deserializer:
+          key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+          value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
 app:
   open-route:
     api-key: ${OPENROUTE_API_KEY}
+  payout-policies:
+    economy:
+      percentage: 60
+    comfort:
+      percentage: 50
+    business:
+      percentage: 40
   kafka:
     topics:
       rate:
         name: rating.creation.v1
         partitions: 1
         replicas: 1
+      payment:
+        name: payment.creation.v1
+        partitions: 1
+        replicas: 1
+      payout:
+        name: payout.creation.v1
+        partitions: 1
+        replicas: 1
+      payment-status:
+        name: payment-status.changing.v1
+mongock:
+  migration-scan-package: com.cabaggregator.rideservice.migrations
+  enabled: true
 services:
   open-route:
     name: open-route-api
@@ -39,5 +70,9 @@ services:
   promo-stat:
     name: promo-code-service
     path: /api/v1/promo-stats
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/}
 server:
   port: ${SERVER_PORT:8084}

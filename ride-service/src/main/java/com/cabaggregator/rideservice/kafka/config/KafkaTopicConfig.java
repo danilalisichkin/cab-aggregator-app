@@ -11,6 +11,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "app.kafka.topics")
 public class KafkaTopicConfig {
     private final Topic rate = new Topic();
+    private final Topic payment = new Topic();
+    private final Topic payout = new Topic();
 
     @Getter
     @Setter

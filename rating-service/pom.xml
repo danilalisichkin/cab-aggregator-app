@@ -19,6 +19,7 @@
         <java.version>21</java.version>
         <mongock.version>5.5.0</mongock.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
+        <springcloud.version>2023.0.4</springcloud.version>
         <springdoc.version>2.6.0</springdoc.version>
     </properties>
 
@@ -28,6 +29,13 @@
                 <groupId>io.mongock</groupId>
                 <artifactId>mongock-bom</artifactId>
                 <version>${mongock.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${springcloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -54,6 +62,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
