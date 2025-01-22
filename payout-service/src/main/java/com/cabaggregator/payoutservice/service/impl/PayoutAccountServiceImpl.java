@@ -63,7 +63,7 @@ public class PayoutAccountServiceImpl implements PayoutAccountService {
     }
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN') or #id == authentication.principal")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
     public PayoutAccountDto getPayoutAccount(UUID id) {
         return payoutAccountMapper.entityToDto(
                 getPayoutAccountEntity(id));
@@ -119,7 +119,7 @@ public class PayoutAccountServiceImpl implements PayoutAccountService {
 
     @Override
     @Transactional(readOnly = true)
-    @PreAuthorize("hasAuthority('ADMIN') or #id == authentication.principal")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
     public PageDto<BalanceOperationDto> getPageOfBalanceOperations(
             UUID id, Integer offset, Integer limit, BalanceOperationSortField sortBy,
             Sort.Direction sortOrder, OperationType operationType, LocalDateTime startTime, LocalDateTime endTime) {
