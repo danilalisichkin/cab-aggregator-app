@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(
-        value = "${services.promo-stat.name}",
+        name = "${services.promo-stat.name}",
+        contextId = "promoStatClient",
         path = "${services.promo-stat.path}")
 public interface PromoStatApiClient {
     @PostMapping

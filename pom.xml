@@ -11,6 +11,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>api-gateway</module>
         <module>auth-service</module>
         <module>driver-service</module>
         <module>eureka-server</module>

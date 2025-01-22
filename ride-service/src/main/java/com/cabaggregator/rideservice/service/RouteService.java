@@ -1,6 +1,6 @@
 package com.cabaggregator.rideservice.service;
 
-import com.cabaggregator.rideservice.core.dto.route.RouteSummary;
+import com.cabaggregator.rideservice.client.dto.RouteSummary;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.cabaggregator.rideservice.mapper;
+package com.cabaggregator.rideservice.core.mapper;
 
 import com.cabaggregator.rideservice.core.dto.page.PageDto;
 import org.springframework.data.domain.Page;

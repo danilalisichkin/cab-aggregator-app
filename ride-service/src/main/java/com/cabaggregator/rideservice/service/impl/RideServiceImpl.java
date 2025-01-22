@@ -1,19 +1,19 @@
 package com.cabaggregator.rideservice.service.impl;
 
 import com.cabaggregator.rideservice.client.dto.PriceCalculationRequest;
+import com.cabaggregator.rideservice.client.dto.PriceRecalculationDto;
+import com.cabaggregator.rideservice.client.dto.RouteSummary;
 import com.cabaggregator.rideservice.core.constant.ApplicationMessages;
 import com.cabaggregator.rideservice.core.dto.page.PageDto;
-import com.cabaggregator.rideservice.core.dto.price.PriceRecalculationDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideAddingDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideDto;
-import com.cabaggregator.rideservice.core.dto.route.RouteSummary;
 import com.cabaggregator.rideservice.core.enums.RidePaymentStatus;
 import com.cabaggregator.rideservice.core.enums.RideStatus;
 import com.cabaggregator.rideservice.core.enums.sort.RideSortField;
+import com.cabaggregator.rideservice.core.mapper.PageMapper;
+import com.cabaggregator.rideservice.core.mapper.RideMapper;
 import com.cabaggregator.rideservice.entity.Ride;
 import com.cabaggregator.rideservice.exception.ResourceNotFoundException;
-import com.cabaggregator.rideservice.mapper.PageMapper;
-import com.cabaggregator.rideservice.mapper.RideMapper;
 import com.cabaggregator.rideservice.repository.RideRepository;
 import com.cabaggregator.rideservice.security.enums.UserRole;
 import com.cabaggregator.rideservice.security.util.SecurityUtil;

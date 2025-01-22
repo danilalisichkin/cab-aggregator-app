@@ -1,5 +1,6 @@
 package com.cabaggregator.rideservice.controller.api;
 
+import com.cabaggregator.rideservice.controller.doc.RideControllerDoc;
 import com.cabaggregator.rideservice.core.constant.ValidationErrors;
 import com.cabaggregator.rideservice.core.dto.page.PageDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideAddingDto;
@@ -30,10 +31,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/rides")
-public class RideController {
+public class RideController implements RideControllerDoc {
 
     private final RideService rideService;
 
+    @Override
     @GetMapping
     public ResponseEntity<PageDto<RideDto>> getPageOfRides(
             @RequestParam(defaultValue = "0")
@@ -50,6 +52,7 @@ public class RideController {
         return ResponseEntity.status(HttpStatus.OK).body(rides);
     }
 
+    @Override
     @GetMapping("/requests")
     public ResponseEntity<PageDto<RideDto>> getRequestedRides(
             @RequestParam(defaultValue = "0")
@@ -66,6 +69,7 @@ public class RideController {
         return ResponseEntity.status(HttpStatus.OK).body(availableRides);
     }
 
+    @Override
     @PutMapping("/rides/requests/{id}")
     public ResponseEntity<RideDto> acceptRide(
             @PathVariable ObjectId id) {
@@ -75,6 +79,7 @@ public class RideController {
         return ResponseEntity.status(HttpStatus.OK).body(acceptedRide);
     }
 
+    @Override
     @GetMapping("/{id}")
     public ResponseEntity<RideDto> getRide(@PathVariable ObjectId id) {
         RideDto ride = rideService.getRide(id);
@@ -82,6 +87,7 @@ public class RideController {
         return ResponseEntity.status(HttpStatus.OK).body(ride);
     }
 
+    @Override
     @PostMapping
     public ResponseEntity<RideDto> createRide(@RequestBody @Valid RideAddingDto addingDto) {
         RideDto ride = rideService.createRide(addingDto);

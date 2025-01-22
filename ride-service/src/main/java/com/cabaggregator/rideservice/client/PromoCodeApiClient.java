@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(
-        value = "${services.promo-code.name}",
+        name = "${services.promo-code.name}",
+        contextId = "promoCodeClient",
         path = "${services.promo-code.path}")
 public interface PromoCodeApiClient {
     @GetMapping("/{code}")

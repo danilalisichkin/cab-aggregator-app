@@ -2,7 +2,7 @@ package com.cabaggregator.rideservice.service.impl;
 
 import com.cabaggregator.rideservice.client.OpenRouteApiClient;
 import com.cabaggregator.rideservice.client.dto.RouteRequest;
-import com.cabaggregator.rideservice.core.dto.route.RouteSummary;
+import com.cabaggregator.rideservice.client.dto.RouteSummary;
 import com.cabaggregator.rideservice.service.RouteService;
 import com.cabaggregator.rideservice.util.RouteResponseExtractor;
 import lombok.RequiredArgsConstructor;

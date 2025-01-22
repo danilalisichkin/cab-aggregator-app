@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(
-        value = "${services.price.name}",
+        name = "${services.price.name}",
         path = "${services.price.path}")
 public interface PriceCalculationApiClient {
     @PostMapping

@@ -1,8 +1,8 @@
 package com.cabaggregator.rideservice.util;
 
 import com.cabaggregator.rideservice.client.dto.PriceCalculationRequest;
+import com.cabaggregator.rideservice.client.dto.PriceRecalculationDto;
 import com.cabaggregator.rideservice.client.dto.PriceResponse;
-import com.cabaggregator.rideservice.core.dto.price.PriceRecalculationDto;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
