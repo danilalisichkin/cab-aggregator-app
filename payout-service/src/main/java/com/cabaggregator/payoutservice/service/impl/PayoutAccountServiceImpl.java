@@ -24,6 +24,7 @@ import com.stripe.model.Account;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,6 +63,7 @@ public class PayoutAccountServiceImpl implements PayoutAccountService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN') or #id == authentication.principal")
     public PayoutAccountDto getPayoutAccount(UUID id) {
         return payoutAccountMapper.entityToDto(
                 getPayoutAccountEntity(id));
@@ -85,6 +87,7 @@ public class PayoutAccountServiceImpl implements PayoutAccountService {
 
     @Override
     @Transactional
+    @PreAuthorize("#id == authentication.principal")
     public PayoutAccountDto updatePayoutAccount(UUID id, String stripeAccountId) {
         PayoutAccount payoutAccount = getPayoutAccountEntity(id);
         Account stripeAccount = stripeService.retrieveAccount(stripeAccountId);
@@ -116,6 +119,7 @@ public class PayoutAccountServiceImpl implements PayoutAccountService {
 
     @Override
     @Transactional(readOnly = true)
+    @PreAuthorize("hasAuthority('ADMIN') or #id == authentication.principal")
     public PageDto<BalanceOperationDto> getPageOfBalanceOperations(
             UUID id, Integer offset, Integer limit, BalanceOperationSortField sortBy,
             Sort.Direction sortOrder, OperationType operationType, LocalDateTime startTime, LocalDateTime endTime) {
