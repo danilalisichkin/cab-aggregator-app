@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.cabaggregator.passengerservice.util.IntegrationTestUtil.LOCAL_HOST;
 import static com.cabaggregator.passengerservice.util.IntegrationTestUtil.PASSENGERS_BASE_URL;
@@ -130,6 +131,9 @@ class PassengerControllerIntegrationTest extends AbstractPostgresIntegrationTest
 
     @Test
     @SneakyThrows
+    @Sql(scripts = {
+            "classpath:/postgresql/import_passengers.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void getPassenger_ShouldReturnForbiddenStatus_WhenUserIsNotRequestedPassenger() {
         String requestUrl = "%s/%s".formatted(baseUrl, PassengerTestUtil.OTHER_ID.toString());
 
@@ -217,16 +221,26 @@ class PassengerControllerIntegrationTest extends AbstractPostgresIntegrationTest
 
     @Test
     @SneakyThrows
+    @Sql(scripts = {
+            "classpath:/postgresql/import_passengers.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void updatePassenger_ShouldReturnForbiddenStatus_WhenUserIsNotRequestedPassenger() {
-        String requestUrl = "%s/%s".formatted(baseUrl, PassengerTestUtil.OTHER_ID.toString());
+        UUID passengerId = PassengerTestUtil.OTHER_ID;
+        String requestUrl = "%s/%s".formatted(baseUrl, passengerId.toString());
         PassengerUpdatingDto updatingDto = PassengerTestUtil.buildPassengerUpdatingDto();
         String json = new ObjectMapper().writeValueAsString(updatingDto);
+        Optional<Passenger> oldPassenger = passengerRepository.findById(passengerId);
 
         mockMvc.perform(put(requestUrl)
                         .header("Authorization", authTestUtil.getPassengerBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isForbidden());
+
+        Optional<Passenger> newPassenger = passengerRepository.findById(passengerId);
+        assertThat(newPassenger)
+                .isPresent()
+                .isEqualTo(oldPassenger);
     }
 
     @Test
