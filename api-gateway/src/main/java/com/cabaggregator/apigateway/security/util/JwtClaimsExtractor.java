@@ -1,5 +1,6 @@
 package com.cabaggregator.apigateway.security.util;
 
+import com.cabaggregator.apigateway.security.constant.Prefix;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,6 +23,7 @@ public final class JwtClaimsExtractor {
         List<String> roles = (List<String>) realmAccess.get("roles");
 
         return roles.stream()
+                .map(Prefix.ROLE::concat)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }

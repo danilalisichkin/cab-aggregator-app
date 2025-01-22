@@ -3,10 +3,10 @@ package com.cabaggregator.rideservice.unit.validator;
 import com.cabaggregator.rideservice.core.dto.Address;
 import com.cabaggregator.rideservice.entity.Ride;
 import com.cabaggregator.rideservice.exception.BadRequestException;
-import com.cabaggregator.rideservice.exception.ForbiddenException;
 import com.cabaggregator.rideservice.repository.RideRepository;
 import com.cabaggregator.rideservice.util.RideTestUtil;
 import com.cabaggregator.rideservice.validator.RideValidator;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,8 +14,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -51,72 +53,73 @@ class RideValidatorTest {
                 .doesNotThrowAnyException();
     }
 
-    @Test
-    void validateDriverParticipation_ShouldThrowForbiddenException_WhenDriverIsNotRideParticipant() {
-        Ride ride = RideTestUtil.buildDefaultRide();
-        UUID driverId = RideTestUtil.NOT_EXISTING_DRIVER_ID;
+    /**
+     * Checks if driver is participant of the ride.
+     **/
+    public boolean isDriverRideParticipant(ObjectId rideId, UUID driverId) {
+        Optional<Ride> ride = rideRepository.findById(rideId);
 
-        assertThatThrownBy(
-                () -> rideValidator.validateDriverParticipation(ride, driverId))
-                .isInstanceOf(ForbiddenException.class);
+        return ride.isPresent() && ride.get().getDriverId().equals(driverId);
     }
 
     @Test
-    void validateDriverParticipation_ShouldNotThrowAnyException_WhenDriverIsRideParticipant() {
-        Ride ride = RideTestUtil.buildDefaultRide();
-        UUID driverId = ride.getDriverId();
-
-        assertThatCode(
-                () -> rideValidator.validateDriverParticipation(ride, driverId))
-                .doesNotThrowAnyException();
-    }
-
-    @Test
-    void validatePassengerParticipation_ShouldThrowForbiddenException_WhenPassengerIsNotRideParticipant() {
-        Ride ride = RideTestUtil.buildDefaultRide();
-        UUID passengerId = RideTestUtil.NOT_EXISTING_PASSENGER_ID;
-
-        assertThatThrownBy(
-                () -> rideValidator.validatePassengerParticipation(ride, passengerId))
-                .isInstanceOf(ForbiddenException.class);
-    }
-
-    @Test
-    void validatePassengerParticipation_ShouldNotThrowAnyException_WhenPassengerIsRideParticipant() {
-        Ride ride = RideTestUtil.buildDefaultRide();
-        UUID passengerId = ride.getPassengerId();
-
-        assertThatCode(
-                () -> rideValidator.validatePassengerParticipation(ride, passengerId))
-                .doesNotThrowAnyException();
-    }
-
-    @Test
-    void validatePassengerFreedom_ShouldThrowBadRequestException_WhenPassengerIsParticipatingInRideNow() {
+    void isPassengerFreeNow_ShouldReturnFalse_WhenPassengerIsParticipatingInRideNow() {
         UUID passengerId = RideTestUtil.PASSENGER_ID;
 
         when(rideRepository.existsByPassengerIdAndStatusNotIn(any(UUID.class), anySet()))
                 .thenReturn(true);
 
-        assertThatThrownBy(
-                () -> rideValidator.validatePassengerFreedom(passengerId))
-                .isInstanceOf(BadRequestException.class);
+        boolean actual = rideValidator.isPassengerFreeNow(passengerId);
+
+        assertThat(actual).isFalse();
 
         verify(rideRepository).existsByPassengerIdAndStatusNotIn(any(UUID.class), anySet());
     }
 
     @Test
-    void validatePassengerFreedom_ShouldNotThrowAnyException_WhenPassengerIsNotParticipatingInRideNow() {
+    void isPassengerFreeNow_ShouldReturnTrue_WhenPassengerIsNotParticipatingInRideNow() {
         UUID passengerId = RideTestUtil.PASSENGER_ID;
 
         when(rideRepository.existsByPassengerIdAndStatusNotIn(any(UUID.class), anySet()))
                 .thenReturn(false);
 
-        assertThatCode(
-                () -> rideValidator.validatePassengerFreedom(passengerId))
-                .doesNotThrowAnyException();
+        boolean actual = rideValidator.isPassengerFreeNow(passengerId);
+
+        assertThat(actual).isTrue();
 
         verify(rideRepository).existsByPassengerIdAndStatusNotIn(any(UUID.class), anySet());
+    }
+
+    @Test
+    void isDriverRideParticipant_ShouldReturnTrue_WhenDriverIsRideParticipant() {
+        Ride ride = RideTestUtil.buildDefaultRide();
+        UUID driverId = ride.getDriverId();
+        ObjectId rideId = ride.getId();
+
+        when(rideRepository.findById(rideId))
+                .thenReturn(Optional.of(ride));
+
+        boolean actual = rideValidator.isDriverRideParticipant(rideId, driverId);
+
+        assertThat(actual).isTrue();
+
+        verify(rideRepository).findById(rideId);
+    }
+
+    @Test
+    void isDriverRideParticipant_ShouldReturnFalse_WhenDriverIsNotRideParticipant() {
+        Ride ride = RideTestUtil.buildDefaultRide();
+        UUID driverId = RideTestUtil.NOT_EXISTING_DRIVER_ID;
+        ObjectId rideId = ride.getId();
+
+        when(rideRepository.findById(rideId))
+                .thenReturn(Optional.of(ride));
+
+        boolean actual = rideValidator.isDriverRideParticipant(rideId, driverId);
+
+        assertThat(actual).isFalse();
+
+        verify(rideRepository).findById(rideId);
     }
 
     @Test

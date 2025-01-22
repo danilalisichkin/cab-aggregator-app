@@ -3,10 +3,10 @@ package com.cabaggregator.ratingservice.unit.validator;
 import com.cabaggregator.ratingservice.entity.DriverRate;
 import com.cabaggregator.ratingservice.exception.BadRequestException;
 import com.cabaggregator.ratingservice.exception.DataUniquenessConflictException;
-import com.cabaggregator.ratingservice.exception.ForbiddenException;
 import com.cabaggregator.ratingservice.repository.DriverRateRepository;
 import com.cabaggregator.ratingservice.util.DriverRateTestUtil;
 import com.cabaggregator.ratingservice.validator.DriverRateValidator;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,8 +14,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
@@ -86,26 +88,34 @@ class DriverRateValidatorTest {
     }
 
     @Test
-    void validatePassengerParticipation_ShouldThrowForbiddenException_WhenUserIsNotRideParticipant() {
+    void isPassengerRideParticipant_ShouldReturnFalse_WhenUserIsNotRideParticipant() {
         DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
+        ObjectId id = driverRate.getRideId();
         UUID passengerId = DriverRateTestUtil.OTHER_PASSENGER_ID;
 
-        assertThatThrownBy(
-                () -> driverRateValidator.validatePassengerParticipation(driverRate, passengerId))
-                .isInstanceOf(ForbiddenException.class);
+        when(driverRateRepository.findByRideId(id))
+                .thenReturn(Optional.of(driverRate));
 
-        verifyNoInteractions(driverRateRepository);
+        boolean actual = driverRateValidator.isPassengerRideParticipant(id, passengerId);
+
+        assertThat(actual).isFalse();
+
+        verify(driverRateRepository).findByRideId(id);
     }
 
     @Test
-    void validatePassengerParticipation_ShouldNotThrowException_WhenUserIsRideParticipant() {
+    void isPassengerRideParticipant_ShouldReturnTrue_WhenUserIsRideParticipant() {
         DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
+        ObjectId id = driverRate.getRideId();
         UUID passengerId = driverRate.getPassengerId();
 
-        assertThatCode(
-                () -> driverRateValidator.validatePassengerParticipation(driverRate, passengerId))
-                .doesNotThrowAnyException();
+        when(driverRateRepository.findByRideId(id))
+                .thenReturn(Optional.of(driverRate));
 
-        verifyNoInteractions(driverRateRepository);
+        boolean actual = driverRateValidator.isPassengerRideParticipant(id, passengerId);
+
+        assertThat(actual).isTrue();
+
+        verify(driverRateRepository).findByRideId(id);
     }
 }

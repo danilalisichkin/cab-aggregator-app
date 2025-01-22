@@ -12,20 +12,17 @@ import com.cabaggregator.rideservice.core.mapper.PageMapper;
 import com.cabaggregator.rideservice.core.mapper.RideMapper;
 import com.cabaggregator.rideservice.entity.Ride;
 import com.cabaggregator.rideservice.exception.BadRequestException;
-import com.cabaggregator.rideservice.exception.ForbiddenException;
 import com.cabaggregator.rideservice.exception.ResourceNotFoundException;
 import com.cabaggregator.rideservice.repository.RideRepository;
 import com.cabaggregator.rideservice.security.util.SecurityUtil;
 import com.cabaggregator.rideservice.service.PriceService;
 import com.cabaggregator.rideservice.service.RouteService;
 import com.cabaggregator.rideservice.service.impl.RideServiceImpl;
-import com.cabaggregator.rideservice.strategy.manager.RideStatusChangingManager;
 import com.cabaggregator.rideservice.util.PageRequestBuilder;
 import com.cabaggregator.rideservice.util.PaginationTestUtil;
 import com.cabaggregator.rideservice.util.PriceTestUtil;
 import com.cabaggregator.rideservice.util.RideTestUtil;
 import com.cabaggregator.rideservice.util.RouteTestUtil;
-import com.cabaggregator.rideservice.util.UserRoleExtractor;
 import com.cabaggregator.rideservice.validator.RideValidator;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Tag;
@@ -76,9 +73,6 @@ class RideServiceImplTest {
     private RouteService routeService;
 
     @Mock
-    private RideStatusChangingManager rideStatusChangingManager;
-
-    @Mock
     private RideMapper rideMapper;
 
     @Mock
@@ -86,9 +80,6 @@ class RideServiceImplTest {
 
     @Mock
     private SecurityUtil securityUtil;
-
-    @Mock
-    private UserRoleExtractor userRoleExtractor;
 
     @Test
     void getPageOfRides_ShouldReturnPageDto_WhenCalledWithValidParameters() {
@@ -182,7 +173,7 @@ class RideServiceImplTest {
 
         verify(rideRepository).findById(rideId);
         verifyNoMoreInteractions(rideRepository);
-        verifyNoInteractions(userRoleExtractor, securityUtil, rideValidator, rideMapper);
+        verifyNoInteractions(rideValidator, rideMapper);
     }
 
     @Test
@@ -222,27 +213,6 @@ class RideServiceImplTest {
     }
 
     @Test
-    void createRide_ShouldThrowForbiddenException_WhenPassengerIsParticipatingInRideNow() {
-        RideAddingDto addingDto = RideTestUtil.buildRideAddingDto();
-        UUID userId = RideTestUtil.PASSENGER_ID;
-
-        doNothing().when(rideValidator).validateAddresses(addingDto.pickUpAddress(), addingDto.dropOffAddress());
-        when(securityUtil.getUserIdFromSecurityContext())
-                .thenReturn(userId);
-        doThrow(new ForbiddenException("error"))
-                .when(rideValidator).validatePassengerFreedom(userId);
-
-        assertThatThrownBy(
-                () -> rideService.createRide(addingDto))
-                .isInstanceOf(ForbiddenException.class);
-
-        verify(rideValidator).validateAddresses(addingDto.pickUpAddress(), addingDto.dropOffAddress());
-        verify(securityUtil).getUserIdFromSecurityContext();
-        verify(rideValidator).validatePassengerFreedom(userId);
-        verifyNoInteractions(routeService, priceService, rideRepository, rideMapper);
-    }
-
-    @Test
     void createRide_ShouldCreateRide_WhenCalledWithValidParameters() {
         RideAddingDto addingDto = RideTestUtil.buildRideAddingDto();
         UUID userId = RideTestUtil.PASSENGER_ID;
@@ -255,7 +225,6 @@ class RideServiceImplTest {
         doNothing().when(rideValidator).validateAddresses(addingDto.pickUpAddress(), addingDto.dropOffAddress());
         when(securityUtil.getUserIdFromSecurityContext())
                 .thenReturn(userId);
-        doNothing().when(rideValidator).validatePassengerFreedom(userId);
         when(rideMapper.dtoToEntity(addingDto))
                 .thenReturn(ride);
         when(routeService.getRouteSummary(anyList()))
@@ -281,7 +250,6 @@ class RideServiceImplTest {
 
         verify(rideValidator).validateAddresses(addingDto.pickUpAddress(), addingDto.dropOffAddress());
         verify(securityUtil).getUserIdFromSecurityContext();
-        verify(rideValidator).validatePassengerFreedom(userId);
         verify(rideMapper).dtoToEntity(addingDto);
         verify(routeService).getRouteSummary(anyList());
         verify(priceService).calculateBasePrice(priceCalculationRequest);

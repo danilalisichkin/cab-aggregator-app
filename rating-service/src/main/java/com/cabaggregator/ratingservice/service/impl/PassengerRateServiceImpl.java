@@ -12,17 +12,15 @@ import com.cabaggregator.ratingservice.entity.PassengerRate;
 import com.cabaggregator.ratingservice.exception.ForbiddenException;
 import com.cabaggregator.ratingservice.exception.ResourceNotFoundException;
 import com.cabaggregator.ratingservice.repository.PassengerRateRepository;
-import com.cabaggregator.ratingservice.security.enums.UserRole;
-import com.cabaggregator.ratingservice.security.util.SecurityUtil;
 import com.cabaggregator.ratingservice.service.PassengerRateService;
 import com.cabaggregator.ratingservice.util.PageRequestBuilder;
-import com.cabaggregator.ratingservice.util.UserRoleExtractor;
 import com.cabaggregator.ratingservice.validator.PassengerRateValidator;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,10 +29,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class PassengerRateServiceImpl implements PassengerRateService {
-
-    private final SecurityUtil securityUtil;
-
-    private final UserRoleExtractor userRoleExtractor;
 
     private final PassengerRateRepository passengerRateRepository;
 
@@ -65,18 +59,17 @@ public class PassengerRateServiceImpl implements PassengerRateService {
      * This method is accessible by the Passenger or an Admin.
      *
      * @param passengerId The UUID of the passenger whose ratings are being retrieved.
-     * @param offset The page number for pagination (0-based).
-     * @param limit The maximum number of ratings per page.
-     * @param sortBy The field by which to sort the ratings.
-     * @param sortOrder The direction of sorting (ascending or descending).
+     * @param offset      The page number for pagination (0-based).
+     * @param limit       The maximum number of ratings per page.
+     * @param sortBy      The field by which to sort the ratings.
+     * @param sortOrder   The direction of sorting (ascending or descending).
      * @return A PageDto containing a list of PassengerRateDto objects representing the ratings.
      * @throws ForbiddenException if Passenger tries to retrieve other Passenger's rates.
      */
     @Override
+    @PreAuthorize("hasRole('ADMIN') or #passengerId == authentication.principal")
     public PageDto<PassengerRateDto> getPageOfPassengerRates(
             UUID passengerId, Integer offset, Integer limit, PassengerRateSortField sortBy, Sort.Direction sortOrder) {
-
-        validateUserIsRequestedPassengerOrAdmin(passengerId);
 
         PageRequest pageRequest = PageRequestBuilder.buildPageRequest(offset, limit, sortBy.getValue(), sortOrder);
         Page<PassengerRate> passengerRates = passengerRateRepository.findAllByPassengerId(passengerId, pageRequest);
@@ -90,15 +83,14 @@ public class PassengerRateServiceImpl implements PassengerRateService {
      * This method is accessible by the Passenger or an Admin.
      *
      * @param passengerId The UUID of the Passenger whose rating is being retrieved.
-     * @param rideId The ObjectId of the ride for which the rating is being fetched.
+     * @param rideId      The ObjectId of the ride for which the rating is being fetched.
      * @return A PassengerRateDto representing the rating of the passenger for the specific ride.
      * @throws ResourceNotFoundException if no rating is found for the specified Passenger and ride combination.
-     * @throws ForbiddenException if Passenger tries to retrieve other Passenger's rates.
+     * @throws ForbiddenException        if Passenger tries to retrieve other Passenger's rates.
      */
     @Override
+    @PreAuthorize("hasRole('ADMIN') or #passengerId == authentication.principal")
     public PassengerRateDto getPassengerRate(UUID passengerId, ObjectId rideId) {
-        validateUserIsRequestedPassengerOrAdmin(passengerId);
-
         return passengerRateMapper.entityToDto(
                 getPassengerRateEntity(passengerId, rideId));
     }
@@ -108,8 +100,7 @@ public class PassengerRateServiceImpl implements PassengerRateService {
      *
      * @param addingDto The PassengerRateAddingDto containing the data for creating the new rating.
      * @return A PassengerRateDto representing the newly created Passenger rating.
-     * @throws com.cabaggregator.ratingservice.exception.DataUniquenessConflictException
-     * if the provided rating record has been already created.
+     * @throws com.cabaggregator.ratingservice.exception.DataUniquenessConflictException if the provided rating record has been already created.
      */
     @Override
     @Transactional
@@ -127,19 +118,18 @@ public class PassengerRateServiceImpl implements PassengerRateService {
      * This method is used by the Driver.
      *
      * @param passengerId The UUID of the Passenger being rated.
-     * @param rideId The ObjectId of the ride for which the rating is being set.
-     * @param settingDto The PassengerRateSettingDto containing the rating data to be set.
+     * @param rideId      The ObjectId of the ride for which the rating is being set.
+     * @param settingDto  The PassengerRateSettingDto containing the rating data to be set.
      * @return A PassengerRateDto representing the updated Passenger rating.
-     * @throws ForbiddenException if the user is not participant of the ride.
+     * @throws ForbiddenException        if the user is not participant of the ride.
      * @throws ResourceNotFoundException if the rating for the specified Passenger and ride does not exist.
      */
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ADMIN') or @passengerRateValidator.isDriverRideParticipant(#rideId, authentication.principal)")
     public PassengerRateDto setPassengerRate(UUID passengerId, ObjectId rideId, PassengerRateSettingDto settingDto) {
         PassengerRate passengerRateToUpdate = getPassengerRateEntity(passengerId, rideId);
 
-        UUID userId = securityUtil.getUserIdFromSecurityContext();
-        passengerRateValidator.validateDriverParticipation(passengerRateToUpdate, userId);
         passengerRateValidator.validatePassengerRateSetting(passengerRateToUpdate);
 
         passengerRateMapper.updateEntityFromDto(settingDto, passengerRateToUpdate);
@@ -149,26 +139,11 @@ public class PassengerRateServiceImpl implements PassengerRateService {
     }
 
     /**
-     * Validates that the current user is either the requested Passenger (resource owner) or an Admin.
-     *
-     * @param passengerId The UUID of the Passenger being accessed.
-     * @throws ForbiddenException if the user is not authorized to access the ratings of the specified Passenger.
-     */
-    private void validateUserIsRequestedPassengerOrAdmin(UUID passengerId) {
-        UUID userId = securityUtil.getUserIdFromSecurityContext();
-        UserRole userRole = userRoleExtractor.extractCurrentUserRole();
-
-        if (!userId.equals(passengerId) && userRole.equals(UserRole.PASSENGER)) {
-            throw new ForbiddenException(ApplicationMessages.CANT_GET_RATES_OF_OTHER_USER);
-        }
-    }
-
-    /**
      * Returns the existing Passenger rate for a specified Passenger and ride.
      * Throws an exception if the rate does not exist.
      *
      * @param passengerId The UUID of the Passenger whose rate is being retrieved.
-     * @param rideId The ObjectId of the ride for which the rate is being retrieved.
+     * @param rideId      The ObjectId of the ride for which the rate is being retrieved.
      * @return A PassengerRate entity representing the rate for the specified Passenger and ride.
      * @throws ResourceNotFoundException if no rating is found for the specified Passenger and ride combination.
      */

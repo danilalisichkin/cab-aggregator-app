@@ -15,4 +15,5 @@ public final class ApplicationMessages {
     public static final String PROVIDED_PAYMENT_METHOD_NOT_CARD = "error.provided.payment.method.not.card";
     public static final String CARD_PAYMENT_ERROR = "error.cart.payment";
     public static final String INVALID_REQUEST = "error.invalid.request";
+    public static final String CANT_ACCESS_ACCOUNT_OF_OTHER_USER = "error.cant.access.account.of.other.user";
 }

@@ -10,17 +10,12 @@ import com.cabaggregator.ratingservice.core.mapper.PageMapper;
 import com.cabaggregator.ratingservice.entity.DriverRate;
 import com.cabaggregator.ratingservice.exception.BadRequestException;
 import com.cabaggregator.ratingservice.exception.DataUniquenessConflictException;
-import com.cabaggregator.ratingservice.exception.ForbiddenException;
 import com.cabaggregator.ratingservice.exception.ResourceNotFoundException;
 import com.cabaggregator.ratingservice.repository.DriverRateRepository;
-import com.cabaggregator.ratingservice.security.enums.UserRole;
-import com.cabaggregator.ratingservice.security.util.SecurityUtil;
 import com.cabaggregator.ratingservice.service.impl.DriverRateServiceImpl;
 import com.cabaggregator.ratingservice.util.DriverRateTestUtil;
 import com.cabaggregator.ratingservice.util.PageRequestBuilder;
 import com.cabaggregator.ratingservice.util.PaginationTestUtil;
-import com.cabaggregator.ratingservice.util.PassengerRateTestUtil;
-import com.cabaggregator.ratingservice.util.UserRoleExtractor;
 import com.cabaggregator.ratingservice.validator.DriverRateValidator;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Tag;
@@ -53,12 +48,6 @@ class DriverRateServiceImplTest {
 
     @InjectMocks
     private DriverRateServiceImpl driverRateService;
-
-    @Mock
-    private SecurityUtil securityUtil;
-
-    @Mock
-    private UserRoleExtractor userRoleExtractor;
 
     @Mock
     private DriverRateRepository driverRateRepository;
@@ -117,10 +106,6 @@ class DriverRateServiceImplTest {
         PageDto<DriverRateDto> pageDto = PaginationTestUtil.buildPageDto(driverRateDtoPage);
 
         try (MockedStatic<PageRequestBuilder> mockedStatic = mockStatic(PageRequestBuilder.class)) {
-            when(securityUtil.getUserIdFromSecurityContext())
-                    .thenReturn(driverId);
-            when(userRoleExtractor.extractCurrentUserRole())
-                    .thenReturn(UserRole.DRIVER);
             mockedStatic.when(() -> PageRequestBuilder.buildPageRequest(offset, limit, sortBy.getValue(), sortOrder))
                     .thenReturn(pageRequest);
             when(driverRateRepository.findAllByDriverId(driverId, pageRequest))
@@ -137,35 +122,11 @@ class DriverRateServiceImplTest {
                     .isNotNull()
                     .isEqualTo(pageDto);
 
-            verify(securityUtil).getUserIdFromSecurityContext();
-            verify(userRoleExtractor).extractCurrentUserRole();
             mockedStatic.verify(() -> PageRequestBuilder.buildPageRequest(offset, limit, sortBy.getValue(), sortOrder));
             verify(driverRateRepository).findAllByDriverId(driverRate.getDriverId(), pageRequest);
             verify(driverRateMapper).entityPageToDtoPage(driverRatePage);
             verify(pageMapper).pageToPageDto(driverRateDtoPage);
         }
-    }
-
-    @Test
-    void getPageOfDriverRates_ShouldThrowForbiddenException_WhenUserIsAnotherDriver() {
-        UUID driverId = DriverRateTestUtil.DRIVER_ID;
-        UUID userId = PassengerRateTestUtil.OTHER_DRIVER_ID;
-        Integer offset = 0, limit = 10;
-        DriverRateSortField sortBy = DriverRateSortField.ID;
-        Sort.Direction sortOrder = Sort.Direction.ASC;
-
-        when(securityUtil.getUserIdFromSecurityContext())
-                .thenReturn(userId);
-        when(userRoleExtractor.extractCurrentUserRole())
-                .thenReturn(UserRole.DRIVER);
-
-        assertThatThrownBy(
-                () -> driverRateService.getPageOfDriverRates(driverId, offset, limit, sortBy, sortOrder))
-                .isInstanceOf(ForbiddenException.class);
-
-        verify(securityUtil).getUserIdFromSecurityContext();
-        verify(userRoleExtractor).extractCurrentUserRole();
-        verifyNoInteractions(driverRateRepository, driverRateMapper, pageMapper);
     }
 
     @Test
@@ -175,10 +136,6 @@ class DriverRateServiceImplTest {
         ObjectId rideId = driverRate.getRideId();
         DriverRateDto driverRateDto = DriverRateTestUtil.buildDriverRateDto();
 
-        when(securityUtil.getUserIdFromSecurityContext())
-                .thenReturn(driverId);
-        when(userRoleExtractor.extractCurrentUserRole())
-                .thenReturn(UserRole.DRIVER);
         when(driverRateRepository.findByDriverIdAndRideId(driverId, rideId))
                 .thenReturn(Optional.of(driverRate));
         when(driverRateMapper.entityToDto(driverRate))
@@ -190,31 +147,8 @@ class DriverRateServiceImplTest {
                 .isNotNull()
                 .isEqualTo(driverRateDto);
 
-        verify(securityUtil).getUserIdFromSecurityContext();
-        verify(userRoleExtractor).extractCurrentUserRole();
         verify(driverRateRepository).findByDriverIdAndRideId(driverId, rideId);
         verify(driverRateMapper).entityToDto(driverRate);
-    }
-
-    @Test
-    void getDriverRate_ShouldThrowForbiddenException_WhenUserIsAnotherDriver() {
-        DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
-        UUID driverId = driverRate.getDriverId();
-        UUID userId = PassengerRateTestUtil.OTHER_DRIVER_ID;
-        ObjectId rideId = driverRate.getRideId();
-
-        when(securityUtil.getUserIdFromSecurityContext())
-                .thenReturn(userId);
-        when(userRoleExtractor.extractCurrentUserRole())
-                .thenReturn(UserRole.DRIVER);
-
-        assertThatThrownBy(
-                () -> driverRateService.getDriverRate(driverId, rideId))
-                .isInstanceOf(ForbiddenException.class);
-
-        verify(securityUtil).getUserIdFromSecurityContext();
-        verify(userRoleExtractor).extractCurrentUserRole();
-        verifyNoInteractions(driverRateRepository, driverRateMapper);
     }
 
     @Test
@@ -223,10 +157,6 @@ class DriverRateServiceImplTest {
         UUID driverId = driverRate.getDriverId();
         ObjectId rideId = driverRate.getRideId();
 
-        when(securityUtil.getUserIdFromSecurityContext())
-                .thenReturn(driverId);
-        when(userRoleExtractor.extractCurrentUserRole())
-                .thenReturn(UserRole.DRIVER);
         when(driverRateRepository.findByDriverIdAndRideId(driverId, rideId))
                 .thenReturn(Optional.empty());
 
@@ -234,8 +164,6 @@ class DriverRateServiceImplTest {
                 () -> driverRateService.getDriverRate(driverId, rideId))
                 .isInstanceOf(ResourceNotFoundException.class);
 
-        verify(securityUtil).getUserIdFromSecurityContext();
-        verify(userRoleExtractor).extractCurrentUserRole();
         verify(driverRateRepository).findByDriverIdAndRideId(driverId, rideId);
         verifyNoInteractions(driverRateMapper);
     }
@@ -335,45 +263,14 @@ class DriverRateServiceImplTest {
     }
 
     @Test
-    void setDriverRate_ShouldThrowForbiddenException_WhenUserIsNotRideParticipant() {
-        DriverRateSettingDto driverRateSettingDto = DriverRateTestUtil.buildDriverRateSettingDto();
-        DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
-        UUID driverId = driverRate.getDriverId();
-        UUID userId = DriverRateTestUtil.OTHER_PASSENGER_ID;
-        ObjectId rideId = driverRate.getRideId();
-
-        when(driverRateRepository.findByDriverIdAndRideId(driverId, rideId))
-                .thenReturn(Optional.of(driverRate));
-        when(securityUtil.getUserIdFromSecurityContext())
-                .thenReturn(userId);
-        doThrow(new ForbiddenException("error"))
-                .when(driverRateValidator).validatePassengerParticipation(driverRate, userId);
-
-        assertThatThrownBy(
-                () -> driverRateService.setDriverRate(driverId, rideId, driverRateSettingDto))
-                .isInstanceOf(ForbiddenException.class)
-                .hasMessage("error");
-
-        verify(driverRateRepository).findByDriverIdAndRideId(driverId, rideId);
-        verify(securityUtil).getUserIdFromSecurityContext();
-        verify(driverRateValidator).validatePassengerParticipation(driverRate, userId);
-        verifyNoMoreInteractions(driverRateRepository, driverRateValidator);
-        verifyNoInteractions(driverRateMapper);
-    }
-
-    @Test
     void setDriverRate_ShouldThrowBadRequestException_WhenDriverRateAlreadySet() {
         DriverRateSettingDto driverRateSettingDto = DriverRateTestUtil.buildDriverRateSettingDto();
         DriverRate driverRate = DriverRateTestUtil.buildDefaultDriverRate();
         UUID driverId = driverRate.getDriverId();
-        UUID userId = driverRate.getPassengerId();
         ObjectId rideId = driverRate.getRideId();
 
         when(driverRateRepository.findByDriverIdAndRideId(driverId, rideId))
                 .thenReturn(Optional.of(driverRate));
-        when(securityUtil.getUserIdFromSecurityContext())
-                .thenReturn(userId);
-        doNothing().when(driverRateValidator).validatePassengerParticipation(driverRate, userId);
         doThrow(new BadRequestException("error"))
                 .when(driverRateValidator).validateDriverRateSetting(driverRate);
 
@@ -383,8 +280,6 @@ class DriverRateServiceImplTest {
                 .hasMessage("error");
 
         verify(driverRateRepository).findByDriverIdAndRideId(driverId, rideId);
-        verify(securityUtil).getUserIdFromSecurityContext();
-        verify(driverRateValidator).validatePassengerParticipation(driverRate, userId);
         verify(driverRateValidator).validateDriverRateSetting(driverRate);
         verifyNoMoreInteractions(driverRateRepository, driverRateValidator);
         verifyNoInteractions(driverRateMapper);

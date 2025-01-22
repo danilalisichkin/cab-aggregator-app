@@ -1,5 +1,6 @@
 package com.cabaggregator.payoutservice.exception;
 
+import com.cabaggregator.payoutservice.core.constant.ApplicationMessages;
 import com.cabaggregator.payoutservice.core.constant.ErrorCauses;
 import com.cabaggregator.payoutservice.core.dto.error.ErrorResponse;
 import com.cabaggregator.payoutservice.core.dto.error.MultiErrorResponse;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -101,6 +103,15 @@ public class RestExceptionHandler {
                 .body(new ErrorResponse(
                         messageBuilder.buildLocalizedMessage(e.getMessageKey(), e.getMessageArgs()),
                         messageBuilder.buildLocalizedMessage(e.getErrorCauseKey())));
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAuthorizationDeniedException(AuthorizationDeniedException e) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(new ErrorResponse(
+                        messageBuilder.buildLocalizedMessage(ApplicationMessages.CANT_ACCESS_ACCOUNT_OF_OTHER_USER),
+                        messageBuilder.buildLocalizedMessage(ErrorCauses.FORBIDDEN)));
     }
 
     @ExceptionHandler(ForbiddenException.class)

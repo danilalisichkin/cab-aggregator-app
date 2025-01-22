@@ -15,6 +15,8 @@ import java.util.UUID;
 public interface DriverRateRepository extends MongoRepository<DriverRate, ObjectId> {
     Page<DriverRate> findAllByDriverId(UUID driverId, Pageable pageable);
 
+    Optional<DriverRate> findByRideId(ObjectId rideId);
+
     Optional<DriverRate> findByDriverIdAndRideId(UUID driverId, ObjectId rideId);
 
     boolean existsByDriverIdAndRideId(UUID driverId, ObjectId rideId);

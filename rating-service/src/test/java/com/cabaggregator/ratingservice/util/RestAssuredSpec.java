@@ -15,6 +15,9 @@ public class RestAssuredSpec {
     @Value("${auth.passenger-token}")
     private String passengerToken;
 
+    @Value("${auth.admin-token}")
+    private String adminToken;
+
     public RequestSpecification getDriverAuthSpec() {
         return new RequestSpecBuilder()
                 .addHeader("Authorization", "Bearer " + driverToken)
@@ -25,6 +28,13 @@ public class RestAssuredSpec {
     public RequestSpecification getPassengerAuthSpec() {
         return new RequestSpecBuilder()
                 .addHeader("Authorization", "Bearer " + passengerToken)
+                .setContentType(ContentType.JSON)
+                .build();
+    }
+
+    public RequestSpecification getAdminRequestSpec() {
+        return new RequestSpecBuilder()
+                .addHeader("Authorization", "Bearer " + adminToken)
                 .setContentType(ContentType.JSON)
                 .build();
     }

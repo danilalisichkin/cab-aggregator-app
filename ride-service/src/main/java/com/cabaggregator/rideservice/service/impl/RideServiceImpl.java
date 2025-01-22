@@ -28,6 +28,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -89,7 +90,7 @@ public class RideServiceImpl implements RideService {
 
     /**
      * Returns specified ride.
-     * Used by Passenger or Driver.
+     * Used by Admin.
      **/
     @Override
     public RideDto getRide(ObjectId id) {
@@ -104,12 +105,11 @@ public class RideServiceImpl implements RideService {
      **/
     @Override
     @Transactional
+    @PreAuthorize("@rideValidator.isPassengerFreeNow(authentication.principal)")
     public RideDto createRide(RideAddingDto addingDto) {
         rideValidator.validateAddresses(addingDto.pickUpAddress(), addingDto.dropOffAddress());
 
         UUID userId = securityUtil.getUserIdFromSecurityContext();
-        rideValidator.validatePassengerFreedom(userId);
-
         Ride rideToCreate = initDefaultRide(addingDto, userId);
 
         setRouteSummary(rideToCreate);

@@ -8,11 +8,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
 @Repository
 public interface RideRepository extends MongoRepository<Ride, ObjectId> {
+    Optional<Ride> findByIdAndDriverId(ObjectId id, UUID driverId);
+
+    Optional<Ride> findByIdAndPassengerId(ObjectId id, UUID passengerId);
+
     Page<Ride> findAllByPassengerId(UUID passengerId, Pageable pageable);
 
     Page<Ride> findAllByDriverId(UUID driverId, Pageable pageable);

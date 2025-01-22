@@ -1,7 +1,7 @@
-package com.cabaggregator.ratingservice.security.util;
+package com.cabaggregator.authservice.security.util;
 
-import com.cabaggregator.ratingservice.exception.InternalErrorException;
-import com.cabaggregator.ratingservice.security.constant.Prefix;
+import com.cabaggregator.authservice.exception.InternalErrorException;
+import com.cabaggregator.authservice.security.constant.Prefix;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.AccessLevel;
@@ -55,3 +55,4 @@ public final class JwtClaimsExtractor {
                 .collect(Collectors.toList());
     }
 }
+

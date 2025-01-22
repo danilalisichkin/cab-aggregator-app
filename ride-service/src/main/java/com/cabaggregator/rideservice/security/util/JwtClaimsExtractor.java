@@ -1,6 +1,7 @@
 package com.cabaggregator.rideservice.security.util;
 
 import com.cabaggregator.rideservice.exception.InternalErrorException;
+import com.cabaggregator.rideservice.security.constant.Prefix;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.AccessLevel;
@@ -55,6 +56,7 @@ public final class JwtClaimsExtractor {
         List<String> roles = (List<String>) realmAccess.get("roles");
 
         return roles.stream()
+                .map(Prefix.ROLE::concat)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }

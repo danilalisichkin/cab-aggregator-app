@@ -46,7 +46,7 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN') or #id == authentication.principal")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
     public PassengerDto getPassengerById(UUID id) {
         return passengerMapper.entityToDto(
                 getPassengerEntityById(id));
@@ -67,7 +67,7 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('ADMIN') or #id == authentication.principal")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
     public PassengerDto updatePassenger(UUID id, PassengerUpdatingDto passengerDto) {
         Passenger passengerToUpdate = getPassengerEntityById(id);
 

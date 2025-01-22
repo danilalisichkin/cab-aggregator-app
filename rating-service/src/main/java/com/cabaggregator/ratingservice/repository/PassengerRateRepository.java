@@ -15,6 +15,8 @@ import java.util.UUID;
 public interface PassengerRateRepository extends MongoRepository<PassengerRate, ObjectId> {
     Page<PassengerRate> findAllByPassengerId(UUID passengerId, Pageable pageable);
 
+    Optional<PassengerRate> findByRideId(ObjectId rideId);
+
     Optional<PassengerRate> findByPassengerIdAndRideId(UUID passengerId, ObjectId rideId);
 
     boolean existsByPassengerIdAndRideId(UUID passengerId, ObjectId rideId);
