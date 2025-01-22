@@ -1,9 +1,8 @@
-package com.cabaggregator.rideservice.security.config;
+package com.cabaggregator.authservice.security.config;
 
-import com.cabaggregator.rideservice.security.filter.JwtFilter;
+import com.cabaggregator.authservice.security.filter.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
@@ -13,13 +12,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
 public class WebSecurityConfig {
-
-    /**
-     * This config adds spring security to application.
-     * No request authorization provided because it will be configured on api-gateway in future.
-     **/
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -34,8 +27,8 @@ public class WebSecurityConfig {
                                 "/v3/api-docs.yaml",
                                 "/webjars/**"
                         ).permitAll()
-                        .anyRequest().authenticated()
-                )
+                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .anyRequest().authenticated())
                 .build();
     }
 }

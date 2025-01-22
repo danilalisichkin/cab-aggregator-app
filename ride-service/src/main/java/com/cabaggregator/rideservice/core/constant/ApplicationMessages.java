@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ApplicationMessages {
     public static final String RIDE_WITH_ID_NOT_FOUND = "error.ride.with.id.not.found";
+    public static final String DRIVER_RIDE_WITH_ID_NOT_FOUND = "error.driver.ride.with.id.not.found";
+    public static final String PASSENGER_RIDE_WITH_ID_NOT_FOUND = "error.passenger.ride.with.id.not.found";
     public static final String PICKUP_AND_DROPOFF_ADDRESSES_SAME = "error.pickup.and.dropoff.addresses.same";
     public static final String USER_NOT_RIDE_PARTICIPANT = "error.user.not.ride.participant";
     public static final String CANT_GET_RIDES_OF_OTHER_USER = "error.cant.get.rides.of.other.user";

@@ -10,21 +10,18 @@ import com.cabaggregator.rideservice.core.mapper.PageMapper;
 import com.cabaggregator.rideservice.core.mapper.RideMapper;
 import com.cabaggregator.rideservice.entity.Ride;
 import com.cabaggregator.rideservice.exception.BadRequestException;
-import com.cabaggregator.rideservice.exception.ForbiddenException;
 import com.cabaggregator.rideservice.exception.ResourceNotFoundException;
 import com.cabaggregator.rideservice.repository.RideRepository;
 import com.cabaggregator.rideservice.security.enums.UserRole;
-import com.cabaggregator.rideservice.security.util.SecurityUtil;
 import com.cabaggregator.rideservice.service.RidePassengerService;
 import com.cabaggregator.rideservice.strategy.manager.RideStatusChangingManager;
 import com.cabaggregator.rideservice.util.PageRequestBuilder;
-import com.cabaggregator.rideservice.util.UserRoleExtractor;
-import com.cabaggregator.rideservice.validator.RideValidator;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,13 +33,7 @@ import static com.cabaggregator.rideservice.util.RideLifecyclePhaseChecker.isPre
 @RequiredArgsConstructor
 public class RidePassengerServiceImpl implements RidePassengerService {
 
-    private final SecurityUtil securityUtil;
-
-    private final UserRoleExtractor userRoleExtractor;
-
     private final RideStatusChangingManager rideStatusChangingManager;
-
-    private final RideValidator rideValidator;
 
     private final RideRepository rideRepository;
 
@@ -55,14 +46,10 @@ public class RidePassengerServiceImpl implements RidePassengerService {
      * Has optional RideStatus parameter.
      **/
     @Override
+    @PreAuthorize("hasRole('ADMIN') or #passengerId == authentication.principal")
     public PageDto<RideDto> getPageOfPassengerRides(
             UUID passengerId, Integer offset, Integer limit, RideSortField sortBy, Sort.Direction sortOrder,
             RideStatus status) {
-
-        UUID userId = securityUtil.getUserIdFromSecurityContext();
-        if (!userId.equals(passengerId)) {
-            throw new ForbiddenException(ApplicationMessages.CANT_GET_RIDES_OF_OTHER_USER);
-        }
 
         PageRequest pageRequest = PageRequestBuilder.buildPageRequest(offset, limit, sortBy.getValue(), sortOrder);
         Page<Ride> passengerRides = status == null
@@ -77,18 +64,9 @@ public class RidePassengerServiceImpl implements RidePassengerService {
      * Returns specified passenger ride.
      **/
     @Override
+    @PreAuthorize("hasRole('ADMIN') or #passengerId == authentication.principal")
     public RideDto getRide(UUID passengerId, ObjectId id) {
-        Ride ride = getRideEntity(id);
-
-        UUID userId = securityUtil.getUserIdFromSecurityContext();
-        UserRole userRole = userRoleExtractor.extractCurrentUserRole();
-
-        if (userRole.equals(UserRole.PASSENGER)) {
-            if (!userId.equals(passengerId)) {
-                throw new ForbiddenException(ApplicationMessages.CANT_GET_RIDES_OF_OTHER_USER);
-            }
-            rideValidator.validatePassengerParticipation(ride, userId);
-        }
+        Ride ride = getRideEntity(id, passengerId);
 
         return rideMapper.entityToDto(ride);
     }
@@ -99,14 +77,9 @@ public class RidePassengerServiceImpl implements RidePassengerService {
      **/
     @Override
     @Transactional
+    @PreAuthorize("#passengerId == authentication.principal")
     public RideDto updateRide(UUID passengerId, ObjectId id, RideUpdatingDto updatingDto) {
-        Ride rideToUpdate = getRideEntity(id);
-
-        UUID userId = securityUtil.getUserIdFromSecurityContext();
-        if (!userId.equals(passengerId)) {
-            throw new ForbiddenException(ApplicationMessages.CANT_GET_RIDES_OF_OTHER_USER);
-        }
-        rideValidator.validatePassengerParticipation(rideToUpdate, userId);
+        Ride rideToUpdate = getRideEntity(id, passengerId);
 
         if (!isPrepared(rideToUpdate.getStatus())) {
             throw new BadRequestException(ApplicationMessages.CANT_CHANGE_RIDE_WHEN_IT_REQUESTED);
@@ -124,8 +97,9 @@ public class RidePassengerServiceImpl implements RidePassengerService {
      **/
     @Override
     @Transactional
+    @PreAuthorize("#passengerId == authentication.principal")
     public RideDto changeRideStatus(UUID passengerId, ObjectId id, RideStatus status) {
-        Ride rideToUpdate = getRideEntity(id);
+        Ride rideToUpdate = getRideEntity(id, passengerId);
 
         rideStatusChangingManager.processRideStatusChanging(rideToUpdate, UserRole.PASSENGER, status);
 
@@ -136,11 +110,11 @@ public class RidePassengerServiceImpl implements RidePassengerService {
     /**
      * Returns existing ride or throws exception if it doesn't exist.
      **/
-    private Ride getRideEntity(ObjectId id) {
+    private Ride getRideEntity(ObjectId id, UUID passengerId) {
         return rideRepository
-                .findById(id)
+                .findByIdAndPassengerId(id, passengerId)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        ApplicationMessages.RIDE_WITH_ID_NOT_FOUND,
-                        id.toString()));
+                        ApplicationMessages.PASSENGER_RIDE_WITH_ID_NOT_FOUND,
+                        id.toString(), passengerId.toString()));
     }
 }

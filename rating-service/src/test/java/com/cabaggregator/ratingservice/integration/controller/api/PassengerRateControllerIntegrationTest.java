@@ -10,7 +10,6 @@ import com.cabaggregator.ratingservice.util.JsonReader;
 import com.cabaggregator.ratingservice.util.PassengerRateTestUtil;
 import com.cabaggregator.ratingservice.util.RestAssuredSpec;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
 import org.bson.types.ObjectId;
@@ -182,7 +181,7 @@ class PassengerRateControllerIntegrationTest extends AbstractMongoIntegrationTes
         ObjectId rideId = passengerRateAddingDto.rideId();
 
         given()
-                .contentType(ContentType.JSON)
+                .spec(restAssuredSpec.getAdminRequestSpec())
                 .body(passengerRateAddingDto)
                 .when()
                 .post()
@@ -208,7 +207,7 @@ class PassengerRateControllerIntegrationTest extends AbstractMongoIntegrationTes
         int expectedPassengerRatesSize = 3;
 
         given()
-                .contentType(ContentType.JSON)
+                .spec(restAssuredSpec.getAdminRequestSpec())
                 .body(passengerRateAddingDto)
                 .when()
                 .post()
@@ -250,7 +249,7 @@ class PassengerRateControllerIntegrationTest extends AbstractMongoIntegrationTes
         PassengerRateSettingDto passengerRateSettingDto = PassengerRateTestUtil.buildPassengerRateSettingDto();
 
         given()
-                .spec(restAssuredSpec.getPassengerAuthSpec())
+                .spec(restAssuredSpec.getAdminRequestSpec())
                 .body(passengerRateSettingDto)
                 .pathParam("passengerId", PassengerRateTestUtil.PASSENGER_ID.toString())
                 .pathParam("rideId", PassengerRateTestUtil.NOT_EXISTING_RIDE_ID.toString())

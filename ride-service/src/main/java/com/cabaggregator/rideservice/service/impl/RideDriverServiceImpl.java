@@ -8,21 +8,18 @@ import com.cabaggregator.rideservice.core.enums.sort.RideSortField;
 import com.cabaggregator.rideservice.core.mapper.PageMapper;
 import com.cabaggregator.rideservice.core.mapper.RideMapper;
 import com.cabaggregator.rideservice.entity.Ride;
-import com.cabaggregator.rideservice.exception.ForbiddenException;
 import com.cabaggregator.rideservice.exception.ResourceNotFoundException;
 import com.cabaggregator.rideservice.repository.RideRepository;
 import com.cabaggregator.rideservice.security.enums.UserRole;
-import com.cabaggregator.rideservice.security.util.SecurityUtil;
 import com.cabaggregator.rideservice.service.RideDriverService;
 import com.cabaggregator.rideservice.strategy.manager.RideStatusChangingManager;
 import com.cabaggregator.rideservice.util.PageRequestBuilder;
-import com.cabaggregator.rideservice.util.UserRoleExtractor;
-import com.cabaggregator.rideservice.validator.RideValidator;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,13 +29,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RideDriverServiceImpl implements RideDriverService {
 
-    private final SecurityUtil securityUtil;
-
-    private final UserRoleExtractor userRoleExtractor;
-
     private final RideStatusChangingManager rideStatusChangingManager;
-
-    private final RideValidator rideValidator;
 
     private final RideRepository rideRepository;
 
@@ -51,14 +42,10 @@ public class RideDriverServiceImpl implements RideDriverService {
      * Has optional RideStatus parameter.
      **/
     @Override
+    @PreAuthorize("hasRole('ADMIN') or #driverId == authentication.principal")
     public PageDto<RideDto> getPageOfDriverRides(
             UUID driverId, Integer offset, Integer limit, RideSortField sortBy, Sort.Direction sortOrder,
             RideStatus status) {
-
-        UUID userId = securityUtil.getUserIdFromSecurityContext();
-        if (!userId.equals(driverId)) {
-            throw new ForbiddenException(ApplicationMessages.CANT_GET_RIDES_OF_OTHER_USER);
-        }
 
         PageRequest pageRequest = PageRequestBuilder.buildPageRequest(offset, limit, sortBy.getValue(), sortOrder);
         Page<Ride> driverRides = status == null
@@ -74,18 +61,9 @@ public class RideDriverServiceImpl implements RideDriverService {
      * Used by Driver or Admin.
      **/
     @Override
+    @PreAuthorize("hasRole('ADMIN') or #driverId == authentication.principal")
     public RideDto getRide(UUID driverId, ObjectId id) {
-        Ride ride = getRideEntity(id);
-
-        UUID userId = securityUtil.getUserIdFromSecurityContext();
-        UserRole userRole = userRoleExtractor.extractCurrentUserRole();
-
-        if (userRole.equals(UserRole.DRIVER)) {
-            if (!userId.equals(driverId)) {
-                throw new ForbiddenException(ApplicationMessages.CANT_GET_RIDES_OF_OTHER_USER);
-            }
-            rideValidator.validateDriverParticipation(ride, userId);
-        }
+        Ride ride = getRideEntity(id, driverId);
 
         return rideMapper.entityToDto(ride);
     }
@@ -96,8 +74,9 @@ public class RideDriverServiceImpl implements RideDriverService {
      **/
     @Override
     @Transactional
+    @PreAuthorize("#driverId == authentication.principal")
     public RideDto changeRideStatus(UUID driverId, ObjectId id, RideStatus status) {
-        Ride rideToUpdate = getRideEntity(id);
+        Ride rideToUpdate = getRideEntity(id, driverId);
 
         rideStatusChangingManager.processRideStatusChanging(rideToUpdate, UserRole.DRIVER, status);
 
@@ -108,11 +87,11 @@ public class RideDriverServiceImpl implements RideDriverService {
     /**
      * Return existing ride or throws exception if it doesn't exist.
      **/
-    private Ride getRideEntity(ObjectId id) {
+    private Ride getRideEntity(ObjectId id, UUID driverId) {
         return rideRepository
-                .findById(id)
+                .findByIdAndDriverId(id, driverId)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        ApplicationMessages.RIDE_WITH_ID_NOT_FOUND,
-                        id.toString()));
+                        ApplicationMessages.DRIVER_RIDE_WITH_ID_NOT_FOUND,
+                        id.toString(), driverId.toString()));
     }
 }
