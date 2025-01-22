@@ -18,6 +18,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -65,6 +66,7 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     @Transactional
+    @PreAuthorize("#id == authentication.principal.id and hasAuthority(UserRole.PASSENGER.name())")
     public PassengerDto updatePassenger(UUID id, PassengerUpdatingDto passengerDto) {
         Passenger passengerToUpdate = getPassengerEntityById(id);
 

@@ -1,0 +1,74 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: user-api-route
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/v1/users/**
+
+        - id: auth-api-route
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/v1/auth/**
+
+        - id: ride-api-route
+          uri: lb://ride-service
+          predicates:
+            - Path=/api/v1/rides/**
+            - Path=/api/v1/drivers/{driverId}/rides/**
+            - Path=/api/v1/passengers/{passengerId}/rides/**
+
+        - id: passenger-api-route
+          uri: lb://passenger-service
+          predicates:
+            - Path=/api/v1/passengers/**
+
+        - id: driver-api-route
+          uri: lb://driver-service
+          predicates:
+            - Path=/api/v1/drivers/**
+
+        - id: car-api-route
+          uri: lb://driver-service
+          predicates:
+            - Path=/api/v1/cars/**
+
+        - id: rate-api-route
+          uri: lb://rating-service
+          predicates:
+            - Path=/api/v1/rates/**
+
+        - id: pricing-a[i-route
+          uri: lb://price-calculation-service
+          predicates:
+            - Path=/api/v1/pricing/**
+
+        - id: payment-api-route
+          uri: lb://payment-service
+          predicates:
+            - Path=/api/v1/payments/**
+            - Path=/api/v1/payment-accounts/**
+
+        - id: payout-api-route
+          uri: lb://payout-service
+          predicates:
+            - Path=/api/v1/payout-accounts/**
+  security:
+  oauth2:
+    resourceserver:
+      jwt:
+        jwk-set-uri: http://localhost:8080/realms/cab-aggregator-realm/protocol/openid-connect/certs
+server:
+  port: ${SERVER_PORT:8090}
+  forward-headers-strategy: framework
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/}
