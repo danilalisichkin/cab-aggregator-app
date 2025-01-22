@@ -55,14 +55,14 @@ public class PaymentAccountServiceImpl implements PaymentAccountService {
     }
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN') or #id == authentication.principal")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
     public PaymentAccountDto getPaymentAccount(UUID id) {
         return paymentAccountMapper.entityToDto(
                 getPaymentAccountEntity(id));
     }
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN') or #id == authentication.principal")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
     public List<PaymentCardDto> getAccountPaymentCards(UUID id) {
         PaymentAccount paymentAccount = getPaymentAccountEntity(id);
 
@@ -70,7 +70,7 @@ public class PaymentAccountServiceImpl implements PaymentAccountService {
     }
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN') or #id == authentication.principal")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
     public PaymentCardDto getAccountDefaultPaymentCard(UUID id) {
         PaymentAccount paymentAccount = getPaymentAccountEntity(id);
 
