@@ -1,7 +1,7 @@
 package com.cabaggregator.rideservice.unit.core.mapper;
 
 import com.cabaggregator.rideservice.core.dto.page.PageDto;
-import com.cabaggregator.rideservice.mapper.PageMapper;
+import com.cabaggregator.rideservice.core.mapper.PageMapper;
 import com.cabaggregator.rideservice.util.PaginationTestUtil;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;

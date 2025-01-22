@@ -1,12 +1,13 @@
-package com.cabaggregator.rideservice.mapper;
+package com.cabaggregator.rideservice.core.mapper;
 
 import com.cabaggregator.rideservice.client.dto.PriceCalculationRequest;
-import com.cabaggregator.rideservice.core.dto.price.PriceRecalculationDto;
+import com.cabaggregator.rideservice.client.dto.PriceRecalculationDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideAddingDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideUpdatingDto;
 import com.cabaggregator.rideservice.entity.Ride;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,9 @@ public interface RideMapper {
 
     Ride dtoToEntity(RideAddingDto dto);
 
+    @Mapping(target = "rideId", source = "id")
+    @Mapping(target = "pickUpCoordinates", source = "pickUpAddress.coordinates")
+    @Mapping(target = "duration", source = "estimatedDuration")
     PriceCalculationRequest entityToPriceCalculationRequest(Ride ride);
 
     PriceRecalculationDto entityToPriceRecalculationDto(Ride ride);

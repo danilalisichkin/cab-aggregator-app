@@ -39,7 +39,7 @@ class RideRepositoryTest extends AbstractIntegrationTest {
     void findAllByPassengerId_ShouldReturnPageOfRides_WhenRideWithPassengerIdExists() {
         int pageNumber = 0;
         int pageSize = 10;
-        int expectedContentSize = 1;
+        int expectedContentSize = 2;
         Ride ride = RideTestUtil.buildDefaultRide();
 
         Page<Ride> actual = rideRepository.findAllByPassengerId(
@@ -68,7 +68,7 @@ class RideRepositoryTest extends AbstractIntegrationTest {
     void findAllByDriverId_ShouldReturnPageOfRides_WhenRideWithDriverIdExists() {
         int pageNumber = 0;
         int pageSize = 10;
-        int expectedContentSize = 1;
+        int expectedContentSize = 2;
         Ride ride = RideTestUtil.buildDefaultRide();
 
         Page<Ride> actual = rideRepository.findAllByDriverId(

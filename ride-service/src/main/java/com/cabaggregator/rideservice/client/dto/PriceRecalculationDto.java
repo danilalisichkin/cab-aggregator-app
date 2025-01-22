@@ -1,4 +1,4 @@
-package com.cabaggregator.rideservice.core.dto.price;
+package com.cabaggregator.rideservice.client.dto;
 
 import java.util.UUID;
 

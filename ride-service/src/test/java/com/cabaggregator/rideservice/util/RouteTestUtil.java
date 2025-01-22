@@ -1,6 +1,6 @@
 package com.cabaggregator.rideservice.util;
 
-import com.cabaggregator.rideservice.core.dto.route.RouteSummary;
+import com.cabaggregator.rideservice.client.dto.RouteSummary;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

@@ -9,7 +9,7 @@ spring:
       messages: "classpath:messages"
   data:
     mongodb:
-      uri: mongodb://${DB_HOSTPORT:localhost:27017}/${DB_NAME:ride_database}
+      uri: mongodb://${DB_HOSTPORT:localhost:27018}/${DB_NAME:ride_database}
       username: ${DB_USERNAME:mongo}
       password: ${DB_PASSWORD:root}
       replica-set-name: ${DB_REPLICA_SET_NAME:rs0}
@@ -62,7 +62,7 @@ services:
     name: open-route-api
     path: https://api.openrouteservice.org/v2
   price:
-    name: price-service
+    name: price-calculation-service
     path: api/v1/pricing
   promo-code:
     name: promo-code-service

@@ -5,11 +5,13 @@ import com.cabaggregator.rideservice.core.enums.PaymentMethod;
 import com.cabaggregator.rideservice.core.enums.RideFare;
 import com.cabaggregator.rideservice.core.enums.RidePaymentStatus;
 import com.cabaggregator.rideservice.core.enums.RideStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.bson.types.ObjectId;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Schema(description = "Server response with stored ride data")
 public record RideDto(
         ObjectId id,
 

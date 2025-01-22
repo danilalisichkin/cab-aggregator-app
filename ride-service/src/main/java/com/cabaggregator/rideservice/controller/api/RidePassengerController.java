@@ -1,5 +1,6 @@
 package com.cabaggregator.rideservice.controller.api;
 
+import com.cabaggregator.rideservice.controller.doc.RidePassengerControllerDoc;
 import com.cabaggregator.rideservice.core.constant.ValidationErrors;
 import com.cabaggregator.rideservice.core.dto.page.PageDto;
 import com.cabaggregator.rideservice.core.dto.ride.RideDto;
@@ -33,12 +34,13 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/passengers")
-public class RidePassengerController {
+public class RidePassengerController implements RidePassengerControllerDoc {
 
     private final RidePassengerService ridePassengerService;
 
     private final RidePaymentService ridePaymentService;
 
+    @Override
     @GetMapping("/{passengerId}/rides")
     public ResponseEntity<PageDto<RideDto>> getPageOfPassengerRides(
             @PathVariable UUID passengerId,
@@ -57,6 +59,7 @@ public class RidePassengerController {
         return ResponseEntity.status(HttpStatus.OK).body(driverRides);
     }
 
+    @Override
     @GetMapping("/{passengerId}/rides/{id}")
     public ResponseEntity<RideDto> getRide(
             @PathVariable UUID passengerId,
@@ -67,6 +70,7 @@ public class RidePassengerController {
         return ResponseEntity.status(HttpStatus.OK).body(ride);
     }
 
+    @Override
     @PutMapping("/{passengerId}/rides/{id}")
     public ResponseEntity<RideDto> updateRide(
             @PathVariable UUID passengerId,
@@ -78,6 +82,7 @@ public class RidePassengerController {
         return ResponseEntity.status(HttpStatus.OK).body(ride);
     }
 
+    @Override
     @PatchMapping("/{passengerId}/rides/{id}/status")
     public ResponseEntity<RideDto> changeRideStatus(
             @PathVariable UUID passengerId,
