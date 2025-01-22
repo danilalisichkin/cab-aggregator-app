@@ -28,10 +28,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mockStatic;
@@ -118,15 +118,16 @@ class PassengerServiceImplTest {
 
     @Test
     void getPassengerById_ShouldThrowResourceNotFoundException_WhenPassengerNotFound() {
-        Passenger passenger = PassengerTestUtil.buildDefaultPassenger();
+        UUID passengerId = PassengerTestUtil.ID;
 
-        when(passengerRepository.findById(passenger.getId()))
+        when(passengerRepository.findById(passengerId))
                 .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> passengerService.getPassengerById(passenger.getId()))
+        assertThatThrownBy(
+                () -> passengerService.getPassengerById(passengerId))
                 .isInstanceOf(ResourceNotFoundException.class);
 
-        verify(passengerRepository).findById(passenger.getId());
+        verify(passengerRepository).findById(passengerId);
         verifyNoInteractions(passengerMapper);
     }
 
@@ -146,9 +147,9 @@ class PassengerServiceImplTest {
         when(passengerMapper.entityToDto(passenger))
                 .thenReturn(passengerDto);
 
-        PassengerDto result = passengerService.updatePassenger(passenger.getId(), passengerUpdatingDto);
+        PassengerDto actual = passengerService.updatePassenger(passenger.getId(), passengerUpdatingDto);
 
-        assertThat(result)
+        assertThat(actual)
                 .isNotNull()
                 .isEqualTo(passengerDto);
 
@@ -164,14 +165,16 @@ class PassengerServiceImplTest {
     @Test
     void updatePassenger_ShouldThrowResourceNotFoundException_WhenPassengerNotFound() {
         PassengerUpdatingDto passengerUpdatingDto = PassengerTestUtil.buildPassengerUpdatingDto();
+        UUID passengerId = PassengerTestUtil.NOT_EXISTING_ID;
 
-        when(passengerRepository.findById(PassengerTestUtil.NOT_EXISTING_ID))
+        when(passengerRepository.findById(passengerId))
                 .thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class,
-                () -> passengerService.updatePassenger(PassengerTestUtil.NOT_EXISTING_ID, passengerUpdatingDto));
+        assertThatThrownBy(
+                () -> passengerService.updatePassenger(passengerId, passengerUpdatingDto))
+                .isInstanceOf(ResourceNotFoundException.class);
 
-        verify(passengerRepository).findById(PassengerTestUtil.NOT_EXISTING_ID);
+        verify(passengerRepository).findById(passengerId);
         verifyNoMoreInteractions(passengerRepository);
         verifyNoInteractions(passengerValidator, passengerMapper);
     }

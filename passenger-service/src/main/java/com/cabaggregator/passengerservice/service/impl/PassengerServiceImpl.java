@@ -29,10 +29,10 @@ public class PassengerServiceImpl implements PassengerService {
     private final PassengerRepository passengerRepository;
 
     private final PassengerMapper passengerMapper;
+
     private final PageMapper pageMapper;
 
     private final PassengerValidator passengerValidator;
-
 
     @Override
     public PageDto<PassengerDto> getPageOfPassengers(
@@ -46,6 +46,7 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN') or #id == authentication.principal")
     public PassengerDto getPassengerById(UUID id) {
         return passengerMapper.entityToDto(
                 getPassengerEntityById(id));
@@ -66,7 +67,7 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     @Transactional
-    @PreAuthorize("#id == authentication.principal.id and hasAuthority(UserRole.PASSENGER.name())")
+    @PreAuthorize("hasAuthority('ADMIN') or #id == authentication.principal")
     public PassengerDto updatePassenger(UUID id, PassengerUpdatingDto passengerDto) {
         Passenger passengerToUpdate = getPassengerEntityById(id);
 
