@@ -20,6 +20,7 @@ import com.stripe.model.Customer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,12 +55,14 @@ public class PaymentAccountServiceImpl implements PaymentAccountService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
     public PaymentAccountDto getPaymentAccount(UUID id) {
         return paymentAccountMapper.entityToDto(
                 getPaymentAccountEntity(id));
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
     public List<PaymentCardDto> getAccountPaymentCards(UUID id) {
         PaymentAccount paymentAccount = getPaymentAccountEntity(id);
 
@@ -67,6 +70,7 @@ public class PaymentAccountServiceImpl implements PaymentAccountService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
     public PaymentCardDto getAccountDefaultPaymentCard(UUID id) {
         PaymentAccount paymentAccount = getPaymentAccountEntity(id);
 
@@ -98,6 +102,7 @@ public class PaymentAccountServiceImpl implements PaymentAccountService {
 
     @Override
     @Transactional
+    @PreAuthorize("#id == authentication.principal")
     public PaymentAccountDto updatePaymentAccount(UUID id, String stripeCustomerId) {
         PaymentAccount paymentAccount = getPaymentAccountEntity(id);
         paymentAccountValidator.validateStripeCustomerIdUniqueness(stripeCustomerId);
