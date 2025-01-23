@@ -18,6 +18,10 @@ public class WebSecurityConfig {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(ex -> ex
+                        // Actuator & metrics
+                        .pathMatchers("/actuator/prometheus/**")
+                        .permitAll()
+
                         // User API in auth-service
                         .pathMatchers("/api/v1/users/**")
                         .hasRole("ADMIN")

@@ -5,9 +5,8 @@ services:
   ride-database1:
     build:
       context: .
-    container_name: ride-database1
+    container_name: cab-ride-database1
     image: mongo:7.0
-    restart: always
     command: mongod --replSet rs0 --bind_ip_all
     ports:
       - "27017:27017"
@@ -17,9 +16,8 @@ services:
   ride-database2:
     build:
       context: .
-    container_name: ride-database2
+    container_name: cab-ride-database2
     image: mongo:7.0
-    restart: always
     command: mongod --replSet rs0 --bind_ip_all
     ports:
       - "27018:27017"
@@ -29,9 +27,8 @@ services:
   rating-database1:
     build:
       context: .
-    container_name: rating-database1
+    container_name: cab-rating-database1
     image: mongo:7.0
-    restart: always
     command: mongod --replSet rs1 --bind_ip_all --port 27017
     ports:
       - "27019:27017"
@@ -41,26 +38,69 @@ services:
   rating-database2:
     build:
       context: .
-    container_name: rating-database2
+    container_name: cab-rating-database2
     image: mongo:7.0
-    restart: always
     command: mongod --replSet rs1 --bind_ip_all --port 27017
     ports:
       - "27020:27017"
     volumes:
       - rating-database2_data:/data/db
 
+  passenger-database:
+    image: postgres:17
+    container_name: cab-passenger-database
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: passenger_database
+    ports:
+      - "5433:5432"
+    volumes:
+      - passenger-database_data:/var/lib/postgresql/data
+    networks:
+      - cab-aggregator-network
+
+  eureka-server:
+    build: eureka-server
+    image: cab-eureka-server:1.0.0
+    container_name: cab-eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - cab-aggregator-network
+
+  passenger-service:
+    build: passenger-service
+    image: cab-passenger-service:1.0.0
+    container_name: cab-passenger-service
+    environment:
+      DB_USERNAME: postgres
+      DB_PASSWORD: root
+      DB_NAME: passenger_database
+      DB_HOSTPORT: passenger-database:5432
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SERVER_PORT: 8082
+    ports:
+      - "8082:8082"
+    networks:
+      - cab-aggregator-network
+    depends_on:
+      - passenger-database
+      - eureka-server
+      - kafka
+
   zookeeper:
     image: zookeeper:3.7.0
-    container_name: zookeeper
-    restart: "no"
+    container_name: cab-zookeeper
     ports:
       - "2181:2181"
+    networks:
+      - cab-aggregator-network
 
   kafka:
     image: obsidiandynamics/kafka
-    container_name: kafka
-    restart: "no"
+    container_name: cab-kafka
     ports:
       - "9092:9092"
     environment:
@@ -72,11 +112,57 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    networks:
+      - cab-aggregator-network
     depends_on:
       - zookeeper
 
+  prometheus:
+    image: prom/prometheus:v3.1.0
+    container_name: cab-prometheus
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--web.enable-lifecycle"
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    ports:
+      - "9090:9090"
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:9090/-/healthy
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+    networks:
+      - cab-aggregator-network
+
+  grafana:
+    image: grafana/grafana:11.4.0
+    container_name: cab-grafana
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: true
+    healthcheck:
+      test: curl --fail -s http://localhost:3000/api/health || exit 1
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+    networks:
+      - cab-aggregator-network
+
 volumes:
+  passenger-database_data:
   ride-database1_data:
   ride-database2_data:
   rating-database1_data:
   rating-database2_data:
+
+networks:
+  cab-aggregator-network:
+    driver: bridge

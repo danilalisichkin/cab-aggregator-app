@@ -34,6 +34,19 @@ spring:
         spring.deserializer:
           key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
           value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  metrics:
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
 app:
   kafka:
     topics:
@@ -42,7 +55,7 @@ app:
       payment-status:
         name: payment-status.changing.v1
         partitions: 1
-        replicas: 1
+        replicas: 1       
 stripe:
   secret-key: ${STRIPE_SECRET_KEY}
   endpoint-secret: ${STRIPE_ENDPOINT_SECRET}

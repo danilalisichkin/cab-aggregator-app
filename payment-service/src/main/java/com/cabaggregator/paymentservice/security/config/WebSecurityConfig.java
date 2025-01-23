@@ -44,7 +44,8 @@ public class WebSecurityConfig {
                                 "/swagger-resources/**",
                                 "/v3/api-docs/**",
                                 "/v3/api-docs.yaml",
-                                "/webjars/**"
+                                "/webjars/**",
+                                "/actuator/prometheus/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

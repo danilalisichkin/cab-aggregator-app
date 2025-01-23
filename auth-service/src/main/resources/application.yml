@@ -33,6 +33,19 @@ app:
         name: driver.creation.v1
         partitions: 1
         replicas: 1
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  metrics:
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
 eureka:
   client:
     serviceUrl:
