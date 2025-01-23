@@ -25,6 +25,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,10 +36,13 @@ public class CarServiceImpl implements CarService {
     private final CarDetailsService carDetailsService;
 
     private final CarMapper carMapper;
+
     private final CarDetailsMapper carDetailsMapper;
+
     private final PageMapper pageMapper;
 
     private final CarValidator carValidator;
+
     private final CarDetailsValidator carDetailsValidator;
 
     @Override
@@ -83,8 +87,10 @@ public class CarServiceImpl implements CarService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ADMIN') or @carValidator.isUserCarOwner(#id, authentication.principal)")
     public CarDto updateCar(Long id, CarUpdatingDto carDto) {
         Car carToUpdate = getCarEntityById(id);
+
         if (!carToUpdate.getLicensePlate().equals(carDto.licensePlate())) {
             carValidator.validateLicencePlateUniqueness(carDto.licensePlate());
         }
@@ -97,6 +103,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ADMIN') or @carValidator.isUserCarOwner(#carId, authentication.principal)")
     public CarFullDto updateCarDetails(Long carId, CarDetailsSettingDto carDetailsDto) {
         carDetailsValidator.validateReleaseDate(carDetailsDto.releaseDate());
 
@@ -104,7 +111,7 @@ public class CarServiceImpl implements CarService {
 
         CarDetailsDto detailsDto = carDetailsService.updateCarDetails(carId, carDetailsDto);
         CarDto carDto = carMapper.entityToDto(carToUpdate);
-        
+
         return new CarFullDto(carDto, detailsDto);
     }
 

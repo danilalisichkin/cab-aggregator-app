@@ -19,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
@@ -80,7 +81,7 @@ class PassengerControllerIntegrationTest extends AbstractPostgresIntegrationTest
         int expectedContentSize = 2;
 
         mockMvc.perform(get(baseUrl)
-                        .header("Authorization", authTestUtil.getAdminBearerToken())
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getAdminBearerToken())
                         .param("offset", "0")
                         .param("limit", "10")
                         .param("sortBy", "ID")
@@ -101,7 +102,7 @@ class PassengerControllerIntegrationTest extends AbstractPostgresIntegrationTest
         int expectedContentSize = 0;
 
         mockMvc.perform(get(baseUrl)
-                        .header("Authorization", authTestUtil.getAdminBearerToken())
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getAdminBearerToken())
                         .param("offset", "0")
                         .param("limit", "10")
                         .param("sortBy", "ID")
@@ -124,7 +125,7 @@ class PassengerControllerIntegrationTest extends AbstractPostgresIntegrationTest
         String expectedJson = new ObjectMapper().writeValueAsString(passengerDto);
 
         mockMvc.perform(get(requestUrl)
-                        .header("Authorization", authTestUtil.getPassengerBearerToken()))
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getPassengerBearerToken()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedJson));
     }
@@ -138,7 +139,7 @@ class PassengerControllerIntegrationTest extends AbstractPostgresIntegrationTest
         String requestUrl = "%s/%s".formatted(baseUrl, PassengerTestUtil.OTHER_ID.toString());
 
         mockMvc.perform(get(requestUrl)
-                        .header("Authorization", authTestUtil.getPassengerBearerToken()))
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getPassengerBearerToken()))
                 .andExpect(status().isForbidden());
     }
 
@@ -148,7 +149,7 @@ class PassengerControllerIntegrationTest extends AbstractPostgresIntegrationTest
         String requestUrl = "%s/%s".formatted(baseUrl, PassengerTestUtil.NOT_EXISTING_ID.toString());
 
         mockMvc.perform(get(requestUrl)
-                        .header("Authorization", authTestUtil.getAdminBearerToken()))
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getAdminBearerToken()))
                 .andExpect(status().isNotFound());
     }
 
@@ -162,7 +163,7 @@ class PassengerControllerIntegrationTest extends AbstractPostgresIntegrationTest
         int expectedPassengerCount = 1;
 
         mockMvc.perform(post(baseUrl)
-                        .header("Authorization", authTestUtil.getAdminBearerToken())
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getAdminBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isCreated())
@@ -184,7 +185,7 @@ class PassengerControllerIntegrationTest extends AbstractPostgresIntegrationTest
         int expectedPassengerCount = 2;
 
         mockMvc.perform(post(baseUrl)
-                        .header("Authorization", authTestUtil.getAdminBearerToken())
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getAdminBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isConflict());
@@ -206,7 +207,7 @@ class PassengerControllerIntegrationTest extends AbstractPostgresIntegrationTest
         String expectedJson = new ObjectMapper().writeValueAsString(updatedPassengerDto);
 
         mockMvc.perform(put(requestUrl)
-                        .header("Authorization", authTestUtil.getPassengerBearerToken())
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getPassengerBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isOk())
@@ -232,7 +233,7 @@ class PassengerControllerIntegrationTest extends AbstractPostgresIntegrationTest
         Optional<Passenger> oldPassenger = passengerRepository.findById(passengerId);
 
         mockMvc.perform(put(requestUrl)
-                        .header("Authorization", authTestUtil.getPassengerBearerToken())
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getPassengerBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isForbidden());
@@ -251,7 +252,7 @@ class PassengerControllerIntegrationTest extends AbstractPostgresIntegrationTest
         String json = new ObjectMapper().writeValueAsString(updatingDto);
 
         mockMvc.perform(put(requestUrl)
-                        .header("Authorization", authTestUtil.getAdminBearerToken())
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getAdminBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isNotFound());
@@ -268,7 +269,7 @@ class PassengerControllerIntegrationTest extends AbstractPostgresIntegrationTest
         String json = new ObjectMapper().writeValueAsString(updatingDto);
 
         mockMvc.perform(put(requestUrl)
-                        .header("Authorization", authTestUtil.getPassengerBearerToken())
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getPassengerBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isConflict());
@@ -284,7 +285,7 @@ class PassengerControllerIntegrationTest extends AbstractPostgresIntegrationTest
         int expectedPassengerCount = 1;
 
         mockMvc.perform(delete(requestUrl)
-                        .header("Authorization", authTestUtil.getAdminBearerToken()))
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getAdminBearerToken()))
                 .andExpect(status().isNoContent());
 
         List<Passenger> passengers = passengerRepository.findAll();
@@ -298,7 +299,7 @@ class PassengerControllerIntegrationTest extends AbstractPostgresIntegrationTest
         String requestUrl = "%s/%s".formatted(baseUrl, PassengerTestUtil.NOT_EXISTING_ID.toString());
 
         mockMvc.perform(delete(requestUrl)
-                        .header("Authorization", authTestUtil.getAdminBearerToken()))
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getAdminBearerToken()))
                 .andExpect(status().isNotFound());
     }
 }

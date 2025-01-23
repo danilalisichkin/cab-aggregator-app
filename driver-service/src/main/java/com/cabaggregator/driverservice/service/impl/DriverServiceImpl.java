@@ -20,6 +20,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -28,9 +29,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DriverServiceImpl implements DriverService {
     private final DriverRepository driverRepository;
+
     private final CarRepository carRepository;
 
     private final DriverMapper driverMapper;
+
     private final PageMapper pageMapper;
 
     private final DriverValidator driverValidator;
@@ -47,6 +50,7 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
     public DriverDto getDriverById(UUID id) {
         return driverMapper.entityToDto(
                 getDriverEntityById(id));
@@ -67,8 +71,10 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
     public DriverDto updateDriver(UUID id, DriverUpdatingDto driverDto) {
         Driver driverToUpdate = getDriverEntityById(id);
+
         if (!driverToUpdate.getPhoneNumber().equals(driverDto.phoneNumber())) {
             driverValidator.validatePhoneUniqueness(driverDto.phoneNumber());
         }
@@ -84,8 +90,10 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
     public DriverDto updateDriverCarId(UUID id, Long carId) {
         Driver driverToUpdate = getDriverEntityById(id);
+
         driverValidator.validateDriverCarUniqueness(carId);
 
         driverToUpdate.setCar(getCarEntityById(carId));

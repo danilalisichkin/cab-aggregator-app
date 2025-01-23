@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ErrorCauses {
     public static final String BAD_REQUEST = "error.cause.bad.request";
+    public static final String FORBIDDEN = "error.cause.forbidden";
     public static final String NOT_FOUND = "error.cause.not.found";
     public static final String UNIQUENESS_CONFLICT = "error.cause.uniqueness.conflict";
     public static final String VALIDATION = "error.cause.validation";

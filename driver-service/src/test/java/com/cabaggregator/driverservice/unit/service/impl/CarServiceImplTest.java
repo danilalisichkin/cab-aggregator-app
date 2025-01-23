@@ -12,6 +12,7 @@ import com.cabaggregator.driverservice.core.mapper.CarDetailsMapper;
 import com.cabaggregator.driverservice.core.mapper.CarMapper;
 import com.cabaggregator.driverservice.core.mapper.PageMapper;
 import com.cabaggregator.driverservice.entity.Car;
+import com.cabaggregator.driverservice.entity.Driver;
 import com.cabaggregator.driverservice.exception.DataUniquenessConflictException;
 import com.cabaggregator.driverservice.exception.ResourceNotFoundException;
 import com.cabaggregator.driverservice.exception.ValidationErrorException;
@@ -20,6 +21,7 @@ import com.cabaggregator.driverservice.service.CarDetailsService;
 import com.cabaggregator.driverservice.service.impl.CarServiceImpl;
 import com.cabaggregator.driverservice.util.CarDetailsTestUtil;
 import com.cabaggregator.driverservice.util.CarTestUtil;
+import com.cabaggregator.driverservice.util.DriverTestUtil;
 import com.cabaggregator.driverservice.util.PageRequestBuilder;
 import com.cabaggregator.driverservice.util.PaginationTestUtil;
 import com.cabaggregator.driverservice.validator.CarDetailsValidator;
@@ -265,8 +267,9 @@ class CarServiceImplTest {
     @Test
     void updateCar_ShouldThrowDataUniquenessException_WhenNewCarLicensePlateNotUnique() {
         CarUpdatingDto carUpdatingDto = CarTestUtil.buildCarUpdatingDto();
-        Car car = CarTestUtil.buildDefaultCar()
-                .toBuilder()
+        Driver driver = DriverTestUtil.buildDefaultDriver();
+        Car car = CarTestUtil.buildDefaultCar().toBuilder()
+                .driver(driver)
                 .licensePlate(CarTestUtil.OTHER_LICENSE_PLATE)
                 .build();
         Long carId = car.getId();
@@ -289,8 +292,10 @@ class CarServiceImplTest {
     @Test
     void updateCar_ShouldUpdateCar_WhenCarFound() {
         CarUpdatingDto carUpdatingDto = CarTestUtil.buildCarUpdatingDto();
+        Driver driver = DriverTestUtil.buildDefaultDriver();
         Car car = CarTestUtil.buildDefaultCar()
                 .toBuilder()
+                .driver(driver)
                 .licensePlate(CarTestUtil.OTHER_LICENSE_PLATE)
                 .build();
         Long carId = car.getId();
@@ -354,9 +359,12 @@ class CarServiceImplTest {
 
     @Test
     void updateCarDetails_ShouldUpdateCarDetails_WhenCarFoundAndReleaseDateIsValid() {
-        Long carId = CarTestUtil.ID;
         CarDetailsSettingDto carDetailsSettingDto = CarDetailsTestUtil.buildCarDetailsSettingDto();
-        Car car = CarTestUtil.buildDefaultCar();
+        Driver driver = DriverTestUtil.buildDefaultDriver();
+        Car car = CarTestUtil.buildDefaultCar().toBuilder()
+                .driver(driver)
+                .build();
+        Long carId = car.getId();
         CarDetailsDto carDetailsDto = CarDetailsTestUtil.buildCarDetailsDto();
         CarDto carDto = CarTestUtil.buildCarDto();
         CarFullDto carFullDto = new CarFullDto(carDto, carDetailsDto);

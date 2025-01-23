@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CarDetailsServiceImpl implements CarDetailsService {
     private final CarDetailsRepository carDetailsRepository;
+
     private final CarDetailsMapper carDetailsMapper;
 
     @Override

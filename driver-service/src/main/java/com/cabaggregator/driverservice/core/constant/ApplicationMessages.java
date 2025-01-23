@@ -14,4 +14,6 @@ public final class ApplicationMessages {
     public static final String CAR_WITH_LICENCE_PLATE_ALREADY_EXISTS = "error.car.with.license.plate.already.exists";
     public static final String CAR_DETAILS_WITH_ID_NOT_FOUND = "error.car.details.with.id.not.found";
     public static final String CAR_RELEASE_DATE_IS_AFTER_PRESENT = "error.car.release.date.is.after.present";
+    public static final String CANT_CHANGE_CAR_OF_OTHER_USER = "error.cant.change.car.of.other.user";
+    public static final String CANT_ACCESS_PROFILE_OF_OTHER_USER = "error.cant.access.profile.of.other.user";
 }

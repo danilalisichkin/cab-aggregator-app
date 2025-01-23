@@ -14,6 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @Setter
@@ -43,4 +45,20 @@ public class Car {
 
     @OneToOne(mappedBy = "car")
     private Driver driver;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Car car = (Car) o;
+        return Objects.equals(licensePlate, car.licensePlate) &&
+                Objects.equals(make, car.make) &&
+                Objects.equals(model, car.model) &&
+                Objects.equals(color, car.color);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(licensePlate, make, model, color);
+    }
 }
