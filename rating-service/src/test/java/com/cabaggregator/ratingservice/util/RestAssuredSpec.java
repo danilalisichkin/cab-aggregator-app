@@ -4,6 +4,7 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,21 +21,21 @@ public class RestAssuredSpec {
 
     public RequestSpecification getDriverAuthSpec() {
         return new RequestSpecBuilder()
-                .addHeader("Authorization", "Bearer " + driverToken)
+                .addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + driverToken)
                 .setContentType(ContentType.JSON)
                 .build();
     }
 
     public RequestSpecification getPassengerAuthSpec() {
         return new RequestSpecBuilder()
-                .addHeader("Authorization", "Bearer " + passengerToken)
+                .addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + passengerToken)
                 .setContentType(ContentType.JSON)
                 .build();
     }
 
     public RequestSpecification getAdminRequestSpec() {
         return new RequestSpecBuilder()
-                .addHeader("Authorization", "Bearer " + adminToken)
+                .addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + adminToken)
                 .setContentType(ContentType.JSON)
                 .build();
     }

@@ -51,8 +51,7 @@ public class Car {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Car car = (Car) o;
-        return Objects.equals(id, car.id) &&
-                Objects.equals(licensePlate, car.licensePlate) &&
+        return Objects.equals(licensePlate, car.licensePlate) &&
                 Objects.equals(make, car.make) &&
                 Objects.equals(model, car.model) &&
                 Objects.equals(color, car.color);
@@ -60,6 +59,6 @@ public class Car {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, licensePlate, make, model, color);
+        return Objects.hash(licensePlate, make, model, color);
     }
 }

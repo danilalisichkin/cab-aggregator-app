@@ -23,6 +23,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
@@ -92,7 +93,7 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         int expectedContentSize = 3;
 
         mockMvc.perform(get(baseUrl)
-                        .header("Authorization", authTestUtil.getAdminBearerToken())
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getAdminBearerToken())
                         .param("offset", "0")
                         .param("limit", "10")
                         .param("sortBy", "ID")
@@ -113,7 +114,7 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         int expectedContentSize = 0;
 
         mockMvc.perform(get(baseUrl)
-                        .header("Authorization", authTestUtil.getAdminBearerToken())
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getAdminBearerToken())
                         .param("offset", "0")
                         .param("limit", "10")
                         .param("sortBy", "ID")
@@ -137,7 +138,7 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         String expectedJson = objectMapper.writeValueAsString(carDto);
 
         mockMvc.perform(get(requestUrl)
-                        .header("Authorization", authTestUtil.getAdminBearerToken()))
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getAdminBearerToken()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedJson));
     }
@@ -148,7 +149,7 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         String requestUrl = "%s/%s".formatted(baseUrl, CarTestUtil.NOT_EXISTING_ID.toString());
 
         mockMvc.perform(get(requestUrl)
-                        .header("Authorization", authTestUtil.getAdminBearerToken()))
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getAdminBearerToken()))
                 .andExpect(status().isNotFound());
     }
 
@@ -164,7 +165,7 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         String expectedJson = objectMapper.writeValueAsString(carFullDto);
 
         mockMvc.perform(get(requestUrl)
-                        .header("Authorization", authTestUtil.getAdminBearerToken()))
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getAdminBearerToken()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedJson));
     }
@@ -175,7 +176,7 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         String requestUrl = "%s/%s/full".formatted(baseUrl, CarTestUtil.NOT_EXISTING_ID.toString());
 
         mockMvc.perform(get(requestUrl)
-                        .header("Authorization", authTestUtil.getAdminBearerToken()))
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getAdminBearerToken()))
                 .andExpect(status().isNotFound());
     }
 
@@ -189,7 +190,7 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         int expectedCarCount = 1;
 
         mockMvc.perform(post(baseUrl)
-                        .header("Authorization", authTestUtil.getAdminBearerToken())
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getAdminBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isCreated())
@@ -212,7 +213,7 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         int expectedCarCount = 3;
 
         mockMvc.perform(post(baseUrl)
-                        .header("Authorization", authTestUtil.getAdminBearerToken())
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getAdminBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isConflict());
@@ -236,7 +237,7 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         String expectedJson = objectMapper.writeValueAsString(updatedCarDto);
 
         mockMvc.perform(put(requestUrl)
-                        .header("Authorization", authTestUtil.getDriverBearerToken())
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getDriverBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isOk())
@@ -258,7 +259,7 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         String json = objectMapper.writeValueAsString(updatingDto);
 
         mockMvc.perform(put(requestUrl)
-                        .header("Authorization", authTestUtil.getAdminBearerToken())
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getAdminBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isNotFound());
@@ -277,7 +278,7 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         String json = objectMapper.writeValueAsString(updatingDto);
 
         mockMvc.perform(put(requestUrl)
-                        .header("Authorization", authTestUtil.getDriverBearerToken())
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getDriverBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isForbidden());
@@ -296,7 +297,7 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         String json = objectMapper.writeValueAsString(updatingDto);
 
         mockMvc.perform(put(requestUrl)
-                        .header("Authorization", authTestUtil.getDriverBearerToken())
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getDriverBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isConflict());
@@ -317,7 +318,7 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         String expectedJson = objectMapper.writeValueAsString(updatedCarFullDto);
 
         mockMvc.perform(put(requestUrl)
-                        .header("Authorization", authTestUtil.getDriverBearerToken())
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getDriverBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isOk())
@@ -337,7 +338,7 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         String json = objectMapper.writeValueAsString(settingDto);
 
         mockMvc.perform(patch(requestUrl)
-                        .header("Authorization", authTestUtil.getDriverBearerToken())
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getDriverBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isNotFound());
@@ -356,7 +357,7 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         String json = objectMapper.writeValueAsString(settingDto);
 
         mockMvc.perform(put(requestUrl)
-                        .header("Authorization", authTestUtil.getDriverBearerToken())
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getDriverBearerToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isForbidden());
@@ -372,7 +373,7 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         String requestUrl = "%s/%s".formatted(baseUrl, CarTestUtil.ID.toString());
 
         mockMvc.perform(delete(requestUrl)
-                        .header("Authorization", authTestUtil.getAdminBearerToken()))
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getAdminBearerToken()))
                 .andExpect(status().isNoContent());
 
         List<Car> cars = carRepository.findAll();
@@ -385,7 +386,7 @@ class CarControllerIntegrationTest extends AbstractPostgresIntegrationTest {
         String requestUrl = "%s/%s".formatted(baseUrl, CarTestUtil.NOT_EXISTING_ID.toString());
 
         mockMvc.perform(delete(requestUrl)
-                        .header("Authorization", authTestUtil.getAdminBearerToken()))
+                        .header(HttpHeaders.AUTHORIZATION, authTestUtil.getAdminBearerToken()))
                 .andExpect(status().isNotFound());
     }
 }
