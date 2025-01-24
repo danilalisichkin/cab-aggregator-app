@@ -60,12 +60,24 @@ spring:
           uri: lb://payout-service
           predicates:
             - Path=/api/v1/payout-accounts/**
-
   security:
     oauth2:
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:8080/realms/cab-aggregator-realm/protocol/openid-connect/certs
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  metrics:
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
 server:
   port: ${SERVER_PORT:8090}
   forward-headers-strategy: framework
