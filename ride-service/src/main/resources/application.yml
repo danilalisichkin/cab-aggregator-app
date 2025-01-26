@@ -41,6 +41,9 @@ management:
     metrics:
       export:
         enabled: true
+logging:
+  logstash:
+    server: ${LOGSTASH_HOSTPORT:localhost:5000}
 app:
   open-route:
     api-key: ${OPENROUTE_API_KEY}
