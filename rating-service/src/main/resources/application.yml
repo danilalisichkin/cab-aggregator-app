@@ -40,6 +40,9 @@ management:
     metrics:
       export:
         enabled: true
+logging:
+  logstash:
+    server: ${LOGSTASH_HOSTPORT:localhost:5000}
 app:
   kafka:
     topics:

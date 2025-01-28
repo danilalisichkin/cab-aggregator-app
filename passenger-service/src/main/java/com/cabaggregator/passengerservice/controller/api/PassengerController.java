@@ -13,7 +13,6 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
-@Slf4j
 @Validated
 @RestController
 @RequestMapping("/api/v1/passengers")
@@ -47,8 +45,6 @@ public class PassengerController implements PassengerControllerDocumentation {
             @RequestParam(defaultValue = "id") PassengerSortField sortBy,
             @RequestParam(defaultValue = "ASC") Sort.Direction sortOrder) {
 
-        log.info("Sending page of passengers");
-
         PageDto<PassengerDto> page = passengerService.getPageOfPassengers(offset, limit, sortBy, sortOrder);
 
         return ResponseEntity.status(HttpStatus.OK).body(page);
@@ -57,8 +53,6 @@ public class PassengerController implements PassengerControllerDocumentation {
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<PassengerDto> getPassenger(@PathVariable UUID id) {
-
-        log.info("Getting passenger with id={}", id);
 
         PassengerDto passenger = passengerService.getPassengerById(id);
 
@@ -69,8 +63,6 @@ public class PassengerController implements PassengerControllerDocumentation {
     @PostMapping
     public ResponseEntity<PassengerDto> createPassenger(
             @RequestBody @Valid PassengerAddingDto passengerAddingDto) {
-
-        log.info("Saving passenger with phone={}", passengerAddingDto.phoneNumber());
 
         PassengerDto passenger = passengerService.savePassenger(passengerAddingDto);
 
@@ -83,8 +75,6 @@ public class PassengerController implements PassengerControllerDocumentation {
             @PathVariable UUID id,
             @RequestBody @Valid PassengerUpdatingDto passengerDto) {
 
-        log.info("Updating passenger with id={}", id);
-
         PassengerDto passenger = passengerService.updatePassenger(id, passengerDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(passenger);
@@ -93,8 +83,6 @@ public class PassengerController implements PassengerControllerDocumentation {
     @Override
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePassenger(@PathVariable UUID id) {
-
-        log.info("Deleting passenger with id={}", id);
 
         passengerService.deletePassengerById(id);
 

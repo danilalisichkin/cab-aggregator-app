@@ -81,6 +81,7 @@ services:
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       SERVER_PORT: 8082
+      LOGSTASH_HOSTPORT: logstash:5000
     ports:
       - "8082:8082"
     networks:
@@ -153,6 +154,51 @@ services:
       timeout: 5s
       start_period: 10s
       retries: 5
+    networks:
+      - cab-aggregator-network
+
+  elasticsearch:
+    image: elasticsearch:7.14.2
+    container_name: cab-elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      discovery.type: single-node
+      ELASTIC_PASSWORD: elastic
+    networks:
+      - cab-aggregator-network
+
+  logstash:
+    image: logstash:7.14.2
+    container_name: cab-logstash
+    volumes:
+      - ./monitoring/logstash/pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    ports:
+      - "5000:5000"
+      - "9600:9600"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ELASTIC_USERNAME: elastic
+      ELASTIC_PASSWORD: elastic
+    depends_on:
+      - elasticsearch
+    networks:
+      - cab-aggregator-network
+
+  kibana:
+    image: kibana:7.14.2
+    container_name: cab-kibana
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_USERNAME: elastic
+      ELASTICSEARCH_PASSWORD: elastic
+      XPACK_MONITORING_UI_CONTAINER_ELASTICSEARCH_ENABLED: "true"
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
     networks:
       - cab-aggregator-network
 
