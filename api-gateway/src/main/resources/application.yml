@@ -8,58 +8,128 @@ spring:
           enabled: true
           lower-case-service-id: true
       routes:
-        - id: user-api-route
+        - id: users-api-route
           uri: lb://auth-service
           predicates:
             - Path=/api/v1/users/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: user-cb
+                fallbackUri: forward:/fallback/users
 
         - id: auth-api-route
           uri: lb://auth-service
           predicates:
             - Path=/api/v1/auth/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: auth-cb
+                fallbackUri: forward:/fallback/auth
 
-        - id: ride-api-route
+        - id: rides-api-route
           uri: lb://ride-service
           predicates:
             - Path=/api/v1/rides/**
             - Path=/api/v1/drivers/{driverId}/rides/**
             - Path=/api/v1/passengers/{passengerId}/rides/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: rides-cb
+                fallbackUri: forward:/fallback/rides
 
-        - id: passenger-api-route
+        - id: passengers-api-route
           uri: lb://passenger-service
           predicates:
             - Path=/api/v1/passengers/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: passengers-cb
+                fallbackUri: forward:/fallback/passengers
 
-        - id: driver-api-route
+        - id: drivers-api-route
           uri: lb://driver-service
           predicates:
             - Path=/api/v1/drivers/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: drivers-cb
+                fallbackUri: forward:/fallback/drivers
 
-        - id: car-api-route
+        - id: cars-api-route
           uri: lb://driver-service
           predicates:
             - Path=/api/v1/cars/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: cars-cb
+                fallbackUri: forward:/fallback/cars
 
-        - id: rate-api-route
+        - id: promo-code-api-route
+          uri: lb://promo-code-service
+          predicates:
+            - Path=/api/v1/promo-codes/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: promo-code-cb
+                fallbackUri: forward:/fallback/promo-codes
+
+        - id: promo-stat-api-route
+          uri: lb://promo-code-service
+          predicates:
+            - Path=/api/v1/promo-stats/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: promo-stat-cb
+                fallbackUri: forward:/fallback/promo-stats
+
+        - id: rates-api-route
           uri: lb://rating-service
           predicates:
             - Path=/api/v1/rates/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: rates-cb
+                fallbackUri: forward:/fallback/rates
 
-        - id: pricing-a[i-route
+        - id: pricing-api-route
           uri: lb://price-calculation-service
           predicates:
             - Path=/api/v1/pricing/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: pricing-cb
+                fallbackUri: forward:/fallback/pricing
 
         - id: payment-api-route
           uri: lb://payment-service
           predicates:
             - Path=/api/v1/payments/**
             - Path=/api/v1/payment-accounts/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: payment-cb
+                fallbackUri: forward:/fallback/payment
 
         - id: payout-api-route
           uri: lb://payout-service
           predicates:
             - Path=/api/v1/payout-accounts/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: payout-cb
+                fallbackUri: forward:/fallback/payout
   security:
     oauth2:
       resourceserver:
@@ -78,6 +148,17 @@ management:
     metrics:
       export:
         enabled: true
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        register-health-indicator: true
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 3
+        minimum-number-of-calls: 5
+        automatic-transition-from-open-to-half-open-enabled: true
 server:
   port: ${SERVER_PORT:8090}
   forward-headers-strategy: framework
