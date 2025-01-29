@@ -6,12 +6,14 @@ import com.cabaggregator.rideservice.client.dto.RouteSummary;
 import com.cabaggregator.rideservice.service.RouteService;
 import com.cabaggregator.rideservice.util.RouteResponseExtractor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class RouteServiceImpl implements RouteService {
 
@@ -27,6 +29,10 @@ public class RouteServiceImpl implements RouteService {
 
         Map<String, Object> openRouteResponse = openRouteApiClient.getDrivingCarRoute(routeRequest);
 
-        return RouteResponseExtractor.extractRouteSummary(openRouteResponse);
+        RouteSummary routeSummary = RouteResponseExtractor.extractRouteSummary(openRouteResponse);
+
+        log.info("Got route summary: {} for route coordinates {}", routeSummary, routeCoordinates);
+
+        return routeSummary;
     }
 }

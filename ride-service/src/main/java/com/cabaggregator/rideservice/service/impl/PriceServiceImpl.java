@@ -8,9 +8,11 @@ import com.cabaggregator.rideservice.client.dto.PromoCodeDto;
 import com.cabaggregator.rideservice.service.PriceService;
 import com.cabaggregator.rideservice.service.PromoCodeService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class PriceServiceImpl implements PriceService {
 
@@ -25,6 +27,8 @@ public class PriceServiceImpl implements PriceService {
     @Override
     public Long calculateBasePrice(PriceCalculationRequest priceCalculationRequest) {
         PriceResponse priceResponse = priceCalculationApiClient.calculatePrice(priceCalculationRequest);
+
+        log.info("Calculated price={} for ride with id={}", priceResponse.getPrice(), priceCalculationRequest.rideId());
 
         return priceResponse.getPrice();
     }
@@ -44,6 +48,10 @@ public class PriceServiceImpl implements PriceService {
         Integer discountPercentage = promoCodeDto.discountPercentage();
         Double discountAmount = originalPrice * discountPercentage / 100.0;
 
-        return originalPrice - discountAmount.longValue();
+        Long recalculatedPrice = originalPrice - discountAmount.longValue();
+
+        log.info("Recalculated price by decreasing it from {} to {}", originalPrice, recalculatedPrice);
+
+        return recalculatedPrice;
     }
 }

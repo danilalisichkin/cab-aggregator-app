@@ -11,6 +11,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -53,6 +55,8 @@ public class PromoStatController implements PromoStatControllerDoc {
     @PostMapping
     public ResponseEntity<PromoStatDto> createPromoStat(
             @RequestBody @Valid PromoStatAddingDto addingDto) {
+
+        log.info("Create promo stat {}", addingDto);
 
         PromoStatDto promoStat = promoStatService.savePromoStat(addingDto);
 

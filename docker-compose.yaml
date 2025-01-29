@@ -64,6 +64,9 @@ services:
     build: eureka-server
     image: cab-eureka-server:1.0.0
     container_name: cab-eureka-server
+    environment:
+      LOGSTASH_HOSTPORT: logstash:5000
+      ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
     ports:
       - "8761:8761"
     networks:
@@ -82,6 +85,7 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       SERVER_PORT: 8082
       LOGSTASH_HOSTPORT: logstash:5000
+      ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
     ports:
       - "8082:8082"
     networks:
@@ -201,6 +205,12 @@ services:
       - elasticsearch
     networks:
       - cab-aggregator-network
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: cab-zipkin
+    ports:
+      - "9411:9411"
 
 volumes:
   passenger-database_data:

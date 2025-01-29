@@ -6,11 +6,13 @@ import com.cabaggregator.rideservice.client.dto.PromoCodeDto;
 import com.cabaggregator.rideservice.client.dto.PromoStatAddingDto;
 import com.cabaggregator.rideservice.service.PromoCodeService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class PromoCodeServiceImpl implements PromoCodeService {
     private final PromoStatApiClient promoStatApiClient;
@@ -22,7 +24,11 @@ public class PromoCodeServiceImpl implements PromoCodeService {
      **/
     @Override
     public PromoCodeDto getPromoCode(String promoCode) {
-        return promoCodeApiClient.getPromoCode(promoCode);
+        PromoCodeDto promoCodeDto = promoCodeApiClient.getPromoCode(promoCode);
+
+        log.info("Got promo code={}", promoCodeDto);
+
+        return promoCodeDto;
     }
 
     /**
@@ -32,5 +38,7 @@ public class PromoCodeServiceImpl implements PromoCodeService {
     public void createPromoStat(UUID userId, String promoCode) {
         PromoStatAddingDto promoStatAddingDto = new PromoStatAddingDto(userId, promoCode);
         promoStatApiClient.createPromoStat(promoStatAddingDto);
+
+        log.info("Applied promo code={} for passenger with id={}", promoCode, userId);
     }
 }

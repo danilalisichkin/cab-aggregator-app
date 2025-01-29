@@ -41,6 +41,13 @@ management:
     metrics:
       export:
         enabled: true
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: ${ZIPKIN_TRACING_ENDPOINT:http://localhost:9411/api/v2/spans}
 logging:
   logstash:
     server: ${LOGSTASH_HOSTPORT:localhost:5000}
@@ -90,5 +97,10 @@ eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/}
+feign:
+  client:
+    config:
+      default:
+        loggerLevel: basic
 server:
   port: ${SERVER_PORT:8084}
