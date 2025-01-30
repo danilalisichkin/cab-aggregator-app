@@ -13,6 +13,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -90,6 +92,8 @@ public class RideController implements RideControllerDoc {
     @Override
     @PostMapping
     public ResponseEntity<RideDto> createRide(@RequestBody @Valid RideAddingDto addingDto) {
+        log.info("Order ride with data={}", addingDto);
+
         RideDto ride = rideService.createRide(addingDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ride);

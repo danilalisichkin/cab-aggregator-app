@@ -8,6 +8,7 @@ import com.cabaggregator.authservice.sevice.AuthenticationService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -25,6 +27,8 @@ public class AuthController implements AuthControllerDocumentation {
 
     @PostMapping("/sign-in")
     public ResponseEntity<KeycloakAccessTokenDto> signIn(@RequestBody @Valid UserLoginDto loginDto) {
+        log.info("Sign in user: {}", loginDto);
+
         KeycloakAccessTokenDto token = authenticationService.loginUser(loginDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(token);

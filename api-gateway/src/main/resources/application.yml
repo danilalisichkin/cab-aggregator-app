@@ -31,9 +31,7 @@ spring:
         - id: rides-api-route
           uri: lb://ride-service
           predicates:
-            - Path=/api/v1/rides/**
-            - Path=/api/v1/drivers/{driverId}/rides/**
-            - Path=/api/v1/passengers/{passengerId}/rides/**
+            - Path=/api/v1/rides/**, /api/v1/drivers/{driverId}/rides/**, /api/v1/passengers/{passengerId}/rides/**
           filters:
             - name: CircuitBreaker
               args:
@@ -113,8 +111,7 @@ spring:
         - id: payment-api-route
           uri: lb://payment-service
           predicates:
-            - Path=/api/v1/payments/**
-            - Path=/api/v1/payment-accounts/**
+            - Path=/api/v1/payments/**, /api/v1/payment-accounts/**
           filters:
             - name: CircuitBreaker
               args:
@@ -148,6 +145,13 @@ management:
     metrics:
       export:
         enabled: true
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: ${ZIPKIN_TRACING_ENDPOINT:http://localhost:9411/api/v2/spans}
 logging:
   logstash:
     server: ${LOGSTASH_HOSTPORT:localhost:5000}

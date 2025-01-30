@@ -13,6 +13,7 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -49,6 +51,7 @@ public class PromoCodeController implements PromoCodeControllerDoc {
     @GetMapping("/{code}")
     public ResponseEntity<PromoCodeDto> getPromoCode(
             @PathVariable @Size(min = 2, max = 20) String code) {
+        log.info("Get promo code {}", code);
 
         PromoCodeDto promoCode = promoCodeService.getPromoCode(code);
 
