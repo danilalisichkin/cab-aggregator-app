@@ -23,7 +23,7 @@ management:
       endpoint: ${ZIPKIN_TRACING_ENDPOINT:http://localhost:9411/api/v2/spans}
 logging:
   logstash:
-    server: ${LOGSTASH_HOSTPORT:localhost:5000}
+    server: ${LOGSTASH_URL:localhost:5000}
 server:
   port: ${SERVER_PORT:8761}
 eureka:
