@@ -2,53 +2,10 @@ version: "3.7"
 
 services:
 
-  ride-database1:
-    build:
-      context: .
-    container_name: cab-ride-database1
-    image: mongo:7.0
-    command: mongod --replSet rs0 --bind_ip_all
-    ports:
-      - "27017:27017"
-    volumes:
-      - ride-database1_data:/data/db
-
-  ride-database2:
-    build:
-      context: .
-    container_name: cab-ride-database2
-    image: mongo:7.0
-    command: mongod --replSet rs0 --bind_ip_all
-    ports:
-      - "27018:27017"
-    volumes:
-      - ride-database2_data:/data/db
-
-  rating-database1:
-    build:
-      context: .
-    container_name: cab-rating-database1
-    image: mongo:7.0
-    command: mongod --replSet rs1 --bind_ip_all --port 27017
-    ports:
-      - "27019:27017"
-    volumes:
-      - rating-database1_data:/data/db
-
-  rating-database2:
-    build:
-      context: .
-    container_name: cab-rating-database2
-    image: mongo:7.0
-    command: mongod --replSet rs1 --bind_ip_all --port 27017
-    ports:
-      - "27020:27017"
-    volumes:
-      - rating-database2_data:/data/db
-
-  passenger-database:
+  passenger-pg-database:
     image: postgres:17
-    container_name: cab-passenger-database
+    container_name: cab-passenger-pg-database
+    restart: on-failure
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
@@ -56,7 +13,264 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - passenger-database_data:/var/lib/postgresql/data
+      - passenger-pg-database_data:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 10s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
+    networks:
+      - cab-aggregator-network
+
+  driver-pg-database:
+    image: postgres:17
+    container_name: cab-driver-pg-database
+    restart: on-failure
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: driver_database
+    ports:
+      - "5434:5432"
+    volumes:
+      - driver-pg-database_data:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 10s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
+    networks:
+      - cab-aggregator-network
+
+  ride-mongo-database1:
+    build:
+      context: .
+    container_name: cab-ride-mongo-database1
+    image: mongo:7.0
+    command: ["--replSet", "rs0", "--bind_ip", "0.0.0.0", "--port", "27017"]
+    ports:
+      - "27017:27017"
+    volumes:
+      - ride-mongo-database1_data:/data/db
+    healthcheck:
+      test: test $$(mongosh --port 27017 --eval "try {rs.initiate({_id:'rs0',members:[{_id:0,host:\"ride-mongo-database1:27017\"}, {_id:1,host:\"ride-mongo-database2:27017\"}]})} catch(e) {rs.status().ok}") -eq 1
+      interval: 10s
+      timeout: 10s
+      start_period: 10s
+      retries: 3
+    networks:
+      - cab-aggregator-network
+    depends_on:
+      - ride-mongo-database2
+
+  ride-mongo-database2:
+    build:
+      context: .
+    container_name: cab-ride-mongo-database2
+    image: mongo:7.0
+    command: ["--replSet", "rs0", "--bind_ip", "0.0.0.0", "--port", "27017"]
+    ports:
+      - "27018:27017"
+    volumes:
+      - ride-mongo-database2_data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo mongo:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    networks:
+      - cab-aggregator-network
+
+  promo-code-pg-database:
+    image: postgres:17
+    container_name: cab-promo-code-pg-database
+    restart: on-failure
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: promo_code_database
+    ports:
+      - "5435:5432"
+    volumes:
+      - promo-code-pg-database_data:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 10s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
+    networks:
+      - cab-aggregator-network
+
+  rating-mongo-database1:
+    build:
+      context: .
+    container_name: cab-rating-mongo-database1
+    image: mongo:7.0
+    command: ["--replSet", "rs1", "--bind_ip", "0.0.0.0", "--port", "27017"]
+    ports:
+      - "27019:27017"
+    volumes:
+      - rating-mongo-database1_data:/data/db
+    healthcheck:
+      test: test $$(mongosh --port 27017 --eval "try {rs.initiate({_id:'rs1',members:[{_id:0,host:\"rating-mongo-database1:27017\"}, {_id:1,host:\"rating-mongo-database2:27017\"}]})} catch(e) {rs.status().ok}") -eq 1
+      interval: 10s
+      timeout: 10s
+      start_period: 10s
+      retries: 3
+    networks:
+      - cab-aggregator-network
+    depends_on:
+      - rating-mongo-database2
+
+  rating-mongo-database2:
+    build:
+      context: .
+    container_name: cab-rating-mongo-database2
+    image: mongo:7.0
+    command: ["--replSet", "rs1", "--bind_ip", "0.0.0.0", "--port", "27017"]
+    ports:
+      - "27020:27017"
+    volumes:
+      - rating-mongo-database2_data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo mongo:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    networks:
+      - cab-aggregator-network
+
+  price-calculation-pg-database:
+    image: postgres:17
+    container_name: cab-price-calculation-pg-database
+    restart: on-failure
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: price_calculation_database
+    ports:
+      - "5436:5432"
+    volumes:
+      - price-calculation-pg-database_data:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 10s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
+    networks:
+      - cab-aggregator-network
+
+  payment-pg-database:
+    image: postgres:17
+    container_name: cab-payment-pg-database
+    restart: on-failure
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: payment_database
+    ports:
+      - "5437:5432"
+    volumes:
+      - payment-pg-database_data:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 10s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
+    networks:
+      - cab-aggregator-network
+
+  payout-pg-database:
+    image: postgres:17
+    container_name: cab-payout-pg-database
+    restart: on-failure
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: payout_database
+    ports:
+      - "5438:5432"
+    volumes:
+      - payout-pg-database_data:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 10s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
+    networks:
+      - cab-aggregator-network
+
+  keycloak-pg-database:
+    image: postgres:17
+    container_name: cab-keycloak-pg-database
+    restart: on-failure
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: keycloak_db
+    ports:
+      - "5439:5432"
+    volumes:
+      - keycloak-pg-database_data:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 10s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
+    networks:
+      - cab-aggregator-network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.7
+    container_name: cab-keycloak
+    restart: on-failure
+    command: start-dev --import-realm --health-enabled=true
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./keycloak-service/export:/opt/keycloak/data/import
+    environment:
+      KC_HTTP_PORT: 8080
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL_HOST: keycloak-pg-database
+      KC_DB_URL_PORT: 5432
+      KC_DB_URL_DATABASE: keycloak_db
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: root
+      KC_HEALTH_ENABLED: "true"
+      KC_FEATURES: token-exchange,admin-fine-grained-authz
+    networks:
+      - cab-aggregator-network
+    depends_on:
+      - keycloak-pg-database
+
+  redis:
+    image: redis:7.4-alpine
+    container_name: cab-redis-server
+    restart: on-failure
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_PASSWORD: passwords
+    volumes:
+      - cab-redis_data:/data
+    healthcheck:
+      test: redis-cli ping
+      interval: 10s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
     networks:
       - cab-aggregator-network
 
@@ -64,48 +278,346 @@ services:
     build: eureka-server
     image: cab-eureka-server:1.0.0
     container_name: cab-eureka-server
+    restart: on-failure
     environment:
-      LOGSTASH_HOSTPORT: logstash:5000
+      SERVER_PORT: 8761
       ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+      LOGSTASH_HOSTPORT: logstash:5000
     ports:
       - "8761:8761"
+    healthcheck:
+      test: wget --spider --quiet http://localhost:8761/actuator/health && wget -qO- http://localhost:8761/actuator/health | grep UP || exit 1
+      interval: 20s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
     networks:
       - cab-aggregator-network
+
+  api-gateway:
+    build: api-gateway
+    image: cab-api-gateway:1.0.0
+    container_name: cab-api-gateway
+    restart: on-failure
+    environment:
+      SERVER_PORT: 8090
+      OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:8080/realms/cab-aggregator-realm/protocol/openid-connect/certs
+      ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+      LOGSTASH_HOSTPORT: logstash:5000
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+    ports:
+      - "8090:8090"
+    networks:
+      - cab-aggregator-network
+    healthcheck:
+      test: wget --spider --quiet http://localhost:8090/actuator/health && wget -qO- http://localhost:8090/actuator/health | grep UP || exit 1
+      interval: 20s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
+    depends_on:
+      - eureka-server
+
+  auth-service:
+    build: auth-service
+    image: cab-auth-service:1.0.0
+    container_name: cab-auth-service
+    restart: on-failure
+    environment:
+      SERVER_PORT: 8081
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      KEYCLOAK_SERVER_URL: http://keycloak:8080
+      KEYCLOAK_REALM: cab-aggregator-realm
+      KEYCLOAK_GRANT_TYPE: client_credentials
+      KEYCLOAK_ADMIN_CLIENT_ID: admin-cli
+      KEYCLOAK_ADMIN_CLIENT_SECRET: DvvioL4dre9nKOIzPrgaZm6VqyJODevD
+      KEYCLOAK_USER_CLIENT_ID: cab-aggregator-client
+      KEYCLOAK_USER_CLIENT_SECRET: NsaeQ20BK7DL4hdWxAzx0iCzbUHjw1OL
+      ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+      LOGSTASH_HOSTPORT: logstash:5000
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+    ports:
+      - "8081:8081"
+    networks:
+      - cab-aggregator-network
+    healthcheck:
+      test: wget --spider --quiet http://localhost:8081/actuator/health && wget -qO- http://localhost:8081/actuator/health | grep UP || exit 1
+      interval: 20s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
+    depends_on:
+      - keycloak
+      - eureka-server
+      - kafka
 
   passenger-service:
     build: passenger-service
     image: cab-passenger-service:1.0.0
     container_name: cab-passenger-service
+    restart: on-failure
     environment:
+      DB_URL: driver-pg-database:5432/passenger_database
       DB_USERNAME: postgres
       DB_PASSWORD: root
-      DB_NAME: passenger_database
-      DB_HOSTPORT: passenger-database:5432
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
-      SERVER_PORT: 8082
-      LOGSTASH_HOSTPORT: logstash:5000
       ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+      LOGSTASH_URL: logstash:5000
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+      SERVER_PORT: 8082
     ports:
       - "8082:8082"
     networks:
       - cab-aggregator-network
+    healthcheck:
+      test: wget --spider --quiet http://localhost:8082/actuator/health && wget -qO- http://localhost:8082/actuator/health | grep UP || exit 1
+      interval: 20s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
     depends_on:
-      - passenger-database
+      - passenger-pg-database
+      - eureka-server
+      - kafka
+
+  driver-service:
+    build: driver-service
+    image: cab-driver-service:1.0.0
+    container_name: cab-driver-service
+    restart: on-failure
+    environment:
+      DB_URL: driver-pg-database:5432/driver_database
+      DB_USERNAME: postgres
+      DB_PASSWORD: root
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+      LOGSTASH_HOSTPORT: logstash:5000
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+      SERVER_PORT: 8083
+    ports:
+      - "8083:8083"
+    networks:
+      - cab-aggregator-network
+    healthcheck:
+      test: wget --spider --quiet http://localhost:8083/actuator/health && wget -qO- http://localhost:8083/actuator/health | grep UP || exit 1
+      interval: 20s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
+    depends_on:
+      - driver-pg-database
+      - eureka-server
+      - kafka
+
+  ride-service:
+    build: ride-service
+    image: cab-ride-service:1.0.0
+    container_name: cab-ride-service
+    restart: on-failure
+    environment:
+      DB_URL: ride-mongo-database1:27017
+      DB_USERNAME: mongo
+      DB_PASSWORD: root
+      DB_REPLICA_SET_NAME: rs0
+      DB_NAME: ride_database
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+      LOGSTASH_URL: logstash:5000
+      OPENROUTE_API_KEY:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+      SERVER_PORT: 8084
+    ports:
+      - "8084:8084"
+    networks:
+      - cab-aggregator-network
+    healthcheck:
+      test: wget --spider --quiet http://localhost:8084/actuator/health && wget -qO- http://localhost:8084/actuator/health | grep UP || exit 1
+      interval: 20s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
+    depends_on:
+      - ride-mongo-database1
+      - eureka-server
+      - kafka
+
+  promo-code-service:
+    build: promo-code-service
+    image: cab-promo-code-service:1.0.0
+    container_name: cab-promo-code-service
+    restart: on-failure
+    environment:
+      DB_URL: promo-code-pg-database:5432/promo_code_database
+      DB_USERNAME: postgres
+      DB_PASSWORD: root
+      ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+      LOGSTASH_URL: logstash:5000
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+      SERVER_PORT: 8085
+    ports:
+      - "8085:8085"
+    networks:
+      - cab-aggregator-network
+    healthcheck:
+      test: wget --spider --quiet http://localhost:8085/actuator/health && wget -qO- http://localhost:8085/actuator/health | grep UP || exit 1
+      interval: 20s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
+    depends_on:
+      - promo-code-pg-database
+      - eureka-server
+
+  rating-service:
+    build: rating-service
+    image: cab-rating-service:1.0.0
+    container_name: cab-rating-service
+    restart: on-failure
+    environment:
+      DB_URL: rating-mongo-database1:27017
+      DB_USERNAME: mongo
+      DB_PASSWORD: root
+      DB_REPLICA_SET_NAME: rs1
+      DB_NAME: rating_database
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+      LOGSTASH_URL: logstash:5000
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+      SERVER_PORT: 8086
+    ports:
+      - "8086:8086"
+    networks:
+      - cab-aggregator-network
+    healthcheck:
+      test: wget --spider --quiet http://localhost:8086/actuator/health && wget -qO- http://localhost:8086/actuator/health | grep UP || exit 1
+      interval: 20s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
+    depends_on:
+      - rating-mongo-database1
+      - eureka-server
+      - kafka
+
+  price-calculation-service:
+    build: price-calculation-service
+    image: cab-price-calculation-service:1.0.0
+    container_name: cab-price-calculation-service
+    restart: on-failure
+    environment:
+      DB_URL: price-calculation-pg-database:5432/price_calculation_database
+      DB_USERNAME: postgres
+      DB_PASSWORD: root
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: password
+      REDIS_DATABASE: 0
+      ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+      LOGSTASH_URL: logstash:5000
+      WEATHER_API_KEY:
+      FARE_CACHE_TTL: 1440
+      WEATHER_CACHE_TTL: 180
+      REDIS_CELL_DEMAND_KEY_PREFIX: 'cell_demand:'
+      REDIS_CEL_KEY_PREFIX: 'cell:'
+      REDIS_RIDE_KEY_PREFIX: 'ride:'
+      REDIS_DEMAND_KEY_TTL: 10
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+      SERVER_PORT: 8087
+    ports:
+      - "8087:8087"
+    networks:
+      - cab-aggregator-network
+    healthcheck:
+      test: wget --spider --quiet http://localhost:8087/actuator/health && wget -qO- http://localhost:8087/actuator/health | grep UP || exit 1
+      interval: 20s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
+    depends_on:
+      - price-calculation-pg-database
+      - redis
+      - eureka-server
+
+  payment-service:
+    build: payment-service
+    image: cab-payment-service:1.0.0
+    container_name: cab-payment-service
+    restart: on-failure
+    environment:
+      DB_URL: payment-pg-database:5432/payment_database
+      DB_USERNAME: postgres
+      DB_PASSWORD: root
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+      LOGSTASH_URL: logstash:5000
+      STRIPE_SECRET_KEY:
+      STRIPE_ENDPOINT_SECRET:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+      SERVER_PORT: 8088
+    ports:
+      - "8088:8088"
+    networks:
+      - cab-aggregator-network
+    healthcheck:
+      test: wget --spider --quiet http://localhost:8088/actuator/health && wget -qO- http://localhost:8088/actuator/health | grep UP || exit 1
+      interval: 20s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
+    depends_on:
+      - payment-pg-database
+      - eureka-server
+      - kafka
+
+  payout-service:
+    build: payout-service
+    image: cab-payout-service:1.0.0
+    container_name: cab-payout-service
+    restart: on-failure
+    environment:
+      DB_URL: payout-pg-database:5432/payout_database
+      DB_USERNAME: postgres
+      DB_PASSWORD: root
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+      LOGSTASH_URL: logstash:5000
+      STRIPE_SECRET_KEY:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+      SERVER_PORT: 8089
+    ports:
+      - "8089:8089"
+    networks:
+      - cab-aggregator-network
+    healthcheck:
+      test: wget --spider --quiet http://localhost:8089/actuator/health && wget -qO- http://localhost:8089/actuator/health | grep UP || exit 1
+      interval: 20s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
+    depends_on:
+      - payout-pg-database
       - eureka-server
       - kafka
 
   zookeeper:
     image: zookeeper:3.7.0
     container_name: cab-zookeeper
+    restart: on-failure
     ports:
       - "2181:2181"
+    healthcheck:
+      test: nc -z 127.0.0.1 2181 || exit -1
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
     networks:
       - cab-aggregator-network
 
   kafka:
     image: obsidiandynamics/kafka
     container_name: cab-kafka
+    restart: on-failure
     ports:
       - "9092:9092"
     environment:
@@ -119,12 +631,19 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     networks:
       - cab-aggregator-network
+    healthcheck:
+      test: kafka-topics --bootstrap-server localhost:29092 --list
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
     depends_on:
       - zookeeper
 
   prometheus:
     image: prom/prometheus:v3.1.0
     container_name: cab-prometheus
+    restart: on-failure
     volumes:
       - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     command:
@@ -133,7 +652,7 @@ services:
     ports:
       - "9090:9090"
     healthcheck:
-      test: wget --no-verbose --tries=1 --spider http://localhost:9090/-/healthy
+      test: wget --spider --quiet http://localhost:9090/-/healthy && wget -qO- http://localhost:9090/-/healthy | grep UP || exit 1
       interval: 10s
       timeout: 5s
       start_period: 10s
@@ -144,6 +663,7 @@ services:
   grafana:
     image: grafana/grafana:11.4.0
     container_name: cab-grafana
+    restart: on-failure
     volumes:
       - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
     ports:
@@ -151,8 +671,6 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: admin
-      GF_USERS_ALLOW_SIGN_UP: true
-    healthcheck:
       test: curl --fail -s http://localhost:3000/api/health || exit 1
       interval: 10s
       timeout: 5s
@@ -164,6 +682,7 @@ services:
   elasticsearch:
     image: elasticsearch:7.14.2
     container_name: cab-elasticsearch
+    restart: on-failure
     ports:
       - "9200:9200"
       - "9300:9300"
@@ -171,12 +690,19 @@ services:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
       discovery.type: single-node
       ELASTIC_PASSWORD: elastic
+    healthcheck:
+      test: curl --silent --fail http://localhost:9200/_cluster/health || exit 1
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
     networks:
       - cab-aggregator-network
 
   logstash:
     image: logstash:7.14.2
     container_name: cab-logstash
+    restart: on-failure
     volumes:
       - ./monitoring/logstash/pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     ports:
@@ -188,12 +714,19 @@ services:
       ELASTIC_PASSWORD: elastic
     depends_on:
       - elasticsearch
+    healthcheck:
+      test: curl --silent --fail http://localhost:9600/_node/stats || exit 1
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
     networks:
       - cab-aggregator-network
 
   kibana:
     image: kibana:7.14.2
     container_name: cab-kibana
+    restart: on-failure
     ports:
       - "5601:5601"
     environment:
@@ -203,21 +736,43 @@ services:
       ELASTICSEARCH_HOSTS: http://elasticsearch:9200
     depends_on:
       - elasticsearch
+    healthcheck:
+      test: curl --silent --fail http://localhost:5601/api/status || exit 1
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
     networks:
       - cab-aggregator-network
 
   zipkin:
     image: openzipkin/zipkin
     container_name: cab-zipkin
+    restart: on-failure
     ports:
       - "9411:9411"
+    healthcheck:
+      test: curl --silent --fail http://localhost:5601/api/health | grep UP || exit 1
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+    networks:
+      - cab-aggregator-network
 
 volumes:
-  passenger-database_data:
-  ride-database1_data:
-  ride-database2_data:
-  rating-database1_data:
-  rating-database2_data:
+  keycloak-pg-database_data:
+  passenger-pg-database_data:
+  driver-pg-database_data:
+  ride-mongo-database1_data:
+  ride-mongo-database2_data:
+  promo-code-pg-database_data:
+  price-calculation-pg-database_data:
+  cab-redis_data:
+  rating-mongo-database1_data:
+  rating-mongo-database2_data:
+  payment-pg-database_data:
+  payout-pg-database_data:
 
 networks:
   cab-aggregator-network:

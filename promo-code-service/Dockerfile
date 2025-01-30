@@ -6,8 +6,8 @@ RUN mvn clean package -DskipTests=true
 
 FROM amazoncorretto:21-alpine AS runtime
 VOLUME /tmp
-ARG JAR_FILE=passenger-service-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE=promo-code-service-0.0.1-SNAPSHOT.jar
 WORKDIR /app
-COPY --from=build /build/target/${JAR_FILE} passenger-service.jar
+COPY --from=build /build/target/${JAR_FILE} promo-code-service.jar
 
-ENTRYPOINT ["java", "-jar", "passenger-service.jar"]
+ENTRYPOINT ["java", "-jar", "promo-code-service.jar"]
