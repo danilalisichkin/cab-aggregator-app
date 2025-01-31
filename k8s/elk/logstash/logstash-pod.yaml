@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kompose.cmd: C:\Utils\Kompose\bin\kompose.exe convert
+    kompose.version: 1.34.0 (cbf2835db)
+  labels:
+    io.kompose.service: logstash
+  name: logstash
+spec:
+  containers:
+    - env:
+        - name: ELASTIC_PASSWORD
+          value: elastic
+        - name: ELASTIC_USERNAME
+          value: elastic
+        - name: LS_JAVA_OPTS
+          value: -Xmx256m -Xms256m
+      image: logstash:7.14.2
+      livenessProbe:
+        exec:
+          command:
+            - curl --silent --fail http://localhost:9600/_node/stats || exit 1
+        failureThreshold: 5
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        timeoutSeconds: 5
+      name: cab-logstash
+      ports:
+        - containerPort: 5000
+          protocol: TCP
+        - containerPort: 9600
+          protocol: TCP
+      volumeMounts:
+        - mountPath: /usr/share/logstash/pipeline/logstash.conf
+          name: logstash-cm0
+          subPath: logstash.conf
+  restartPolicy: OnFailure
+  volumes:
+    - configMap:
+        items:
+          - key: logstash.conf
+            path: logstash.conf
+        name: logstash-cm0
+      name: logstash-cm0

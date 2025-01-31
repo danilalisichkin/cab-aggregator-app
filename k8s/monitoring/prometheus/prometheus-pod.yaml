@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kompose.cmd: C:\Utils\Kompose\bin\kompose.exe convert
+    kompose.version: 1.34.0 (cbf2835db)
+  labels:
+    io.kompose.service: prometheus
+  name: prometheus
+spec:
+  containers:
+    - args:
+        - --web.enable-lifecycle
+        - --config.file=/etc/prometheus/prometheus.yml
+      image: prom/prometheus:v3.1.0
+      livenessProbe:
+        exec:
+          command:
+            - wget --spider --quiet http://localhost:9090/-/healthy && wget -qO- http://localhost:9090/-/healthy | grep UP || exit 1
+        failureThreshold: 5
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        timeoutSeconds: 5
+      name: cab-prometheus
+      ports:
+        - containerPort: 9090
+          protocol: TCP
+      volumeMounts:
+        - mountPath: /etc/prometheus/prometheus.yml
+          name: prometheus-cm0
+          subPath: prometheus.yml
+  restartPolicy: OnFailure
+  volumes:
+    - configMap:
+        items:
+          - key: prometheus.yml
+            path: prometheus.yml
+        name: prometheus-cm0
+      name: prometheus-cm0

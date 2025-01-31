@@ -1,0 +1,47 @@
+apiVersion: v1
+data:
+  logstash.conf: |
+    input {
+        tcp {
+            port => 5000
+            type => syslog
+            codec => json_lines
+        }
+    }
+
+    filter {
+        grok {
+            match => [ "message", "%{GREEDYDATA}" ]
+        }
+        mutate {
+            remove_field => [
+                "@version",
+                "host",
+                "port",
+                "logstashServer",
+                "appName.keyword",
+                "message.keyword",
+                "level_value",
+                "type"
+            ]
+        }
+    }
+
+    output {
+        stdout {
+            codec => rubydebug
+        }
+        elasticsearch {
+            hosts => [ "host.docker.internal:9200" ]
+    		user => "elastic"
+    		password => "elastic"
+            index => "cab-%{[appName]}-%{+YYYY.MM.dd}"
+        }
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    use-subpath: "true"
+  labels:
+    io.kompose.service: logstash
+  name: logstash-cm0
