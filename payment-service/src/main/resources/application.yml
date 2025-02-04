@@ -21,6 +21,10 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
   kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     consumer:
       key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
@@ -34,6 +38,10 @@ spring:
         spring.deserializer:
           key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
           value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+    template:
+      observation-enabled: true
+    listener:
+      observation-enabled: true
 management:
   endpoints:
     web:

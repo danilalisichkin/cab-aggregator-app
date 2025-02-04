@@ -72,7 +72,7 @@ public class RideController implements RideControllerDoc {
     }
 
     @Override
-    @PutMapping("/rides/requests/{id}")
+    @PutMapping("/requests/{id}")
     public ResponseEntity<RideDto> acceptRide(
             @PathVariable ObjectId id) {
 

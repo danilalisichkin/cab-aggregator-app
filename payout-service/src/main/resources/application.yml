@@ -34,6 +34,8 @@ spring:
         spring.deserializer:
           key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
           value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+    listener:
+      observation-enabled: true
 management:
   endpoints:
     web:
