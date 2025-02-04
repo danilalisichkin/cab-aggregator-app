@@ -22,6 +22,7 @@
         <springcloud.version>2023.0.4</springcloud.version>
         <springdoc.version>2.6.0</springdoc.version>
         <logback.encoder.version>8.0</logback.encoder.version>
+        <datasource.micrometer.version>1.0.6</datasource.micrometer.version>
     </properties>
 
     <dependencyManagement>
@@ -110,6 +111,11 @@
         <dependency>
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-micrometer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.ttddyy.observation</groupId>
+            <artifactId>datasource-micrometer-spring-boot</artifactId>
+            <version>${datasource.micrometer.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

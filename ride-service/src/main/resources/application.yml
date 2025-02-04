@@ -14,7 +14,12 @@ spring:
       password: ${DB_PASSWORD:root}
       replica-set-name: ${DB_REPLICA_SET_NAME:rs0}
       database: ${DB_NAME:ride_database}
+      tracing: enabled
   kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     consumer:
       key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
@@ -28,6 +33,10 @@ spring:
         spring.deserializer:
           key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
           value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+    template:
+      observation-enabled: true
+    listener:
+      observation-enabled: true
 management:
   endpoints:
     web:
@@ -37,6 +46,9 @@ management:
     distribution:
       percentiles-histogram:
         "[http.server.requests]": true
+    mongo:
+      command:
+        enabled: false
   prometheus:
     metrics:
       export:
@@ -89,18 +101,13 @@ services:
     path: api/v1/pricing
   promo-code:
     name: promo-code-service
-    path: /api/v1/promo-codes
+    path: api/v1/promo-codes
   promo-stat:
     name: promo-code-service
-    path: /api/v1/promo-stats
+    path: api/v1/promo-stats
 eureka:
   client:
     serviceUrl:
-      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/}
-feign:
-  client:
-    config:
-      default:
-        loggerLevel: basic
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka}
 server:
   port: ${SERVER_PORT:8084}
