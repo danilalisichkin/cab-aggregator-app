@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: passenger-pg-database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: passenger-pg-database
+  template:
+    metadata:
+      labels:
+        app: passenger-pg-database
+    spec:
+      containers:
+        - name: cab-passenger-pg-database
+          image: postgres:17
+          envFrom:
+            - configMapRef:
+                name: passenger-pg-database-config
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
+            failureThreshold: 5
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: passenger-pg-database-data
+      volumes:
+        - name: passenger-pg-database-data
+          persistentVolumeClaim:
+            claimName: passenger-pg-database-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: passenger-pg-database
+spec:
+  type: ClusterIP
+  selector:
+    app: passenger-pg-database
+  ports:
+    - port: 5432
+      targetPort: 5432

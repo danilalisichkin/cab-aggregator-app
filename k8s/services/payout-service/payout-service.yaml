@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payout-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payout-service
+  template:
+    metadata:
+      labels:
+        app: payout-service
+    spec:
+      containers:
+        - name: cab-payout-service
+          image: cab-payout-service:1.0.0
+          envFrom:
+            - configMapRef:
+                name: payout-service-config
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - wget --spider --quiet http://localhost:8089/actuator/health && wget -qO- http://localhost:8089/actuator/health | grep UP || exit 1
+            failureThreshold: 5
+            initialDelaySeconds: 20
+            periodSeconds: 20
+            timeoutSeconds: 5
+          ports:
+            - containerPort: 8089
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payout-service
+spec:
+  type: ClusterIP
+  selector:
+    app: payout-service
+  ports:
+    - port: 8089
+      targetPort: 8089

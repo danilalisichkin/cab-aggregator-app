@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logstash
+  template:
+    metadata:
+      labels:
+        app: logstash
+    spec:
+      containers:
+        - name: cab-logstash
+          image: logstash:7.14.2
+          envFrom:
+            - configMapRef:
+                name: logstash-config
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - curl --silent --fail http://localhost:9600/_node/stats || exit 1
+            failureThreshold: 5
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+            - containerPort: 9600
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /usr/share/logstash/pipeline/logstash.conf
+              name: logstash-init-config
+              subPath: logstash.conf
+      volumes:
+        - name: logstash-init-config
+          configMap:
+            name: logstash-init-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: logstash
+spec:
+  type: ClusterIP
+  selector:
+    app: logstash
+  ports:
+    - name: "5000"
+      port: 5000
+      targetPort: 5000
+    - name: "9600"
+      port: 9600
+      targetPort: 9600

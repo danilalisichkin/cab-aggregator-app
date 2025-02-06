@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: promo-code-pg-database-config
+data:
+  POSTGRES_DB: "promo_code_database"
+  POSTGRES_PASSWORD: "root"
+  POSTGRES_USER: "postgres"

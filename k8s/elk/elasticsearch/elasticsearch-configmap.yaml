@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: elasticsearch-config
+data:
+  ELASTIC_PASSWORD: "elastic"
+  ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+  discovery.type: "single-node"

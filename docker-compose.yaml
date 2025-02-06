@@ -623,6 +623,7 @@ services:
     restart: on-failure
     ports:
       - "9092:9092"
+      - "9092:9092"
     environment:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: DOCKER_INTERNAL:PLAINTEXT,DOCKER_EXTERNAL:PLAINTEXT
       KAFKA_LISTENERS: DOCKER_INTERNAL://:29092,DOCKER_EXTERNAL://:9092
@@ -674,6 +675,7 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: admin
+    healthcheck:
       test: curl --fail -s http://localhost:3000/api/health || exit 1
       interval: 10s
       timeout: 5s

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-config
+data:
+  KC_HTTP_PORT: "8080"
+  KEYCLOAK_ADMIN: "admin"
+  KEYCLOAK_ADMIN_PASSWORD: "admin"
+  KC_DB: "postgres"
+  KC_DB_URL_HOST: "keycloak-pg-database"
+  KC_DB_URL_PORT: "5432"
+  KC_DB_URL_DATABASE: "keycloak_db"
+  KC_DB_USERNAME: "postgres"
+  KC_DB_PASSWORD: "root"
+  KC_HEALTH_ENABLED: "true"
+  KC_METRICS_ENABLED: "true"
+  KC_FEATURES: "token-exchange,admin-fine-grained-authz"

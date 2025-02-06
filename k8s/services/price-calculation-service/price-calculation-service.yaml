@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: price-calculation-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: price-calculation-service
+  template:
+    metadata:
+      labels:
+        app: price-calculation-service
+    spec:
+      containers:
+        - name: cab-price-calculation-service
+          image: cab-price-calculation-service:1.0.0
+          envFrom:
+            - configMapRef:
+                name: price-calculation-service-config
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - wget --spider --quiet http://localhost:8087/actuator/health && wget -qO- http://localhost:8087/actuator/health | grep UP || exit 1
+            failureThreshold: 5
+            initialDelaySeconds: 20
+            periodSeconds: 20
+            timeoutSeconds: 5
+          ports:
+            - containerPort: 8087
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: price-calculation-service
+spec:
+  type: ClusterIP
+  selector:
+    app: price-calculation-service
+  ports:
+    - port: 8087
+      targetPort: 8087

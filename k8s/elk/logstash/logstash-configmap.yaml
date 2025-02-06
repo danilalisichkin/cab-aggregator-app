@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-config
+data:
+  ELASTIC_PASSWORD: "elastic"
+  ELASTIC_USERNAME: "elastic"
+  LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+  

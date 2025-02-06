@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zipkin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zipkin
+  template:
+    metadata:
+      labels:
+        app: zipkin
+    spec:
+      containers:
+        - name: cab-zipkin
+          image: openzipkin/zipkin
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - curl --silent --fail http://localhost:5601/api/health | grep UP || exit 1
+            failureThreshold: 5
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          ports:
+            - containerPort: 9411
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zipkin
+spec:
+  type: LoadBalancer
+  selector:
+    app: zipkin
+  ports:
+    - port: 9411
+      targetPort: 9411

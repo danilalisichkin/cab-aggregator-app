@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka
+  template:
+    metadata:
+      labels:
+        app: kafka
+    spec:
+      containers:
+        - name: cab-kafka
+          image: obsidiandynamics/kafka
+          envFrom:
+            - configMapRef:
+                name: kafka-config
+          volumeMounts:
+            - name: kafka-data
+              mountPath: /var/lib/kafka/data
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - kafka-topics --bootstrap-server localhost:29092 --list
+            failureThreshold: 5
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          ports:
+            - containerPort: 9092
+              protocol: TCP
+      volumes:
+        - name: kafka-data
+          emptyDir: { }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka
+spec:
+  type: ClusterIP
+  selector:
+    app: kafka
+  ports:
+    - name: "9092"
+      port: 9092
+      targetPort: 9092
+    - name: "29092"
+      port: 29092
+      targetPort: 29092
