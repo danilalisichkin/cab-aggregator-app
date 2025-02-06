@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-gateway-config
+data:
+  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8761/eureka"
+  LOGSTASH_URL: "logstash:5000"
+  OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: "http://keycloak:8080/realms/cab-aggregator-realm/protocol/openid-connect/certs"
+  SERVER_PORT: "8090"
+  ZIPKIN_TRACING_ENDPOINT: "http://zipkin:9411/api/v2/spans"

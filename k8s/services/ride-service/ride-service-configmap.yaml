@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ride-service-config
+data:
+  DB_NAME: "ride_database"
+  DB_PASSWORD: "root"
+  DB_REPLICA_SET_NAME: "rs0"
+  DB_URL: "ride-mongo-database1:27017"
+  DB_USERNAME: "mongo"
+  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8761/eureka"
+  KAFKA_BOOTSTRAP_SERVERS: "kafka:29092"
+  LOGSTASH_URL: "logstash:5000"
+  SERVER_PORT: "8084"
+  ZIPKIN_TRACING_ENDPOINT: "http://zipkin:9411/api/v2/spans"

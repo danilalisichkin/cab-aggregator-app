@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payout-pg-database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payout-pg-database
+  template:
+    metadata:
+      labels:
+        app: payout-pg-database
+    spec:
+      containers:
+        - name: cab-payout-pg-database
+          image: postgres:17
+          envFrom:
+            - configMapRef:
+                name: payout-pg-database-config
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
+            failureThreshold: 5
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: payout-pg-database-data
+      volumes:
+        - name: payout-pg-database-data
+          persistentVolumeClaim:
+            claimName: payout-pg-database-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payout-pg-database
+spec:
+  type: ClusterIP
+  selector:
+    app: payout-pg-database
+  ports:
+    - port: 5432
+      targetPort: 5432

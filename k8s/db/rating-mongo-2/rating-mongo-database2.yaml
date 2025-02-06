@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rating-mongo-database2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rating-mongo-database2
+  template:
+    metadata:
+      labels:
+        app: rating-mongo-database2
+    spec:
+      containers:
+        - name: cab-rating-mongo-database2
+          image: mongo:7.0
+          args:
+            - --replSet
+            - rs1
+            - --bind_ip
+            - 0.0.0.0
+            - --port
+            - "27017"
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - echo 'db.runCommand("ping").ok' | mongo mongo:27017/test --quiet
+            failureThreshold: 5
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 10
+          ports:
+            - containerPort: 27017
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /data/db
+              name: rating-mongo-database2-data
+      volumes:
+        - name: rating-mongo-database2-data
+          persistentVolumeClaim:
+            claimName: rating-mongo-database2-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rating-mongo-database2
+spec:
+  type: ClusterIP
+  selector:
+    app: rating-mongo-database2
+  ports:
+    - port: 27017
+      targetPort: 27017

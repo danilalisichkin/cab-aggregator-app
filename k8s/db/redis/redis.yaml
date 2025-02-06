@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: cab-redis-server
+          image: redis:7.4-alpine
+          envFrom:
+            - configMapRef:
+                name: redis-config
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - redis-cli ping
+            failureThreshold: 5
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+          ports:
+            - containerPort: 6379
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /data
+              name: redis-data
+      volumes:
+        - name: redis-data
+          persistentVolumeClaim:
+            claimName: redis-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  type: ClusterIP
+  selector:
+    app: redis
+  ports:
+    - port: 6379
+      targetPort: 6379

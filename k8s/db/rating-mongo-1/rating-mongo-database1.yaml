@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rating-mongo-database1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rating-mongo-database1
+  template:
+    metadata:
+      labels:
+        app: rating-mongo-database1
+    spec:
+      containers:
+        - args:
+            - --replSet
+            - rs1
+            - --bind_ip
+            - 0.0.0.0
+            - --port
+            - "27017"
+          image: mongo:7.0
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - test $(mongosh --port 27017 --eval "try {rs.initiate({_id:'rs1',members:[{_id:0,host:\"rating-mongo-database1:27017\"}, {_id:1,host:\"rating-mongo-database2:27017\"}]})} catch(e) {rs.status().ok}") -eq 1
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 10
+          name: cab-rating-mongo-database1
+          ports:
+            - containerPort: 27017
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /data/db
+              name: rating-mongo-database1-data
+      volumes:
+        - name: rating-mongo-database1-data
+          persistentVolumeClaim:
+            claimName: rating-mongo-database1-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rating-mongo-database1
+spec:
+  type: ClusterIP
+  selector:
+    app: rating-mongo-database1
+  ports:
+    - port: 27017
+      targetPort: 27017

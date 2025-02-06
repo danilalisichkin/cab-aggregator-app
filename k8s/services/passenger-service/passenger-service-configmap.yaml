@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: passenger-service-config
+data:
+  DB_PASSWORD: "root"
+  DB_URL: "driver-pg-database:5432/passenger_database"
+  DB_USERNAME: "postgres"
+  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8761/eureka"
+  KAFKA_BOOTSTRAP_SERVERS: "kafka:29092"
+  LOGSTASH_URL: "logstash:5000"
+  SERVER_PORT: "8082"
+  ZIPKIN_TRACING_ENDPOINT: "http://zipkin:9411/api/v2/spans"

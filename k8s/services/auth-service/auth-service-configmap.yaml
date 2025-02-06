@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-service-config
+data:
+  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8761/eureka"
+  KAFKA_BOOTSTRAP_SERVERS: "kafka:29092"
+  KEYCLOAK_ADMIN_CLIENT_ID: "admin-cli"
+  KEYCLOAK_ADMIN_CLIENT_SECRET: "DvvioL4dre9nKOIzPrgaZm6VqyJODevD"
+  KEYCLOAK_GRANT_TYPE: "client_credentials"
+  KEYCLOAK_REALM: "cab-aggregator-realm"
+  KEYCLOAK_SERVER_URL: "http://keycloak:8080"
+  KEYCLOAK_USER_CLIENT_ID: "cab-aggregator-client"
+  KEYCLOAK_USER_CLIENT_SECRET: "NsaeQ20BK7DL4hdWxAzx0iCzbUHjw1OL"
+  LOGSTASH_URL: "logstash:5000"
+  SERVER_PORT: "8081"
+  ZIPKIN_TRACING_ENDPOINT: "http://zipkin:9411/api/v2/spans"

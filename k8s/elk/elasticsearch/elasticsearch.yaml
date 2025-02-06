@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elasticsearch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elasticsearch
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      containers:
+        - name: cab-elasticsearch
+          image: elasticsearch:7.14.2
+          envFrom:
+            - configMapRef:
+                name: elasticsearch-config
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - curl --silent --fail http://localhost:9200/_cluster/health || exit 1
+            failureThreshold: 5
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+          ports:
+            - containerPort: 9200
+              protocol: TCP
+            - containerPort: 9300
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch
+spec:
+  type: ClusterIP
+  selector:
+    app: elasticsearch
+  ports:
+    - name: "9200"
+      port: 9200
+      targetPort: 9200
+    - name: "9300"
+      port: 9300
+      targetPort: 9300

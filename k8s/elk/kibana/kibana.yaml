@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kibana
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      containers:
+        - name: cab-kibana
+          image: kibana:7.14.2
+          envFrom:
+            - configMapRef:
+                name: kibana-config
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - curl --silent --fail http://localhost:5601/api/status || exit 1
+            failureThreshold: 5
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+          ports:
+            - containerPort: 5601
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana
+spec:
+  type: LoadBalancer
+  selector:
+    app: kibana
+  ports:
+    - port: 5601
+      targetPort: 5601

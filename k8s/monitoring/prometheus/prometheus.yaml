@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+        - name: cab-prometheus
+          image: prom/prometheus:v3.1.0
+          args:
+            - --web.enable-lifecycle
+            - --config.file=/etc/prometheus/prometheus.yml
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - wget --spider --quiet http://localhost:9090/-/healthy && wget -qO- http://localhost:9090/-/healthy | grep UP || exit 1
+            failureThreshold: 5
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          ports:
+            - containerPort: 9090
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /etc/prometheus/prometheus.yml
+              name: prometheus-init-config
+              subPath: prometheus.yml
+      volumes:
+        - name: prometheus-init-config
+          configMap:
+            name: prometheus-init-config

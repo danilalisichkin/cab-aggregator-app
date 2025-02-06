@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: price-calculation-service-config
+data:
+  DB_URL: "price-calculation-pg-database:5432/price_calculation_database"
+  DB_USERNAME: "postgres"
+  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8761/eureka"
+  FARE_CACHE_TTL: "1440"
+  LOGSTASH_URL: "logstash:5000"
+  REDIS_CELL_DEMAND_KEY_PREFIX: "cell_demand:"
+  REDIS_CEL_KEY_PREFIX: "cell:"
+  REDIS_DATABASE: "0"
+  REDIS_DEMAND_KEY_TTL: "10"
+  REDIS_HOST: "redis"
+  REDIS_PASSWORD: "password"
+  REDIS_PORT: "6379"
+  REDIS_RIDE_KEY_PREFIX: "ride:"
+  SERVER_PORT: "8087"
+  WEATHER_CACHE_TTL: "180"
+  ZIPKIN_TRACING_ENDPOINT: "http://zipkin:9411/api/v2/spans"

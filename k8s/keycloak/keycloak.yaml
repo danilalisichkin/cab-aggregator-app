@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+        - name: cab-keycloak
+          image: quay.io/keycloak/keycloak:26.0.7
+          args:
+            - start-dev
+            - --import-realm
+            - --health-enabled=true
+          envFrom:
+            - configMapRef:
+                name: keycloak-config
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /opt/keycloak/data/import
+              name: keycloak-export-realm-config
+              subPath: realm-export.json
+      volumes:
+        - name: keycloak-export-realm-config
+          configMap:
+            name: keycloak-export-realm-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+spec:
+  type: LoadBalancer
+  selector:
+    app: keycloak
+  ports:
+    - port: 8080
+      targetPort: 8080
